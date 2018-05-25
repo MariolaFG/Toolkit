@@ -60,6 +60,6 @@ if __name__ == '__main__':
         print("{}\t{}".format(sorted_high[i][0], sorted_high[i][1]))
     
     # create figures:
-    pie_chart(labels, relative_sizes) # works only on small file
+    pie_chart(labels, relative_sizes)
     #bar_plot(labels, sizes) # not readable but one can zoom in
     #bar_plot(labels, relative_sizes)
