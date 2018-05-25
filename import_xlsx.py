@@ -16,9 +16,9 @@ def import_xlsx(file_name):
     xlsx = pd.ExcelFile(file_name)
     sheet_names = xlsx.sheet_names #sheet names depend on language
     df1 = xlsx.parse(sheet_names[0])
-    print(df1.shape) #gives number of rows and columns
+    print("columns, rows -" , df1.shape) #gives number of rows and columns
     return(df1)
-    
+
 
 if __name__ == '__main__':
     # check if name of file is provided
