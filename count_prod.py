@@ -35,6 +35,7 @@ def counter(sheet):
 
 if __name__ == '__main__':
     sheet = import_xlsx(argv[1])
+    #sheet = import_xlsx("C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\test_samples.xlsx")
     prod_count = counter(sheet)
 
     # get labels and sizes :
