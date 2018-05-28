@@ -75,7 +75,7 @@ if __name__ == '__main__':
         print("{}\t{}".format(sorted_high[i][0], sorted_high[i][1]))
     
     # create figures:
-    pie_chart(labels, relative_sizes)
+    pie_chart(labels, relative_sizes, title)
     #bar_plot(labels, sizes, title, ylabel) # not readable but one can zoom in
     #bar_plot(labels, relative_sizes, title, ylabel, 1)
     #bar_plot(labels, relative_sizes, title, ylabel, 3) # to check if raises ValueError
