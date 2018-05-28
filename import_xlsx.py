@@ -9,7 +9,7 @@ from sys import argv
 import pandas as pd
 
 def import_xlsx(file_name):
-    """ Imports first sheet of Excel file.
+    """ Returns first sheet of .xlsx file as pandas dataframe.
 
     file_name -- string, name of Excel file
     """
