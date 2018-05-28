@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Module to count the number of different products
+Module to count the number of different products.
 Author: Marijke
 """
 
@@ -46,6 +46,9 @@ if __name__ == '__main__':
     if len(labels) == len(sizes):
         relative_sizes = [(sizes[i] / N_diff_samples * 100) for i in range(len(labels))]
 
+    ylabel = "Product group"
+    title = "Unique samples per product group"
+    
     # make list of tuples to sort while label and size comined :
     count_prod_tuple = list(zip(sizes, labels))
     print(count_prod_tuple)
@@ -54,7 +57,7 @@ if __name__ == '__main__':
     count_prod_list = [list(t) for t in zip(*sorted_high)]
     count_list = count_prod_list[0]
     prod_list = count_prod_list[1]
-    bar_plot(prod_list, count_list)
+    bar_plot(prod_list, count_list, title, ylabel)
     # prints product and unique samples per line
     print("PRODUCT\tN_UNIQUE_SAMPLES")
     for i in range(len(sorted_high)):
@@ -62,5 +65,6 @@ if __name__ == '__main__':
     
     # create figures:
     pie_chart(labels, relative_sizes)
-    #bar_plot(labels, sizes) # not readable but one can zoom in
-    #bar_plot(labels, relative_sizes)
+    #bar_plot(labels, sizes, title, ylabel) # not readable but one can zoom in
+    #bar_plot(labels, relative_sizes, title, ylabel, 1)
+    #bar_plot(labels, relative_sizes, title, ylabel, 3) # to check if raises ValueError
