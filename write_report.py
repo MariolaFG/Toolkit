@@ -39,16 +39,16 @@ def write_statistic(stat_meth, fig, alt_name):
 
 
 if __name__ == '__main__':
-    report_name = "SAVI Analytics Report {}".format(time.strftime("%Y%m%d")) # .pdf
+    report_name = "SAVI Analytics Report {}.pdf".format(time.strftime("%Y%m%d")) # .pdf
     
     # get template :
-    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\HTML')) # to local folder
+    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     #env = Environment(loader=FileSystemLoader('.')) #current directory
     # write start of file to template
     html_file = write_header(report_name)
     # write body to template
     html_file += write_statistic("Stastical Method",
-                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\HTML\\test_fig.png",
+                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\test_fig.png",
                                  "Marijke")
     # write end of file to template :
     temp_EOF = env.get_template("EOF.html")
