@@ -9,6 +9,7 @@ from import_xlsx import import_xlsx
 from graphs import bar_plot, pie_chart
 import numpy as np
 from operator import itemgetter
+import pandas as pd
 from sys import argv
 
 
@@ -21,8 +22,10 @@ def counter(sheet, col_name, unique=0):
     prod_dict = {}
     total_count = 0
     col_group = sheet[col_name].tolist()
+    #col_group = pd.Series(sheet[col_name], range(len(sheet[col_name])))
     if unique == 0:
-        col_N_sample = sheet["N_campione"].tolist() # always use this column for unique?
+        col_N_sample = sheet["N_campione"].tolist()
+        #col_N_sample = pd.Series(sheet["N_campione"], range(len(sheet[col_name])))
         for i in range(len(col_group)):
             if col_N_sample[i-1] != col_N_sample[i]: #sample is different from following
                 if col_group[i] not in prod_dict:
