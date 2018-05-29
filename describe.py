@@ -30,3 +30,5 @@ if __name__ == "__main__":
     print(describe(xlsx_df, column))
     print(describe(xlsx_df, column)[1]) # to select mean
     print(describe(xlsx_df, column)[1:3]) # to select mean and std
+    # can you the following instead:
+    print(xlsx_df[column].mean())
