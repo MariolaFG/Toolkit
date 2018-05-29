@@ -13,7 +13,7 @@ from sys import argv
 
 
 def counter(sheet, col_name, unique=0):
-    """ Counts number per group in a column as a dict {group: count} 
+    """ Counts number per group in a column as a dict {group: count}. 
 
     sheet -- pandas df, sheet from .xlsx file
     unique -- integer, indicates unique samples (0) or not (1), default: 0
