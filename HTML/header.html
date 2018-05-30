@@ -5,4 +5,18 @@
     <title>{{ title }}</title>
 </head>
 <body>
-<h1>{{ report_name }}</h1>
+	<img src = {{ figure }} alt = {{ alt_name }} align = {{ align }} 
+    width = {{ width }} height = {{ height }} />
+    <h1 style = font-size:30px;font-family:georgia>{{ report_name }}</h1>
+    <hr />
+    <p style = font-size:14px;font-family:trebuc>
+    {{ text }} <br /><br />
+    </p>
+
+<footer>
+    <p align = "right">
+    <small>
+    &copy;{{ year }} SAVI Analytics by SATA s.r.l. 
+    </small>
+    <p>
+</footer>
