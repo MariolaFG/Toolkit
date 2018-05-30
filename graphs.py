@@ -2,13 +2,12 @@
 
 """
 Module to display several types of graphs: pie chart, bar plot
-Author: Marijke
 """
 
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-from sys import argv
+from sys import argv 
 
 
 def pie_chart(labels, sizes, title):
