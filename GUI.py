@@ -1,9 +1,9 @@
 import tkinter
-#import matplotlib, sys
+import sys
 import tkinter.messagebox
 from functools import partial
 from tkinter import *
-#import matplotlib
+#import matplotlib.pyplot as plt
 #matplotlib.use('TkAgg')
 #import numpy as np
 #from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -54,6 +54,23 @@ root.rowconfigure(9, weight=1)
 root.rowconfigure(10, weight=1)
 
 ## Functions 
+
+# List to go next and previous 
+imagelist = []
+i = -1
+def list(item):
+    global imagelist    
+    imagelist.append(item)
+
+def listcounter(x):
+    global i
+    if x == True:
+        i = i -1
+
+    else:
+        i = i + 1
+    
+## Create the main button functions 
 def act_button1():
     try:
         a = int(entry11.get())
@@ -67,43 +84,69 @@ def act_button2():
     #novi = Toplevel()
     canvas = Canvas(root)
     canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    gif1 = PhotoImage( file="Babis.gif")
+    gif1 = PhotoImage( file="dog1.gif")
     canvas.create_image(100,100, image=gif1)
-    canvas.gif1 = gif1
+    list(gif1)
+    listcounter(False)
+
     
 def act_button3():
-    tkinter.messagebox.showinfo("Statistic 1","BOOM BITCH")
+    canvas = Canvas(root)
+    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    gif2 = PhotoImage( file="dog2.gif")
+    canvas.create_image(100,100, image=gif2)
+#    canvas.gif2 = gif2
+    list(gif2)
+    listcounter(False)
+    
 def act_button4():
-    tkinter.messagebox.showinfo("Statistic 1","Give us the money SATA snakes")
+    canvas = Canvas(root)
+    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    gif3 = PhotoImage( file="cat.png")
+    canvas.create_image(100,100, image=gif3)
+    list(gif3)
+    listcounter(False)
+
+def act_button5():
+    canvas = Canvas(root)
+    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    gif4 = PhotoImage( file="cat1.png")
+    canvas.create_image(100,100, image=gif4)
+    list(gif4)
+    listcounter(False)
+    
 def act_download():
     tkinter.messagebox.showinfo("Statistic 1","No download for you money-boy")
 def act_add():
     tkinter.messagebox.showinfo("Statistic 1","No add for you. I don't like your face")
-def act_button5():
-    tkinter.messagebox.showinfo("Statistic 1","Give us the money SATAAAAAAAAAA")
 
-##def plot():
-##    x=np.array ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-##    v= np.array ([16,16.31925,17.6394,16.003,17.2861,17.3131,19.1259,18.9694,22.0003,22.81226])
-##    p= np.array ([16.23697,     17.31653,     17.22094,     17.68631,     17.73641 ,    18.6368,
-##            19.32125,     19.31756 ,    21.20247  ,   22.41444   ,  22.11718  ,   22.12453])
-##
-##    fig = Figure(figsize=(6,6))
-##    a = fig.add_subplot(111)
-##    a.scatter(v,x,color='red')
-##    a.plot(p, range(2 +max(x)),color='blue')
-##    a.invert_yaxis()
-##
-##    a.set_title ("Estimation Grid", fontsize=16)
-##    a.set_ylabel("Y", fontsize=14)
-##    a.set_xlabel("X", fontsize=14)
-##
-##    canvas = FigureCanvasTkAgg(root)
-##    canvas.get_tk_widget().pack()
-##    canvas.draw()
+def backbutton():
+    if i >= 1:
+        canvas = Canvas(root)
+        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+        canvas.create_image(100,100, image=imagelist[i - 1])
+        listcounter(True)
+    else:
+        canvas = Canvas(root)
+        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+        canvas.create_image(100,100, image=imagelist[i])
+        tkinter.messagebox.showinfo("ERROR","No more graphs")
+    
+def forwardbutton():
+    try:
+        canvas = Canvas(root)
+        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+        canvas.create_image(100,100, image=imagelist[i + 1])
+        listcounter(False)
+    except IndexError:
+        canvas = Canvas(root)
+        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+        canvas.create_image(100,100, image=imagelist[i])
+        tkinter.messagebox.showinfo("ERROR","No more graphs")
+        pass
 
-
-## Buttons 
+    
+##Create the Buttons 
 button1 = Button(root,text="Calculation", command=act_button1)
 button1.grid(row=2, column=0, sticky="nsew")
 entry11 = Entry(root)
@@ -169,10 +212,10 @@ entry82.grid(row=9, column=2, sticky="ew")
 entry82 = Entry(root)
 entry82.grid(row=9, column=3, sticky="ew")
 
-backbutton = Button(root, text= "Previous Screen")
+backbutton = Button(root, text= "Previous Screen", command = backbutton)
 backbutton.grid(row=10, column=4, sticky="ewsn")
 
-forwardbutton = Button(root, text= "Next Screen")
+forwardbutton = Button(root, text= "Next Screen", command = forwardbutton)
 forwardbutton.grid(row=10, column=5, sticky="ewsn")
 
 addbutton = Button(root, text="Add Item", command=act_add)
@@ -181,7 +224,7 @@ addbutton.grid(row=10, column=10, sticky="ewsn")
 buttonDownload = Button(root, text="Download Summary", bg="green", command=act_download)
 buttonDownload.grid(row=10, column=0, columnspan=2, sticky="nsew")
 
-canvas = Canvas(root, bg="white")
+canvas = Canvas(root, bg="black")
 canvas.grid(row=1,column=4,rowspan=9,columnspan=10, sticky="nwes")
 
 
