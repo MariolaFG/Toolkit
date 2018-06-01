@@ -11,6 +11,7 @@ import numpy as np
 from operator import itemgetter
 import pandas as pd
 from sys import argv
+from write_excel import write_xls
 
 
 def counter(sheet, col_name, unique=0):
@@ -21,11 +22,11 @@ def counter(sheet, col_name, unique=0):
     """
     prod_dict = {}
     total_count = 0
-    col_group = sheet[col_name].tolist()
-    #col_group = pd.Series(sheet[col_name], range(len(sheet[col_name])))
+    col_group = sheet[col_name].astype(str).tolist()
+    #col_group = pd.Series(sheet[col_name].astype(str), range(len(sheet[col_name])))
     if unique == 0:
-        col_N_sample = sheet["N_campione"].tolist()
-        #col_N_sample = pd.Series(sheet["N_campione"], range(len(sheet[col_name])))
+        col_N_sample = sheet["N_campione"].astype(str).tolist()
+        #col_N_sample = pd.Series(sheet["N_campione"].astype(str), range(len(sheet[col_name])))
         for i in range(len(col_group)):
             if col_N_sample[i-1] != col_N_sample[i]: #sample is different from following
                 if col_group[i] not in prod_dict:
@@ -41,18 +42,13 @@ def counter(sheet, col_name, unique=0):
     else:
         raise ValueError("unique can be 0 (unique) or 1 (not unique)")
     return(prod_dict)
+  
+ 
+def give_graphs(prod_dict):
+    """ Produces graphs. 
     
-    
-
-if __name__ == '__main__':
-    # imports Excel file:
-    sheet = import_xlsx(argv[1])
-
-    # counts unique samples per product group:
-    col_group = "Gruppo_prodotto"
-    prod_count = counter(sheet, col_group)
-    #prod_count = counter(sheet, col_group, 1) # to test no uniqueness
-
+    prod_dict -- dict {prod : count}
+    """
     # get labels and sizes :
     labels = list(prod_count.keys())
     sizes = list(prod_count.values())
@@ -63,7 +59,6 @@ if __name__ == '__main__':
     
     # make list of tuples to sort while label and size comined :
     count_prod_tuple = list(zip(sizes, labels))
-    print(count_prod_tuple)
     sorted_high = sorted(count_prod_tuple, key=itemgetter(0,1), reverse=True)
     # show bar plot in descending order :
     ylabel = "Product group"
@@ -71,6 +66,7 @@ if __name__ == '__main__':
     count_prod_list = [list(t) for t in zip(*sorted_high)]
     count_list = count_prod_list[0]
     prod_list = count_prod_list[1]
+
     bar_plot(prod_list, count_list, title, ylabel)
     # prints product and unique samples per line
     print("PRODUCT\tN_UNIQUE_SAMPLES")
@@ -79,6 +75,22 @@ if __name__ == '__main__':
     
     # create figures:
     pie_chart(labels, relative_sizes, title)
-    #bar_plot(labels, sizes, title, ylabel) # not readable but one can zoom in
-    #bar_plot(labels, relative_sizes, title, ylabel, 1)
-    #bar_plot(labels, relative_sizes, title, ylabel, 3) # to check if raises ValueError
+    # bar_plot(labels, sizes, title, ylabel) # not readable but one can zoom in
+    # bar_plot(labels, relative_sizes, title, ylabel, 1)
+    # bar_plot(labels, relative_sizes, title, ylabel, 3) # to check if raises ValueError
+
+    
+
+if __name__ == '__main__':
+    # imports Excel file:
+    sheet = import_xlsx(argv[1])
+
+    # counts unique samples per product group:
+    #col_group = "Gruppo_prodotto"
+    col_group = "Cliente"
+    prod_count = counter(sheet, col_group)
+    #prod_count = counter(sheet, col_group, 1) # to test no uniqueness
+    write_xls("Samples_per_client", prod_count)
+    
+    #give_graphs(prod_count)
+    
