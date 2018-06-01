@@ -15,6 +15,7 @@ def import_xlsx(file_name):
     xlsx = pd.ExcelFile(file_name)
     sheet_names = xlsx.sheet_names #sheet names depend on language
     df1 = xlsx.parse(sheet_names[0])
+    #df1.fillna("None")
     df1.drop(df1.index[len(df1) - 1], inplace=True) #drop total row
     #print("columns, rows -" , df1.shape) #gives number of rows and columns
     return(df1)
