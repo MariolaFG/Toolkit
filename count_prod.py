@@ -21,18 +21,24 @@ def counter(sheet, col_name, unique=0):
     unique -- integer, indicates unique samples (0) or not (1), default: 0
     """
     prod_dict = {}
-    total_count = 0
-    col_group = sheet[col_name].astype(str).tolist()
-    #col_group = pd.Series(sheet[col_name].astype(str), range(len(sheet[col_name])))
+    
+    col_group = pd.Series(sheet[col_name].astype("str"))
+    # counts unique samples :
     if unique == 0:
-        col_N_sample = sheet["N_campione"].astype(str).tolist()
-        #col_N_sample = pd.Series(sheet["N_campione"].astype(str), range(len(sheet[col_name])))
+        col_N_sample = pd.Series(sheet["N_campione"].astype("str"))
         for i in range(len(col_group)):
-            if col_N_sample[i-1] != col_N_sample[i]: #sample is different from following
+            if i == 0:  # pandas Series can't count negatively
                 if col_group[i] not in prod_dict:
                     prod_dict[col_group[i]] = 1
                 else:
                     prod_dict[col_group[i]] += 1
+            elif col_N_sample[i-1] != col_N_sample[i]: #sample is different from following
+                if col_group[i] not in prod_dict:
+                    prod_dict[col_group[i]] = 1
+                else:
+                    prod_dict[col_group[i]] += 1
+                    
+    # counts all samples :
     elif unique == 1:
         for j in range(len(col_group)):
             if col_group[j] not in prod_dict:
@@ -41,6 +47,7 @@ def counter(sheet, col_name, unique=0):
                 prod_dict[col_group[j]] += 1
     else:
         raise ValueError("unique can be 0 (unique) or 1 (not unique)")
+    
     return(prod_dict)
   
  
@@ -86,11 +93,11 @@ if __name__ == '__main__':
     sheet = import_xlsx(argv[1])
 
     # counts unique samples per product group:
-    #col_group = "Gruppo_prodotto"
-    col_group = "Cliente"
+    col_group = "Gruppo_prodotto"
+    #col_group = "Cliente"
     prod_count = counter(sheet, col_group)
     #prod_count = counter(sheet, col_group, 1) # to test no uniqueness
-    write_xls("Samples_per_client", prod_count)
+    #write_xls("Samples_per_client", prod_count)
     
-    #give_graphs(prod_count)
+    give_graphs(prod_count)
     
