@@ -29,7 +29,7 @@ def write_header(rep_name="SAVI Analytics Report", title="SAVI",
                  "width" : "300",
                  "height" : "250",
                  "align" : "right",
-#                 "date" : "{}".format(time.strftime("%Y%m%d")),
+                 "date" : "{}".format(time.strftime("%Y%m%d")),
                  "text" : text
                 }
     html_out = template.render(variables)
@@ -54,6 +54,8 @@ def write_statistic(stat_meth, fig, alt_name):
     stat_meth -- string, specifies stastical analysis
     fig -- string ###SHOULD BE CHANGED!
     alt_name -- string, name if image cannot be displayed
+    fig -- integer, indicates number of figure
+    txt -- string, text describing figure
     """
     env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("stat_meth.html")
@@ -61,7 +63,10 @@ def write_statistic(stat_meth, fig, alt_name):
                  "figure" : fig,
                  "alt_name" : alt_name,
                  "width" : "400",
-                 "height" : "400"}
+                 "height" : "400",
+                 # "figure" : fig,
+                 # "text" : txt
+                 }
     html_out = template.render(variables)
     return(html_out)
 
