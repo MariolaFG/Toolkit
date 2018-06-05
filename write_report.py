@@ -9,6 +9,14 @@ import os.path
 import time
 from xhtml2pdf import pisa
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def write_header(rep_name="SATAlytics Report", title="SATAlytics",
                  alt_name="Logo SATAlytics"):
@@ -64,12 +72,14 @@ def write_function(title, fig, alt_name):
     return(html_out)
 
 
-def make_pdf(html_temp, title="SATAlytics Report"):
+# def make_pdf(html_temp, title="SATAlytics Report"):    
+def make_pdf(title="SATAlytics Report"):
     """ Creates a PDF from a HTML template with date of today.
 
     html_temp -- html, template
     title -- string, title of report, default: SAVI Analytics Report 
     """   
+
     report_name = "{} {}.pdf".format(title, time.strftime("%Y%m%d"))
 
     env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
@@ -80,6 +90,7 @@ def make_pdf(html_temp, title="SATAlytics Report"):
     #os.path.exists(file_path)
     ## have to know file path
     
+    html_temp = create_temp()
     # write end of file to template :
     temp_EOF = env.get_template("EOF.html")
     html_temp += temp_EOF.render()
@@ -91,6 +102,24 @@ def make_pdf(html_temp, title="SATAlytics Report"):
     report.close()
     print(pisa_status.err) #True on succes, False on error
     os.startfile(report_name)
+    
+
+def create_temp():
+
+    create_global_env()
+
+    # write start of file to template
+    html_file = write_header()
+    # html_file += write_toc()
+    # write body to template
+    html_file += write_function("Function 1",
+                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
+                                 "Marijke")
+    html_file += write_function("Function 2",
+                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
+                                 "Marijke")
+
+    return (html_file)
 
 
 ##def write_to_template(var1, var2, var3)
@@ -105,25 +134,16 @@ def make_pdf(html_temp, title="SATAlytics Report"):
 
 def create_global_env():
     global env
-    env = env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
-    
+    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
+    env = Environment(
+    loader=FileSystemLoader(
+    resource_path('HTML'))) # to local folder
+    print(env)
 
 
 if __name__ == '__main__':
-    create_global_env()
-
-    # write start of file to template
-    html_file = write_header()
-    # html_file += write_toc()
-    # write body to template
-    html_file += write_function("Function 1",
-                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
-                                 "Marijke")
-    html_file += write_function("Function 2",
-                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
-                                 "Marijke")
-    
-    make_pdf(html_file)
+    make_pdf()
+    # make_pdf(create_temp())
     
 
     
