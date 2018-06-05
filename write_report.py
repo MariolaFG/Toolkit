@@ -17,6 +17,7 @@ def resource_path(relative_path):
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+    
 
 def write_header(rep_name="SATAlytics Report", title="SATAlytics",
                  alt_name="Logo SATAlytics"):
@@ -28,7 +29,7 @@ def write_header(rep_name="SATAlytics Report", title="SATAlytics",
     """
     # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("header.html")
-    fig_path = "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\Logo.png" #Should be changed
+    fig_path = "..\\HTML\\Images\\Logo.png" #Should be changed
     variables = {"title" : title,
                  "report_name" : rep_name,
                  "figure" : fig_path,
@@ -82,8 +83,6 @@ def make_pdf(title="SATAlytics Report"):
 
     report_name = "{} {}.pdf".format(title, time.strftime("%Y%m%d"))
 
-    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
-    #env = Environment(loader=FileSystemLoader('.')) #current directory
     if os.path.isfile(report_name):
         os.remove(report_name) #figure out better solution
     ## this would be better: 
@@ -138,7 +137,7 @@ def create_global_env():
     env = Environment(
     loader=FileSystemLoader(
     resource_path('HTML'))) # to local folder
-    print(env)
+    print(resource_path('HTML'))
 
 
 if __name__ == '__main__':
