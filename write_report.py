@@ -18,9 +18,9 @@ def write_header(rep_name="SATAlytics Report", title="SATAlytics",
     title -- string, title of report, default: SAVI
     figure -- string, logo of SAVI, default: #have to find out how
     """
-    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
+    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("header.html")
-    fig_path = "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Logo.png" #Should be changed
+    fig_path = "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\Logo.png" #Should be changed
     variables = {"title" : title,
                  "report_name" : rep_name,
                  "figure" : fig_path,
@@ -38,7 +38,7 @@ def write_toc():
     """ Returns HTML file with table of contents.
     
     """
-    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
+    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("table_of_contents.html")
     html_out = template.render()
     return(html_out)
@@ -53,7 +53,7 @@ def write_function(title, fig, alt_name):
     alt_name -- string, name if image cannot be displayed
     txt -- string, text describing figure
     """
-    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
+    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("function.html")
     variables = {"title" : title,
                  "figure" : fig,
@@ -71,6 +71,7 @@ def make_pdf(html_temp, title="SATAlytics Report"):
     title -- string, title of report, default: SAVI Analytics Report 
     """   
     report_name = "{} {}.pdf".format(title, time.strftime("%Y%m%d"))
+
     env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     #env = Environment(loader=FileSystemLoader('.')) #current directory
     if os.path.isfile(report_name):
@@ -102,17 +103,24 @@ def make_pdf(html_temp, title="SATAlytics Report"):
 ##    #use case ... if ...
 
 
+def create_global_env():
+    global env
+    env = env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
+    
+
+
 if __name__ == '__main__':
-   
-    # get template :
-    env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
-    #env = Environment(loader=FileSystemLoader('.')) #current directory
+    create_global_env()
+
     # write start of file to template
     html_file = write_header()
     # html_file += write_toc()
     # write body to template
-    html_file += write_function("Function",
-                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\test_fig.png",
+    html_file += write_function("Function 1",
+                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
+                                 "Marijke")
+    html_file += write_function("Function 2",
+                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
                                  "Marijke")
     
     make_pdf(html_file)
