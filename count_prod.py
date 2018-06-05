@@ -5,13 +5,12 @@ Module to count the number of samples in a column.
 Author: Marijke
 """
 
-from import_xlsx import import_xlsx
+from import_xlsx import import_xlsx, write_xls
 from graphs import bar_plot, pie_chart
 import numpy as np
 from operator import itemgetter
 import pandas as pd
 from sys import argv
-from write_excel import write_xls
 
 
 def counter(sheet, col_name, unique=0):
@@ -86,18 +85,24 @@ def give_graphs(prod_dict):
     # bar_plot(labels, relative_sizes, title, ylabel, 1)
     # bar_plot(labels, relative_sizes, title, ylabel, 3) # to check if raises ValueError
 
+
+# def pivot_table(df1):
+    # df = df1.loc[:, ["Cliente", "Gruppo_prodotto"]]
+    # table = pivot_table(data=df, index=["Cliente","Gruppo_prodotto"])
+    # print(table)
     
 
 if __name__ == '__main__':
     # imports Excel file:
     sheet = import_xlsx(argv[1])
+    pivot_table(sheet)
 
     # counts unique samples per product group:
-    col_group = "Gruppo_prodotto"
+    #col_group = "Gruppo_prodotto"
     #col_group = "Cliente"
-    prod_count = counter(sheet, col_group)
+    #prod_count = counter(sheet, col_group)
     #prod_count = counter(sheet, col_group, 1) # to test no uniqueness
     #write_xls("Samples_per_client", prod_count)
     
-    give_graphs(prod_count)
+    #give_graphs(prod_count)
     
