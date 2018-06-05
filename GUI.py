@@ -3,13 +3,11 @@ import sys
 import tkinter.messagebox
 from functools import partial
 from tkinter import *
-#import matplotlib.pyplot as plt
-#matplotlib.use('TkAgg')
-#import numpy as np
-#from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-#from matplotlib.figure import Figure
-
-
+from tkinter import filedialog
+from tkinter.filedialog import askopenfilename
+import os.path
+import numpy as np
+import pandas as pd
 
 
 root = Tk()
@@ -24,10 +22,8 @@ screen_height = root.winfo_screenheight()
 x_coordinate = (screen_width/2) - (width_of_window/2) ## Make it pop up at the center of the screen
 y_coordinate = (screen_height/2) - (height_of_window/2)
 root.geometry("%dx%d+%d+%d" % (width_of_window,height_of_window,x_coordinate,y_coordinate))
-
-
-
 label = tkinter.Label(root,text="Welcome to SAVI Analytics")
+label.config(font=("Comic", 20))
 label.grid(row=0, column=3, columnspan=4)
 
 root.columnconfigure(0, weight=20)
@@ -66,11 +62,41 @@ def listcounter(x):
     global i
     if x == True:
         i = i -1
-
     else:
         i = i + 1
     
 ## Create the main button functions 
+        
+def ex1_button():
+    global filename
+    global excel1
+    global excel1_columns
+    filename = askopenfilename() #Import information file about rice
+    splitfilename = filename.rsplit('/',1)
+    excel1 = pd.read_excel(filename)
+    if filename:
+        print ("selected:", filename)
+        excel1_columns = excel1.columns.values.tolist()
+        print(excel1_columns)
+        #print (excel1[0:3]) #Just read the first three lines 
+        #Chiave = excel1["Chiave"] # Create a column with the name
+        
+        buttonshow1 = Button(root, text=splitfilename[1], bg="blue")
+        buttonshow1.grid(row=1, column=1, sticky="ew")    
+    else:
+        print ("file not selected")
+        
+def ex2_button():
+    global filename1
+    filename1 = askopenfilename()
+    splitfilename1 = filename1.rsplit('/',1)
+    if filename1:
+        print ("selected:", filename1)
+        buttonshow2 = Button(root, text=splitfilename1[1], bg="blue")
+        buttonshow2.grid(row=1, column=3, sticky="ew")
+    else:
+        print ("file not selected")
+
 def act_button1():
     try:
         a = int(entry11.get())
@@ -117,6 +143,10 @@ def act_button5():
     
 def act_download():
     tkinter.messagebox.showinfo("Statistic 1","No download for you money-boy")
+    
+def act_go():
+    tkinter.messagebox.showinfo("Go on with the command")
+    
 def act_add():
     tkinter.messagebox.showinfo("Statistic 1","No add for you. I don't like your face")
 
@@ -145,8 +175,32 @@ def forwardbutton():
         tkinter.messagebox.showinfo("ERROR","No more graphs")
         pass
 
+def openInstrucktion():
+    os.startfile("Instructions.pdf")
+
+def selection():
+    lb = Listbox(root, selectmode=EXTENDED)
+    lb.grid(row=7, column=1, sticky="nsew")
+    for i in excel1_columns:
+        lb.insert(END,i)
+    a = lb.curselection()
+    for i in a:
+        print(lb.get(i))
+
+
+
+
+
+        
+
     
 ##Create the Buttons 
+buttonex1 = Button(root, text="Excel file 1", command=ex1_button)
+buttonex1.grid(row=1, column=0, sticky="ew")
+
+buttonex2 = Button(root, text="Excel file 2", command=ex2_button)
+buttonex2.grid(row=1, column=2, sticky="ew")
+
 button1 = Button(root,text="Calculation", command=act_button1)
 button1.grid(row=2, column=0, sticky="nsew")
 entry11 = Entry(root)
@@ -187,10 +241,10 @@ entry52 = Entry(root)
 entry52.grid(row=6, column=2, sticky="ew")
 
 
-button6 = Button(root,text="Statistic 6")
+button6 = Button(root,text="residues_graph", command=selection)
 button6.grid(row=7, column=0, sticky="nsew")
-entry61 = Entry(root)
-entry61.grid(row=7, column=1, sticky="ew")
+
+
 entry62 = Entry(root)
 entry62.grid(row=7, column=2, sticky="ew")
 entry62 = Entry(root)
@@ -224,9 +278,16 @@ addbutton.grid(row=10, column=10, sticky="ewsn")
 buttonDownload = Button(root, text="Download Summary", bg="green", command=act_download)
 buttonDownload.grid(row=10, column=0, columnspan=2, sticky="nsew")
 
+buttonGo = Button(root, text="GO!", bg="blue", command=act_go)
+buttonGo.grid(row=10, column=3, sticky="nsew")
+
+textBox=Text(root)
+infophoto = PhotoImage( file="infobutton.png")
+buttoninfo = Button(root, image=infophoto, height=20, width=20, command=openInstrucktion)
+buttoninfo.grid(row=0, column=10, sticky="ew")
+
 canvas = Canvas(root, bg="black")
 canvas.grid(row=1,column=4,rowspan=9,columnspan=10, sticky="nwes")
-
 
 
 root.mainloop()
