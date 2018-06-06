@@ -55,7 +55,7 @@
             -pdf-frame-border: 1;
         }
     }
-
+    
     @page regular_page {
         margin: 2.5cm;
         margin-bottom: 2.5 cm;
@@ -96,7 +96,7 @@
     </style>
 </head>
 
-<body class="body">
+<body>
 <div id="logoContent">
         <img src = {{ figure }} alt = {{ alt_name }} align = {{ align }} 
          width = 550 height = 200 />
@@ -111,12 +111,57 @@
     </div>
 </div>
 
-<!-- <div id="logoContent">
-<pdf:toc/>
-</div>
- -->
+<pdf:nextpage>
+<pdf:nexttemplate name="toc_page" />
 
+<div id="toc_content">
+    <h2 style=font-size:18px>Table of Contents</h2> </div>
+    <pdf:toc />
+</div>
+
+<pdf:nextpage>
 <pdf:nexttemplate name="regular_page" />
+
+
+<div id="regularContent">
+    <h2 style=font-size:18px>{{ title }}</h2> </div>
+    <center>
+    <img src = {{ figure }} alt = {{ alt_name }} border = 3 />
+    </center>
+    
+    <p>{{ text }}</p>
+</div>
+
+<pdf:nextpage>
+
+<div id="regularContent">
+    <h2 style=font-size:18px>{{ title }}</h2> </div>
+    <center>
+    <img src = {{ figure }} alt = {{ alt_name }} border = 3 />
+    </center>
+    
+    <p>{{ text }}</p>
+</div>
+
+<footer style="background-color:#1F4E79">
+<div id="footerContent">
+    <p style = "color:white;text-align:left" class="bottomBorder">
+    <small>
+    &nbsp;&nbsp;&nbsp;&nbsp;&copy;{{ year }} SATAlytics by SATA s.r.l.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <pdf:pagenumber> of <pdf:pagecount>
+    &nbsp;&nbsp;
+    </small>
+    <p>
+</div>
+</body>
+</footer>
+</html>
 
 <!-- blue = #1F4E79 -->
 <!-- green = #4A9D4B" -->

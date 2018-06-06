@@ -9,6 +9,7 @@ import os.path
 import time
 from xhtml2pdf import pisa
 
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -27,7 +28,6 @@ def write_header(rep_name="SATAlytics Report", title="SATAlytics",
     title -- string, title of report, default: SAVI
     figure -- string, logo of SAVI, default: #have to find out how
     """
-    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("header.html")
     fig_path = "..\\HTML\\Images\\Logo.png" #Should be changed
     variables = {"title" : title,
@@ -47,7 +47,6 @@ def write_toc():
     """ Returns HTML file with table of contents.
     
     """
-    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("table_of_contents.html")
     html_out = template.render()
     return(html_out)
@@ -62,7 +61,6 @@ def write_function(title, fig, alt_name):
     alt_name -- string, name if image cannot be displayed
     txt -- string, text describing figure
     """
-    # env = Environment(loader=FileSystemLoader('C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML')) # to local folder
     template = env.get_template("function.html")
     variables = {"title" : title,
                  "figure" : fig,
@@ -93,7 +91,11 @@ def make_pdf(title="SATAlytics Report"):
     # write end of file to template :
     temp_EOF = env.get_template("EOF.html")
     html_temp += temp_EOF.render()
-    # print(html_file)
+
+    # create_global_env()
+    # temp = env.get_template("total.html")
+    # html_temp = temp.render()
+    print(html_temp)
 
     # generate PDF :
     report = open(report_name, "w+b")
@@ -104,6 +106,9 @@ def make_pdf(title="SATAlytics Report"):
     
 
 def create_temp():
+    """ Returns HTML template.
+
+    """
 
     create_global_env()
 
@@ -118,6 +123,7 @@ def create_temp():
                                  "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
                                  "Marijke")
 
+    
     return (html_file)
 
 
