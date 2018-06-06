@@ -26,17 +26,17 @@ label = tkinter.Label(root,text="Welcome to SAVI Analytics")
 label.config(font=("Comic", 20))
 label.grid(row=0, column=3, columnspan=4)
 
-root.columnconfigure(0, weight=20)
+root.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=1)
 root.columnconfigure(2, weight=1)
-root.columnconfigure(3, weight=20)
-root.columnconfigure(4, weight=20)
-root.columnconfigure(5, weight=20)
-root.columnconfigure(6, weight=20)
-root.columnconfigure(7, weight=20)
-root.columnconfigure(8, weight=20)
-root.columnconfigure(9, weight=20)
-root.columnconfigure(10, weight=20)
+root.columnconfigure(3, weight=1)
+root.columnconfigure(4, weight=40)
+root.columnconfigure(5, weight=40)
+root.columnconfigure(6, weight=40)
+root.columnconfigure(7, weight=40)
+root.columnconfigure(8, weight=40)
+root.columnconfigure(9, weight=40)
+root.columnconfigure(10, weight=40)
 root.rowconfigure(0, weight=1)
 root.rowconfigure(1, weight=1)
 root.rowconfigure(2, weight=1)
@@ -49,9 +49,31 @@ root.rowconfigure(8, weight=1)
 root.rowconfigure(9, weight=1)
 root.rowconfigure(10, weight=1)
 
-## Functions 
 
-# List to go next and previous 
+# FUNCTIONS OF HELP TO OTHER FUNCTIONS
+
+def scroll_fun(e): ## Function for adding scrollbars into the listbox
+    scrollbar_v = Scrollbar(e, orient= "vertical")
+    scrollbar_v.config(command= e.yview)
+    scrollbar_v.pack(side= "right", fill="y")
+    e.config(yscrollcommand= scrollbar_v.set)
+
+    scrollbar_h = Scrollbar(e, orient = "horizontal")
+    scrollbar_h.config(command= e.xview)
+    scrollbar_h.pack(side= "bottom", fill= "x")
+    e.config(xscrollcommand= scrollbar_h.set)
+
+def pre_proc(excel_file,column_name):  
+    try:
+        specific_column = excel_file[column_name]  # Here we chose the column that we want to choose a value from
+        without_nan = specific_column[pd.isna(specific_column) == FALSE] # Here we keep the column without the NaN values
+        unique_values = np.unique(without_nan) # Here we keep only the unique values
+        return unique_values
+    except KeyError:
+        tkinter.messagebox.showinfo("Name is not a column title in the excel file",column_name)
+        pass
+
+
 imagelist = []
 i = -1
 def list(item):
@@ -65,22 +87,21 @@ def listcounter(x):
     else:
         i = i + 1
     
-## Create the main button functions 
+
+## FUNCTIONS OF EXCEL BUTTONS
         
 def ex1_button():
     global filename
     global excel1
     global excel1_columns
+
     filename = askopenfilename() #Import information file about rice
     splitfilename = filename.rsplit('/',1)
     excel1 = pd.read_excel(filename)
-    if filename:
-        print ("selected:", filename)
+    if filename:        
         excel1_columns = excel1.columns.values.tolist()
-        print(excel1_columns)
-        #print (excel1[0:3]) #Just read the first three lines 
-        #Chiave = excel1["Chiave"] # Create a column with the name
-        
+
+        ## Button to confirm that the program have the file
         buttonshow1 = Button(root, text=splitfilename[1], bg="blue")
         buttonshow1.grid(row=1, column=1, sticky="ew")    
     else:
@@ -97,33 +118,177 @@ def ex2_button():
     else:
         print ("file not selected")
 
+## FUNCTIONS OF STATISTIC BUTTONS
+
 def act_button1():
-    try:
-        a = int(entry11.get())
-        b = int(entry12.get())
-        c = a+b
-        tkinter.messagebox.showinfo("Your value is:",c)
-    except ValueError:
-        tkinter.messagebox.showinfo("ERROR","Not numbers in the correct place. Try again idiot")
-        pass
+    ## Some pre-process to the excel file to make it visible to the user
+    global excel1_specific_column_uniq_val1
+    excel1_specific_column_uniq_val1 = pre_proc(excel1,'Cliente')
+
+    # try:
+    #     excel1_specific_column1 = excel1['Cliente']  # Here we chose the column that we want to choose a value from
+    #     excel1_specific_column_withoutNAN1 = excel1_specific_column1[pd.isna(excel1_specific_column1) == FALSE] # Here we keep the column without the NaN values
+    #     excel1_specific_column_uniq_val1 = np.unique(excel1_specific_column_withoutNAN1) # Here we keep only the unique values
+    # except KeyError:
+    #     tkinter.messagebox.showinfo("Name Error","Name 'Cliente' is not a column title in the excel file")
+    #     pass
+
+    global excel1_specific_column_uniq_val2
+    excel1_specific_column_uniq_val2 = pre_proc(excel1,'Gruppo_prodotto')
+
+    global excel1_specific_column_uniq_val3
+    excel1_specific_column_uniq_val3 = pre_proc(excel1,'ANNO')
+
+       
+    lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb11.grid(row=2, column=1, sticky="nsew")
+    # Adding scrollbar for lb11
+    scroll_fun(lb11)
+    # Put the data into the listbox
+    global value11
+    for i in excel1_specific_column_uniq_val1:
+        lb11.insert(END, i)
+    a = lb11.curselection()
+    for i in a:
+        print(lb11.get(i))
+    def cur_selection11(*x):
+        global value11
+        value11 = (lb11.get(lb11.curselection()))
+        print (value11)
+    lb11.bind("<<ListboxSelect>>", cur_selection11)
+
+   
+    lb12 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb12.grid(row=2, column=2, sticky="nsew")
+    ## Adding scrollbar for lb12
+    scroll_fun(lb12)
+    
+    for y in excel1_specific_column_uniq_val2:
+        lb12.insert(END, y)
+    b = lb12.curselection()
+    for y in a:
+        print (lb12.get(y))
+    def cur_selection12(*y):
+        global value12
+        value12 = lb12.get(lb12.curselection())
+        print (value12)
+    lb12.bind("<<ListboxSelect>>", cur_selection12)
+    
+    lb13 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb13.grid(row=2, column=3, sticky="nsew")
+    # ## Adding scrollbar for lb13
+    # scroll_fun(lb13)
+
+    for z in excel1_specific_column_uniq_val3:
+        lb13.insert(END, z)
+    b = lb13.curselection()
+    for z in a:
+        print (lb13.get(z))
+    def cur_selection13(*z):
+        global value13
+        value13 = (lb13.get(lb13.curselection()))
+        print (value13)
+    lb13.bind("<<ListboxSelect>>", cur_selection13)
+    
 def act_button2():
-    #novi = Toplevel()
-    canvas = Canvas(root)
-    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    gif1 = PhotoImage( file="dog1.gif")
-    canvas.create_image(100,100, image=gif1)
-    list(gif1)
-    listcounter(False)
+    lb21 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb21.grid(row=3, column=1, sticky="nsew")
+    ## Adding scrollbar for lb21
+    scroll_fun(lb21)
+
+    for i in excel1_specific_column_uniq_val2:
+        lb21.insert(END, i)
+    a = lb21.curselection()
+    for i in a:
+        print(lb21.get(i))
+    def cur_selection21(*x):
+        global value21
+        value21 = (lb21.get(lb21.curselection()))
+        print (value21)
+    lb21.bind("<<ListboxSelect>>", cur_selection21)
+   
+    lb22 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb22.grid(row=3, column=2, sticky="nsew")
+    ## Adding scrollbar for lb22
+    scroll_fun(lb22)
+
+    for y in excel1_specific_column_uniq_val1:
+        lb22.insert(END, y)
+    b = lb22.curselection()
+    for y in a:
+        print (lb22.get(y))
+    def cur_selection22(*y):
+        global value22
+        value22 = lb22.get(lb22.curselection())
+        print (value22)
+    lb22.bind("<<ListboxSelect>>", cur_selection22)
+    
+    lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb23.grid(row=3, column=3, sticky="nsew")
+    # ## Adding scrollbar for lb23
+    # scroll_fun(lb23)
+
+    for z in excel1_specific_column_uniq_val3:
+        lb23.insert(END, z)
+    b = lb23.curselection()
+    for z in a:
+        print (lb23.get(z))
+    def cur_selection23(*z):
+        global value23
+        value23 = (lb23.get(lb23.curselection()))
+        print (value23)
+    lb23.bind("<<ListboxSelect>>", cur_selection23)
 
     
 def act_button3():
-    canvas = Canvas(root)
-    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    gif2 = PhotoImage( file="dog2.gif")
-    canvas.create_image(100,100, image=gif2)
-#    canvas.gif2 = gif2
-    list(gif2)
-    listcounter(False)
+    lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb31.grid(row=4, column=1, sticky="nsew")
+    ## Adding scrollbar for lb31
+    scroll_fun(lb31)
+
+    for i in excel1_columns:
+        lb31.insert(END, i)
+    a = lb31.curselection()
+    for i in a:
+        print(lb31.get(i))
+    def cur_selection31(*x):
+        global value31
+        value31 = (lb31.get(lb31.curselection()))
+        print (value31)
+    lb31.bind("<<ListboxSelect>>", cur_selection31)
+   
+    lb32 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb32.grid(row=4, column=2, sticky="nsew")
+    ## Adding scrollbar for lb32
+    scroll_fun(lb32)
+
+    for y in excel1_columns:
+        lb32.insert(END, y)
+    b = lb32.curselection()
+    for y in a:
+        print (lb32.get(y))
+    def cur_selection32(*y):
+        global value32
+        value22 = lb32.get(lb32.curselection())
+        print (value32)
+    lb32.bind("<<ListboxSelect>>", cur_selection32)
+    
+    lb33 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb33.grid(row=4, column=3, sticky="nsew")
+    # ## Adding scrollbar for lb33
+    # scroll_fun(lb33)
+
+    for z in excel1_columns:
+        lb33.insert(END, z)
+    b = lb33.curselection()
+    for z in a:
+        print (lb33.get(z))
+    def cur_selection33(*z):
+        global value33
+        value33 = (lb33.get(lb33.curselection()))
+        print (value33)
+    lb33.bind("<<ListboxSelect>>", cur_selection33)    
+
     
 def act_button4():
     canvas = Canvas(root)
@@ -140,12 +305,18 @@ def act_button5():
     canvas.create_image(100,100, image=gif4)
     list(gif4)
     listcounter(False)
+
+
+
+    
+
+## FUNCTIONS OF SUPPORT BUTTONS
     
 def act_download():
     tkinter.messagebox.showinfo("Statistic 1","No download for you money-boy")
     
 def act_go():
-    tkinter.messagebox.showinfo("Go on with the command")
+    tkinter.messagebox.showinfo("Your selection is:", value61 )
     
 def act_add():
     tkinter.messagebox.showinfo("Statistic 1","No add for you. I don't like your face")
@@ -178,62 +349,38 @@ def forwardbutton():
 def openInstrucktion():
     os.startfile("Instructions.pdf")
 
-def selection():
-    lb = Listbox(root, selectmode=EXTENDED)
-    lb.grid(row=7, column=1, sticky="nsew")
-    for i in excel1_columns:
-        lb.insert(END,i)
-    a = lb.curselection()
-    for i in a:
-        print(lb.get(i))
 
 
 
+## CREATE BUTTONS CODE
 
-
-        
-
-    
-##Create the Buttons 
-buttonex1 = Button(root, text="Excel file 1", command=ex1_button)
-buttonex1.grid(row=1, column=0, sticky="ew")
-
-buttonex2 = Button(root, text="Excel file 2", command=ex2_button)
-buttonex2.grid(row=1, column=2, sticky="ew")
-
-button1 = Button(root,text="Calculation", command=act_button1)
+button1 = Button(root,text="Average amount of residues \n per Client for \n Crop/Time span", command=act_button1)
 button1.grid(row=2, column=0, sticky="nsew")
-entry11 = Entry(root)
-entry11.grid(row=2, column=1, sticky="ew")
-entry12 = Entry(root)
-entry12.grid(row=2, column=2, sticky="ew")
 
-button2 = Button(root,text="DOG", command=act_button2)
+
+button2 = Button(root,text="Average amount of residues \n per Crop for \n Client/Time span", command=act_button2)
 button2.grid(row=3, column=0, sticky="nsew")
-entry21 = Entry(root)
-entry21.grid(row=3, column=1, sticky="ew")
-entry22 = Entry(root)
-entry22.grid(row=3, column=2, sticky="ew")
-entry32 = Entry(root)
-entry32.grid(row=3, column=3, sticky="ew")
+#entry21 = Entry(root)
+#entry21.grid(row=3, column=1, sticky="ew")
+#entry22 = Entry(root)
+#entry22.grid(row=3, column=2, sticky="ew")
+#entry32 = Entry(root)
+#entry32.grid(row=3, column=3, sticky="ew")
 
-button3 = Button(root,text="Statistic 3", command=act_button3)
+button3 = Button(root,text="Average concentration of compound \n in a product in time", command=act_button3)
 button3.grid(row=4, column=0, sticky="nsew")
-entry31 = Entry(root)
-entry31.grid(row=4, column=1, sticky="ew")
-entry32 = Entry(root)
-entry32.grid(row=4, column=2, sticky="ew")
 
-button4 = Button(root,text="Statistic 4", command=act_button4)
+
+
+button4 = Button(root,text="Average of compound per crop \n over a certain time span", command=act_button4)
 button4.grid(row=5, column=0, sticky="nsew")
 entry41 = Entry(root)
 entry41.grid(row=5, column=1, sticky="ew")
 entry42 = Entry(root)
 entry42.grid(row=5, column=2, sticky="ew")
-entry42 = Entry(root)
-entry42.grid(row=5, column=3, sticky="ew")
 
-button5 = Button(root,text="Statistic 5", command=act_button5)
+
+button5 = Button(root,text="Average number of molecules per crop \n over a certain time span", command=act_button5)
 button5.grid(row=6, column=0, sticky="nsew")
 entry51 = Entry(root)
 entry51.grid(row=6, column=1, sticky="ew")
@@ -241,30 +388,31 @@ entry52 = Entry(root)
 entry52.grid(row=6, column=2, sticky="ew")
 
 
-button6 = Button(root,text="residues_graph", command=selection)
+button6 = Button(root,text="Graph on number of samples \n per product/cultivar") #command= lambda: [f() for f in [selection61, selection62]])
 button6.grid(row=7, column=0, sticky="nsew")
-
-
+entry61 = Entry(root)
+entry61.grid(row=7, column=1, sticky="ew")
 entry62 = Entry(root)
 entry62.grid(row=7, column=2, sticky="ew")
 entry62 = Entry(root)
 entry62.grid(row=7, column=3, sticky="ew")
 
-button7 = Button(root,text="Statistic 7")
+
+button7 = Button(root,text="Graph on total number of products \n for a client")
 button7.grid(row=8, column=0, sticky="nsew")
 entry71 = Entry(root)
 entry71.grid(row=8, column=1, sticky="ew")
-entry72 = Entry(root)
-entry72.grid(row=8, column=2, sticky="ew")
 
-button8 = Button(root,text="Statistic 8")
+
+button8 = Button(root,text="Graph on percentage of samples \n that exceeds the limit in timeline")
 button8.grid(row=9, column=0, sticky="nsew")
 entry81 = Entry(root)
 entry81.grid(row=9, column=1, sticky="ew")
-entry82 = Entry(root)
-entry82.grid(row=9, column=2, sticky="ew")
-entry82 = Entry(root)
-entry82.grid(row=9, column=3, sticky="ew")
+
+button9 = Button(root, text="Graph on clients \n always,sometimes and never \n exceeding the limit")
+button9.grid(row=9, column=2, sticky="nsew")
+entry92 = Entry(root)
+entry92.grid(row=9, column=3, sticky="ew")
 
 backbutton = Button(root, text= "Previous Screen", command = backbutton)
 backbutton.grid(row=10, column=4, sticky="ewsn")
@@ -280,6 +428,12 @@ buttonDownload.grid(row=10, column=0, columnspan=2, sticky="nsew")
 
 buttonGo = Button(root, text="GO!", bg="blue", command=act_go)
 buttonGo.grid(row=10, column=3, sticky="nsew")
+
+buttonex1 = Button(root, text="Excel file 1", command=ex1_button)
+buttonex1.grid(row=1, column=0, sticky="ew")
+
+buttonex2 = Button(root, text="Excel file 2", command=ex2_button)
+buttonex2.grid(row=1, column=2, sticky="ew")
 
 textBox=Text(root)
 infophoto = PhotoImage( file="infobutton.png")
