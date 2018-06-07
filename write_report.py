@@ -98,9 +98,9 @@ def make_pdf(list_of_funct, title="SATAlytics Report"):
 
     #get unique file names based on version:
     while os.path.isfile(report_name):
-        # os.remove(report_name) #figure out better solution
-        report_name = "{} {} ({}).pdf".format(title, time.strftime("%Y%m%d"), version)
+        # os.remove(report_name)
         version += 1
+        report_name = "{} {} ({}).pdf".format(title, time.strftime("%Y%m%d"), version)
     
     html_temp = create_temp(list_of_funct)
 
