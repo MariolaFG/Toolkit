@@ -71,10 +71,12 @@ def clients_graph(resultfile, date = "all"):
     return client_dic
 
 
-def product_type(resultfile):
+def product_type(resultfile, function):
     """ This function produces a pie chart with the total percentages of 
     compounds.
     No variables needed. Not used.
+
+    function -- string, describes function
     """
 
     labels = {}
@@ -105,11 +107,15 @@ def product_type(resultfile):
     max_labels.append("Other")
     colors = ['lightskyblue', 'lightblue', 'cyan', "coral", "gold",\
               "lightcoral", "lavender", "cyan", "lime", "lightgreen","aquamarine"]
+    fig = plt.figure() #MT - changed
     plt.xticks(rotation='vertical')
     plt.pie(np.array(sizes), labels=max_labels, shadow=True, explode=explode, \
             startangle=120, autopct='%1.1f%%', pctdistance=0.8, colors=colors)
     plt.title("Total percentage of Compounds", fontsize= 16)
-    plt.show()
+    # plt.show() - MT - changed
+    fig_name = "{}.png".format(function)
+    fig.savefig(fig_name) #MT - changed
+    return(fig_name)
 
 def samples_product_type(resultfile, client = "all"):
     """ This function creates a graph on number of samples per product/cultivar
@@ -570,8 +576,8 @@ def number_of_molecules(resultfile, date = "all"):
         labels.append(element)
         explode.append(0.1)
         
-    print total_prev
-    print len(list(set(resultfile["Prova"].tolist())))
+    print (total_prev)
+    print (len(list(set(resultfile["Prova"].tolist()))))
     other = 0
     for element in prod:
         if not element in max_labels:

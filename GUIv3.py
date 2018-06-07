@@ -11,20 +11,21 @@ import pandas as pd
 
 #MT - added import:
 from write_report import make_pdf
+from function import product_type
 
 root = Tk()
 
 ## Create the main window
-root.title("Savi Analytics")
-root.geometry("1000x800")
-width_of_window = 1000
-height_of_window = 800
+root.title("SATAlytics")
+root.geometry("500x400")
+width_of_window = 500
+height_of_window = 400
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x_coordinate = (screen_width/2) - (width_of_window/2) ## Make it pop up at the center of the screen
 y_coordinate = (screen_height/2) - (height_of_window/2)
 root.geometry("%dx%d+%d+%d" % (width_of_window,height_of_window,x_coordinate,y_coordinate))
-label = tkinter.Label(root,text="Welcome to SAVI Analytics")
+label = tkinter.Label(root,text="Welcome to SATAlytics")
 label.config(font=("Comic", 20))
 label.grid(row=0, column=3, columnspan=4)
 
@@ -89,23 +90,29 @@ def listcounter(x):
     else:
         back_next_counter = back_next_counter + 1
 
+def create_global_curr_fig(fig):
+    """ Creates global of current figure.
 
-global temp_curr_tuple #temporarily holds (title, fig)
-
-def final_save():
-    """ Returns list of saved function with image [(title, fig)]
-
+    fig -- string, name of figure
     """
-    global saved_list
-    saved_list = [
-                ("Function 1", 
-                "..\\HTML\\Images\\bp.png"),
-                ("Function 2",
-                "..\\HTML\\Images\\dp.png"),
-                ("Function 3",
-                "..\\HTML\\Images\\pc.png")
-                ]
-    return(saved_list)
+    global current_figure
+    current_figure = fig
+
+
+# def final_saved():
+#     """ Returns list of saved function with image [fig]
+
+#     """
+#     global saved_list
+#     saved_list = [
+#                 ("Function 1", 
+#                 "..\\HTML\\Images\\bp.png"),
+#                 ("Function 2",
+#                 "..\\HTML\\Images\\dp.png"),
+#                 ("Function 3",
+#                 "..\\HTML\\Images\\pc.png")
+#                 ]
+#     return(saved_list)
     
 
 ## FUNCTIONS OF EXCEL BUTTONS
@@ -310,14 +317,19 @@ def act_button4():
     list(gif3)
     listcounter(False)
 
+
 def act_button5():
+    # works but GUI can't close
+    # resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
+    # fig = product_type(resultfile,"Function_5" )
+    fig = "cat.png"
     canvas = Canvas(root)
     canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    gif4 = PhotoImage( file="cat1.png")
-    canvas.create_image(100,100, image=gif4)
-    list(gif4)
+    img = PhotoImage( file=fig)
+    canvas.create_image(100,100, image=img)
+    list(img)
     listcounter(False)
-
+    create_global_curr_fig(fig)
 
 
     
@@ -330,8 +342,8 @@ def act_download():
     saved_list -- list of tuples [(title, functions)]
     """
     try:
-        a = final_save()
-        make_pdf(a)
+        # saved_list = final_save()
+        make_pdf(saved_list)
     except:
         tkinter.messagebox.showinfo("Download report",
                 "Unable to download report.")
@@ -339,8 +351,21 @@ def act_download():
 def act_go():
     tkinter.messagebox.showinfo("Your selection is:", value61 )
     
+
 def act_add():
-    tkinter.messagebox.showinfo("Statistic 1","No add for you. I don't like your face")
+    selection = current_figure.partition(".")[0]
+
+    if not 'saved_list' in globals():
+        global saved_list
+        saved_list = [(selection, "..\\\{}".format(current_figure))]
+    else:
+        saved_list += [(selection, "..\\\{}".format(current_figure))]
+
+    print(saved_list)
+
+    tkinter.messagebox.showinfo("Add figure to report", 
+        "\"{}\" is added to the report.".format(selection))
+
 
 def backbutton():
     if back_next_counter >= 1:
@@ -464,7 +489,4 @@ buttoninfo.grid(row=0, column=10, sticky="ew")
 canvas = Canvas(root, bg="black")
 canvas.grid(row=1,column=5,rowspan=9,columnspan=9, sticky="nwes")
 
-
 root.mainloop()
-
-# 
