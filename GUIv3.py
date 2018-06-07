@@ -357,9 +357,9 @@ def act_add():
 
     if not 'saved_list' in globals():
         global saved_list
-        saved_list = [(selection, "..\\\{}".format(current_figure))]
+        saved_list = [(selection, "..\\{}".format(current_figure))]
     else:
-        saved_list += [(selection, "..\\\{}".format(current_figure))]
+        saved_list += [(selection, "..\\{}".format(current_figure))]
 
     print(saved_list)
 
