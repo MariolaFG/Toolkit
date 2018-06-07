@@ -29,7 +29,7 @@ def write_header(rep_name="SATAlytics Report", title="SATAlytics",
     figure -- string, logo of SAVI, default: #have to find out how
     """
     template = env.get_template("header.html")
-    fig_path = "..\\HTML\\Images\\Logo.png" #Should be changed
+    fig_path = "..\\HTML\\Images\\Logo.png" 
     variables = {"title" : title,
                  "report_name" : rep_name,
                  "figure" : fig_path,
@@ -53,88 +53,88 @@ def write_toc():
 
 
     
-def write_function(title, fig, alt_name):
+def write_function(title, fig):
     """ Returns HTML file with statistcal output.
 
-    title -- string, describes function
-    fig -- string ###SHOULD BE CHANGED!
-    alt_name -- string, name if image cannot be displayed
-    txt -- string, text describing figure
+    title -- string, name of function
+    fig -- string, path to fig
     """
     template = env.get_template("function.html")
     variables = {"title" : title,
-                 "figure" : fig,
-                 "alt_name" : alt_name
+                 "figure" : fig
                  # "text" : txt
                  }
     html_out = template.render(variables)
     return(html_out)
 
 
+def write_EOF():
+    """ Returns HTML file with end of file and footer.
+
+    """
+    template = env.get_template("EOF.html")
+    html_out = template.render()
+    return(html_out)
+
+
+def write_test():
+    """ Returns HTML file with end of file and footer.
+
+    """
+    template = env.get_template("interior.html")
+    html_out = template.render()
+    return(html_out)
+
+
 # def make_pdf(html_temp, title="SATAlytics Report"):    
-def make_pdf(title="SATAlytics Report"):
+def make_pdf(list_of_funct, title="SATAlytics Report"):
     """ Creates a PDF from a HTML template with date of today.
 
     html_temp -- html, template
     title -- string, title of report, default: SAVI Analytics Report 
     """   
-
+    version = 0
     report_name = "{} {}.pdf".format(title, time.strftime("%Y%m%d"))
 
-    if os.path.isfile(report_name):
-        os.remove(report_name) #figure out better solution
-    ## this would be better: 
-    #os.path.exists(file_path)
-    ## have to know file path
+    #get unique file names based on version:
+    while os.path.isfile(report_name):
+        # os.remove(report_name) #figure out better solution
+        report_name = "{} {} ({}).pdf".format(title, time.strftime("%Y%m%d"), version)
+        version += 1
     
-    html_temp = create_temp()
-    # write end of file to template :
-    temp_EOF = env.get_template("EOF.html")
-    html_temp += temp_EOF.render()
+    html_temp = create_temp(list_of_funct)
 
-    # create_global_env()
-    # temp = env.get_template("total.html")
-    # html_temp = temp.render()
-    print(html_temp)
+    # print(html_temp)
 
     # generate PDF :
     report = open(report_name, "w+b")
     pisa_status = pisa.CreatePDF(html_temp, dest=report)
     report.close()
-    print(pisa_status.err) #True on succes, False on error
     os.startfile(report_name)
+    return(pisa_status.err) #True on succes, False on error
     
 
-def create_temp():
+def create_temp(list_of_funct):
     """ Returns HTML template.
-
+    
+    list_of_funct -- list of tuples of strings [(title, fig, alt)]
     """
 
     create_global_env()
 
     # write start of file to template
     html_file = write_header()
-    # html_file += write_toc()
+    html_file += write_toc()
     # write body to template
-    html_file += write_function("Function 1",
-                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
-                                 "Marijke")
-    html_file += write_function("Function 2",
-                                 "C:\\Users\\marij\\Dropbox\\Wageningen\\ACT\\Toolkit_Work\\Toolkit\\HTML\\Images\\test_fig.png",
-                                 "Marijke")
+    for i in range(len(list_of_funct)):
+        html_file += write_function(list_of_funct[i][0],
+                     list_of_funct[i][1])   
 
+    html_file += write_EOF()
+
+    # html_file = write_test()
     
     return (html_file)
-
-
-##def write_to_template(var1, var2, var3)
-##    """ Returns HTML file of header, statistical method with figure
-##
-##    var1 -- string, variable 1
-##    var2 -- string, variable 2
-##    var3 -- string, variable 3
-##    """
-##    #use case ... if ...
 
 
 def create_global_env():
@@ -147,7 +147,16 @@ def create_global_env():
 
 
 if __name__ == '__main__':
-    make_pdf()
+    func_list = [
+                ("Function 1", 
+                "..\\HTML\\Images\\bp.png"),
+                ("Function 2",
+                "..\\HTML\\Images\\dp.png"),
+                ("Function 3",
+                "..\\HTML\\Images\\pc.png")
+                ]
+
+    make_pdf(func_list)
     # make_pdf(create_temp())
     
 
