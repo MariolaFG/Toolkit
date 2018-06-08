@@ -9,20 +9,23 @@ import os.path
 import numpy as np
 import pandas as pd
 
+#MT - added import:
+from write_report import make_pdf
+from function import product_type
 
 root = Tk()
 
 ## Create the main window
-root.title("Savi Analytics")
-root.geometry("1000x800")
-width_of_window = 1000
-height_of_window = 800
+root.title("SATAlytics")
+root.geometry("500x400")
+width_of_window = 500
+height_of_window = 400
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x_coordinate = (screen_width/2) - (width_of_window/2) ## Make it pop up at the center of the screen
 y_coordinate = (screen_height/2) - (height_of_window/2)
 root.geometry("%dx%d+%d+%d" % (width_of_window,height_of_window,x_coordinate,y_coordinate))
-label = tkinter.Label(root,text="Welcome to SAVI Analytics")
+label = tkinter.Label(root,text="Welcome to SATAlytics")
 label.config(font=("Comic", 20))
 label.grid(row=0, column=3, columnspan=4)
 
@@ -70,22 +73,46 @@ def pre_proc(excel_file,column_name):
         unique_values = np.unique(without_nan) # Here we keep only the unique values
         return unique_values
     except KeyError:
-        tkinter.messagebox.showinfo("Name is not a column title in the excel file",column_name)
+        tkinter.messagebox.showinfo("Name missing",column_name)
         pass
 
 
 imagelist = []
-i = -1
+back_next_counter = -1
 def list(item):
     global imagelist    
     imagelist.append(item)
 
 def listcounter(x):
-    global i
+    global back_next_counter
     if x == True:
-        i = i -1
+        back_next_counter = back_next_counter -1
     else:
-        i = i + 1
+        back_next_counter = back_next_counter + 1
+
+def create_global_curr_fig(fig):
+    """ Creates global of current figure.
+
+    fig -- string, name of figure
+    """
+    global current_figure
+    current_figure = fig
+
+
+# def final_saved():
+#     """ Returns list of saved function with image [fig]
+
+#     """
+#     global saved_list
+#     saved_list = [
+#                 ("Function 1", 
+#                 "..\\HTML\\Images\\bp.png"),
+#                 ("Function 2",
+#                 "..\\HTML\\Images\\dp.png"),
+#                 ("Function 3",
+#                 "..\\HTML\\Images\\pc.png")
+#                 ]
+#     return(saved_list)
     
 
 ## FUNCTIONS OF EXCEL BUTTONS
@@ -124,14 +151,6 @@ def act_button1():
     ## Some pre-process to the excel file to make it visible to the user
     global excel1_specific_column_uniq_val1
     excel1_specific_column_uniq_val1 = pre_proc(excel1,'Cliente')
-
-    # try:
-    #     excel1_specific_column1 = excel1['Cliente']  # Here we chose the column that we want to choose a value from
-    #     excel1_specific_column_withoutNAN1 = excel1_specific_column1[pd.isna(excel1_specific_column1) == FALSE] # Here we keep the column without the NaN values
-    #     excel1_specific_column_uniq_val1 = np.unique(excel1_specific_column_withoutNAN1) # Here we keep only the unique values
-    # except KeyError:
-    #     tkinter.messagebox.showinfo("Name Error","Name 'Cliente' is not a column title in the excel file")
-    #     pass
 
     global excel1_specific_column_uniq_val2
     excel1_specific_column_uniq_val2 = pre_proc(excel1,'Gruppo_prodotto')
@@ -298,14 +317,19 @@ def act_button4():
     list(gif3)
     listcounter(False)
 
+
 def act_button5():
+    # works but GUI can't close
+    # resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
+    # fig = product_type(resultfile,"Function_5" )
+    fig = "cat.png"
     canvas = Canvas(root)
     canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    gif4 = PhotoImage( file="cat1.png")
-    canvas.create_image(100,100, image=gif4)
-    list(gif4)
+    img = PhotoImage( file=fig)
+    canvas.create_image(100,100, image=img)
+    list(img)
     listcounter(False)
-
+    create_global_curr_fig(fig)
 
 
     
@@ -313,36 +337,58 @@ def act_button5():
 ## FUNCTIONS OF SUPPORT BUTTONS
     
 def act_download():
-    tkinter.messagebox.showinfo("Statistic 1","No download for you money-boy")
-    
+    """ Downloads PDF report. 
+
+    saved_list -- list of tuples [(title, functions)]
+    """
+    try:
+        # saved_list = final_save()
+        make_pdf(saved_list)
+    except:
+        tkinter.messagebox.showinfo("Download report",
+                "Unable to download report.")
+
 def act_go():
     tkinter.messagebox.showinfo("Your selection is:", value61 )
     
+
 def act_add():
-    tkinter.messagebox.showinfo("Statistic 1","No add for you. I don't like your face")
+    selection = current_figure.partition(".")[0]
+
+    if not 'saved_list' in globals():
+        global saved_list
+        saved_list = [(selection, "..\\{}".format(current_figure))]
+    else:
+        saved_list += [(selection, "..\\{}".format(current_figure))]
+
+    print(saved_list)
+
+    tkinter.messagebox.showinfo("Add figure to report", 
+        "\"{}\" is added to the report.".format(selection))
+
 
 def backbutton():
-    if i >= 1:
+    if back_next_counter >= 1:
         canvas = Canvas(root)
         canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[i - 1])
+        canvas.create_image(100,100, image=imagelist[back_next_counter - 1])
         listcounter(True)
     else:
         canvas = Canvas(root)
         canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[i])
+        canvas.create_image(100,100, image=imagelist[back_next_counter])
         tkinter.messagebox.showinfo("ERROR","No more graphs")
     
 def forwardbutton():
     try:
         canvas = Canvas(root)
         canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[i + 1])
+        canvas.create_image(100,100, image=imagelist[back_next_counter + 1])
         listcounter(False)
     except IndexError:
         canvas = Canvas(root)
         canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[i])
+        canvas.create_image(100,100, image=imagelist[back_next_counter])
         tkinter.messagebox.showinfo("ERROR","No more graphs")
         pass
 
@@ -354,11 +400,11 @@ def openInstrucktion():
 
 ## CREATE BUTTONS CODE
 
-button1 = Button(root,text="Average amount of residues \n per Client for \n Crop/Time span", command=act_button1)
+button1 = Button(root,text="1. Graph on average amount of residues \n per client for a single crop \n in a certain time span", command=act_button1)
 button1.grid(row=2, column=0, sticky="nsew")
 
 
-button2 = Button(root,text="Average amount of residues \n per Crop for \n Client/Time span", command=act_button2)
+button2 = Button(root,text="2. Graph on average amount of a certain compound \n per crop per year \n for all clients", command=act_button2)
 button2.grid(row=3, column=0, sticky="nsew")
 #entry21 = Entry(root)
 #entry21.grid(row=3, column=1, sticky="ew")
@@ -367,12 +413,12 @@ button2.grid(row=3, column=0, sticky="nsew")
 #entry32 = Entry(root)
 #entry32.grid(row=3, column=3, sticky="ew")
 
-button3 = Button(root,text="Average concentration of compound \n in a product in time", command=act_button3)
+button3 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command=act_button3)
 button3.grid(row=4, column=0, sticky="nsew")
 
 
 
-button4 = Button(root,text="Average of compound per crop \n over a certain time span", command=act_button4)
+button4 = Button(root,text="", command=act_button4)
 button4.grid(row=5, column=0, sticky="nsew")
 entry41 = Entry(root)
 entry41.grid(row=5, column=1, sticky="ew")
@@ -380,7 +426,7 @@ entry42 = Entry(root)
 entry42.grid(row=5, column=2, sticky="ew")
 
 
-button5 = Button(root,text="Average number of molecules per crop \n over a certain time span", command=act_button5)
+button5 = Button(root,text="5. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button5)
 button5.grid(row=6, column=0, sticky="nsew")
 entry51 = Entry(root)
 entry51.grid(row=6, column=1, sticky="ew")
@@ -388,7 +434,7 @@ entry52 = Entry(root)
 entry52.grid(row=6, column=2, sticky="ew")
 
 
-button6 = Button(root,text="Graph on number of samples \n per product/cultivar") #command= lambda: [f() for f in [selection61, selection62]])
+button6 = Button(root,text="3. Chart on number of samples per product \n collected by SATA in a certain year") #command= lambda: [f() for f in [selection61, selection62]])
 button6.grid(row=7, column=0, sticky="nsew")
 entry61 = Entry(root)
 entry61.grid(row=7, column=1, sticky="ew")
@@ -398,18 +444,18 @@ entry62 = Entry(root)
 entry62.grid(row=7, column=3, sticky="ew")
 
 
-button7 = Button(root,text="Graph on total number of products \n for a client")
+button7 = Button(root,text="6. Graph on total number of products \n for a client")
 button7.grid(row=8, column=0, sticky="nsew")
 entry71 = Entry(root)
 entry71.grid(row=8, column=1, sticky="ew")
 
 
-button8 = Button(root,text="Graph on percentage of samples \n that exceeds the limit in timeline")
+button8 = Button(root,text="7. Chart on percentage of samples \n that exceeds the limit in one year")
 button8.grid(row=9, column=0, sticky="nsew")
 entry81 = Entry(root)
 entry81.grid(row=9, column=1, sticky="ew")
 
-button9 = Button(root, text="Graph on clients \n always,sometimes and never \n exceeding the limit")
+button9 = Button(root, text="8. Chart on clients \n always-sometimes-never \n exceeding the limit per year")
 button9.grid(row=9, column=2, sticky="nsew")
 entry92 = Entry(root)
 entry92.grid(row=9, column=3, sticky="ew")
@@ -441,7 +487,6 @@ buttoninfo = Button(root, image=infophoto, height=20, width=20, command=openInst
 buttoninfo.grid(row=0, column=10, sticky="ew")
 
 canvas = Canvas(root, bg="black")
-canvas.grid(row=1,column=4,rowspan=9,columnspan=10, sticky="nwes")
-
+canvas.grid(row=1,column=5,rowspan=9,columnspan=9, sticky="nwes")
 
 root.mainloop()
