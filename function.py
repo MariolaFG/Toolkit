@@ -15,7 +15,7 @@ def number_clients(infofile, date):
     
     return len(infofile[infofile["ANNO"]==str(date)])
 
-def clients_graph(resultfile, date = "all"):
+def clients_graph(resultfile, date = "all"): ## 8
     """ This function produces a Graph on clients always, sometimes and never 
     exceeding the limit. 
     
@@ -117,7 +117,7 @@ def product_type(resultfile, function):
     fig.savefig(fig_name) #MT - changed
     return(fig_name)
 
-def samples_product_type(resultfile, client = "all"):
+def samples_product_type(resultfile, client = "all"): # n.6 and n.3
     """ This function creates a graph on number of samples per product/cultivar
     Variables:
         - Client = optional"""
@@ -162,7 +162,7 @@ def samples_product_type(resultfile, client = "all"):
     
 
 
-def threshold_pie(resultfile, date="all"):
+def threshold_pie(resultfile, date="all"): ## 7
     """ This function creates a graph on percentage of samples that exceeds 
     the limit in timeline.
     Variables:
@@ -206,7 +206,7 @@ def threshold_pie(resultfile, date="all"):
     
     return list2.count("Maggiore o uguale a 100")
 
-def residues_graph(resultfile, client, crop, date = "all"):
+def residues_graph(resultfile, client, crop, date = "all"): ## n.1
     """ This function creates a graph on average amount of residues per client 
     for a single crop in a certain time span, including the limit. 
     Variables:
@@ -314,7 +314,7 @@ def residues_graph(resultfile, client, crop, date = "all"):
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/Kl'))
             plt.show()
 
-def residues_graph_esp(resultfile, client, crop, compound):   
+def residues_graph_esp(resultfile, client, crop, compound):  ## 2 
     """ This function creates a graph with the average concentration of a compound 
     through the year for a single client.
     Variables:
@@ -372,7 +372,7 @@ def residues_graph_esp(resultfile, client, crop, compound):
     plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/Kl'))
     plt.show()
 
-def bar_per_sample(resultfile, client, crop, compound, date = "all"):
+def bar_per_sample(resultfile, client, crop, compound, date = "all"): #n.4
     """ This function gives a graph with each individual concentration of a 
     compound for a especific client and crop.
     Variables:
@@ -595,7 +595,7 @@ def number_of_molecules(resultfile, date = "all"):
  
 if __name__ == "__main__":
     
-    resultfile = pd.read_excel("prove_16-17.xlsx", sheetname=0)
+#    resultfile = pd.read_excel("prove_16-17.xlsx", sheetname=0)
     infofile = pd.read_excel("campioni-16-18.xlsx", sheetname=0)
     date = 2018
     product = "Riso"
