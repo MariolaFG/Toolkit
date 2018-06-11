@@ -1,10 +1,7 @@
-import tkinter  # IS THIS ONE NECESSARY?
 import sys
 import tkinter.messagebox
-from functools import partial
 from tkinter import *
-from tkinter import filedialog
-from tkinter.filedialog import askopenfilename
+from functools import partial
 import os.path
 import numpy as np
 import pandas as pd
