@@ -80,7 +80,7 @@ def pre_proc(excel_file,column_name):
         tkinter.messagebox.showinfo("Missing column", "The column \"{}\" is missing.".format(column_name))
 
  
-def timed_msgbox(msg, top_title="Selection successful", duration=2000):
+def timed_msgbox(msg, top_title="Selection successful", duration=800):
     """ Display messagebox that closes after specified time.
     
     msg -- string, message to display
@@ -92,7 +92,6 @@ def timed_msgbox(msg, top_title="Selection successful", duration=2000):
     Message(top, text=msg, padx=20, pady=20).pack()
     top.after(duration, top.destroy)
 
-timed_msgbox("Hello Marijke")
 
 imagelist = []
 back_next_counter = -1
@@ -219,10 +218,6 @@ def act_button2():
     """ Shows listboxes for product, compound and year 
     to select from for function 2.  
     """
-    # check if values are selected from listbox
-    global selected_value21
-    selected_value21 = False
-
     # create listboxes
     lb21 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb21.grid(row=3, column=1, sticky="nsew")
@@ -231,49 +226,49 @@ def act_button2():
 
     for i in excel1_specific_column_uniq_Gruppo_prodotto:
         lb21.insert(END, i)
-    a = lb21.curselection()
-    for i in a:
-        print(lb21.get(i))
+
     def cur_selection21(*x):
+        # global selected_value21
         global value21
-        value21 = (lb21.get(lb21.curselection()))
-        print (value21)
-        select_value21 = True
+        value21 = lb21.get(lb21.curselection())
+        # selected_value21 = True
+
+        # show timed messagebox
+        select_msg = "You selected \"{}\".".format(value21)
+        timed_msgbox(select_msg)
+        act_lb22()
     lb21.bind("<<ListboxSelect>>", cur_selection21)
 
-    # show timed messagebox
-    select_msg = "You selected \"{}\".".format(value21)
-    timed_msgbox(select_msg)
 
-#     act_lb22()
+def act_lb22():
+    """ Changes selection for Listbox 2 of function 2.
 
-# def act_lb22():
-#     """ Changes selection for Listbox 2 of function 2.
+    """ 
+    # create Listbox 
+    lb22 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb22.grid(row=3, column=2, sticky="nsew")
+    ## Adding scrollbar for lb22
+    scroll_fun(lb22)
 
-#     """ 
-#     # create Listbox  
-#     lb22 = Listbox(root, selectmode=EXTENDED, exportselection=0)
-#     lb22.grid(row=3, column=2, sticky="nsew")
-#     ## Adding scrollbar for lb22
-#     scroll_fun(lb22)
+    # if selected_value21 == False:
+    #     for y in excel1_specific_column_uniq_Prova:
+    #         lb22.insert(END, y)
+    # elif selected_value21 == True:
+    adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
+    unique_prova = pre_proc(adjusted_excel, "Prova")
+    for y in unique_prova:
+        lb22.insert(END, y)
+    b = lb22.curselection()
 
-#     if selected_value21 == False:
-#         for y in excel1_specific_column_uniq_Prova:
-#             lb22.insert(END, y)
-#     else:
-#         adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
-#         # adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21] #this works, but how to change selection
-#         unique_prova = pre_proc(adjusted_excel, "Prova")
-#         for y in unique_prova:
-#             lb22.insert(END, y)
-#     b = lb22.curselection()
-#     for y in b:
-#         print (lb22.get(y))
-#     def cur_selection22(*y):
-#         global value22
-#         value22 = lb22.get(lb22.curselection())
-#         print (value22)
-#     lb22.bind("<<ListboxSelect>>", cur_selection22)
+    def cur_selection22(*y):
+        global value22
+        value22 = lb22.get(lb22.curselection())
+
+        # show timed messagebox
+        select_msg = "You selected \"{}\".".format(value22)
+        timed_msgbox(select_msg)
+        act_lb22()
+    lb22.bind("<<ListboxSelect>>", cur_selection22)
     
 #     lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
 #     lb23.grid(row=3, column=3, sticky="nsew")
