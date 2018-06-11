@@ -4,11 +4,11 @@
 Module to create a PDF report with ReportLab.
 """
 
-from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from reportlab.platypus import Paragraph, Frame
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Paragraph, Frame
 # from reportlab.pdfbase.ttfonts import TTFont  # other fonts
 import os.path
 import time
@@ -190,7 +190,7 @@ def footer(c, pages=1):
 
     # display copyright
     c.setFont("Courier", 9, leading=None)
-    page = c.getPageNumber() ## use?
+    page = c.getPageNumber()
     c.drawString(65, 20, 
         "(c) SATAlytics by SATA s.l.r.")
 
@@ -200,7 +200,7 @@ def footer(c, pages=1):
 
 
 def side_bar(c):
-    """Sets side_bar
+    """Sets side_bar.
 
     c -- canvas
     """
@@ -208,8 +208,8 @@ def side_bar(c):
     c.setStrokeColorRGB(70/256, 165/256, 66/256)
     c.rect(20, 0, 25, 850, stroke=1, fill=1)
 
-# # ####
-# # What is bookmarkpage()
+
+
 
 if __name__ == '__main__':
     fake_list = [("Marijke", "Images\\dp.png"), 
