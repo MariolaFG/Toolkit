@@ -8,7 +8,7 @@ from tkinter.filedialog import askopenfilename
 import os.path
 import numpy as np
 import pandas as pd
-from write_report import make_pdf # takes list of tuples [(title, fig)]
+from reportlab_report import make_pdf # takes list of tuples [(title, fig)]
 from function import product_type
 
 
@@ -97,22 +97,6 @@ def create_global_curr_fig(fig):
     """
     global current_figure
     current_figure = fig
-
-## USED THIS FOR FAKE REPORT
-# def final_saved():
-#     """ Returns list of saved function with image [fig]
-
-#     """
-#     saved_list = []
-#     saved_list = [
-#                 ("Function 1", 
-#                 "..\\HTML\\Images\\bp.png"),
-#                 ("Function 2",
-#                 "..\\HTML\\Images\\dp.png"),
-#                 ("Function 3",
-#                 "..\\HTML\\Images\\pc.png")
-#                 ]
-#     return(saved_list)
 
 
 ## FUNCTIONS OF EXCEL BUTTONS
@@ -316,9 +300,9 @@ def act_button3():
 
 def act_button4():
     # works but GUI can't close
-    resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
-    fig = product_type(resultfile,"Function_5" )
-    # fig = "cat.png"
+    # resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
+    # fig = product_type(resultfile,"Function_5" )
+    fig = "cat.png"
     canvas = Canvas(root)
     canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
     img = PhotoImage( file=fig)
@@ -432,7 +416,6 @@ def act_download():
     saved_list -- list of tuples [(title, functions)]
     """
     try:
-        # saved_list = final_save() #USE THIS FOR FAKE REPORT
         make_pdf(saved_list)
     except:
         tkinter.messagebox.showinfo("Download report",
@@ -447,9 +430,10 @@ def act_add():
 
     if not 'saved_list' in globals():
         global saved_list
-        saved_list = [(selection, "..\\{}".format(current_figure))]
+        saved_list = [(selection, current_figure)]
+        #"{}".format(current_figure)
     else:
-        saved_list += [(selection, "..\\{}".format(current_figure))]
+        saved_list += [(selection, current_figure)]
 
     print(saved_list)
 

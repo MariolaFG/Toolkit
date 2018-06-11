@@ -4,11 +4,11 @@
 Module to create a PDF report with ReportLab.
 """
 
-from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from reportlab.platypus import Paragraph, Frame
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Paragraph, Frame
 # from reportlab.pdfbase.ttfonts import TTFont  # other fonts
 import os.path
 import time
@@ -49,7 +49,7 @@ import time
 def make_pdf(saved_list, title="SATAlytics Report"):
     """ Creates a PDF from a HTML template with date of today.
 
-    saved_list -- list of tuples (strings), saved images from GUI (title, fig)
+    saved_list -- list of tuples (strings), saved images from GUI (title, figpath)
     title -- string, title of report, default: SAVI Analytics Report 
     """   
 
@@ -61,7 +61,7 @@ def make_pdf(saved_list, title="SATAlytics Report"):
         report_name = "{} {} ({}).pdf".format(title, time.strftime("%Y%m%d"), version)
 
     c = canvas.Canvas(report_name)
-    # c.setAuthor() #how does this work?
+    c.setAuthor("Marijke Thijssen") # what use
     c.setTitle(title)
     title_page(c)
     c.showPage()
@@ -74,11 +74,11 @@ def make_pdf(saved_list, title="SATAlytics Report"):
     os.startfile(report_name)
 
 
-def title_page(c, logo="HTML\\Images\\Logo.png"):
+def title_page(c, logo="Images\\Logo.png"):
     """ Creates title page. 
 
     c -- canvas
-    logo -- string, path to logo - default: "HTML\\Images\\Logo.png"
+    logo -- string, path to logo - default: "Images\\Logo.png"
     """
 
     # code for title page
@@ -145,11 +145,11 @@ def toc_page(c, saved_list):
     footer(c)
 
 
-def regular_page(c, title, fig):
+def regular_page(c, title, fig_path):
     """ Creates regular page. 
 
     title -- string, title of figure
-    fig -- string, path to figure
+    fig_path -- string, path to figure
     c -- canvas
     """   
     
@@ -161,7 +161,7 @@ def regular_page(c, title, fig):
     c.setStrokeColorRGB(0.3, 0.4, 0.2)
     c.setFillColorRGB(0.3, 0.4, 0.2)
     c.rect(120, 270, 400, 400, stroke=0, fill=0)
-    c.drawImage(fig, 120, 280, width=390, height=390, mask=None,
+    c.drawImage(fig_path, 120, 280, width=390, height=390, mask=None,
         preserveAspectRatio=True)   
    
     # ## check if this is faster for func images: 
@@ -172,17 +172,17 @@ def regular_page(c, title, fig):
     side_bar(c)
 
 
-def watermark(c, watermark="HTML\\Images\\watermark.png"):
+def watermark(c, watermark="Images\\watermark.png"):
     """ Sets watermark.
 
     c -- canvas
     watermark -- string, path to watermark
     """
-    c.drawImage(watermark, 350, 10, width=250, height=200, mask=None) 
+    c.drawImage(watermark, 380, 10, width=200, height=200, mask=None) 
     
 
 def footer(c, pages=1):
-    """ Sets footer. Displays copyright and page number (True of False).
+    """ Sets footer. Displays copyright and optional page number.
     
     c -- canvas
     pages -- integer, displays page number (True=0, False=1) - default: 1
@@ -190,7 +190,7 @@ def footer(c, pages=1):
 
     # display copyright
     c.setFont("Courier", 9, leading=None)
-    page = c.getPageNumber() ## use?
+    page = c.getPageNumber()
     c.drawString(65, 20, 
         "(c) SATAlytics by SATA s.l.r.")
 
@@ -200,7 +200,7 @@ def footer(c, pages=1):
 
 
 def side_bar(c):
-    """Sets side_bar
+    """Sets side_bar.
 
     c -- canvas
     """
@@ -208,10 +208,10 @@ def side_bar(c):
     c.setStrokeColorRGB(70/256, 165/256, 66/256)
     c.rect(20, 0, 25, 850, stroke=1, fill=1)
 
-# # ####
-# # What is bookmarkpage()
+
+
 
 if __name__ == '__main__':
-    fake_list = [("Marijke", "HTML\\Images\\dp.png"), 
-                ("Marijke Thijssen", "HTML\\Images\\dp.png")]
+    fake_list = [("Marijke", "Images\\dp.png"), 
+                ("Marijke Thijssen", "Images\\dp.png")]
     make_pdf(fake_list)
