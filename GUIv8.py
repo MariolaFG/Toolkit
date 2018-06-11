@@ -98,22 +98,6 @@ def create_global_curr_fig(fig):
     global current_figure
     current_figure = fig
 
-## USED THIS FOR FAKE REPORT
-# def final_saved():
-#     """ Returns list of saved function with image [fig]
-
-#     """
-#     saved_list = []
-#     saved_list = [
-#                 ("Function 1", 
-#                 "..\\HTML\\Images\\bp.png"),
-#                 ("Function 2",
-#                 "..\\HTML\\Images\\dp.png"),
-#                 ("Function 3",
-#                 "..\\HTML\\Images\\pc.png")
-#                 ]
-#     return(saved_list)
-
 
 ## FUNCTIONS OF EXCEL BUTTONS
         
@@ -432,7 +416,6 @@ def act_download():
     saved_list -- list of tuples [(title, functions)]
     """
     try:
-        # saved_list = final_save() #USE THIS FOR FAKE REPORT
         make_pdf(saved_list)
     except:
         tkinter.messagebox.showinfo("Download report",
