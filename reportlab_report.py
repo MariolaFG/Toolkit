@@ -74,11 +74,11 @@ def make_pdf(saved_list, title="SATAlytics Report"):
     os.startfile(report_name)
 
 
-def title_page(c, logo="HTML\\Images\\Logo.png"):
+def title_page(c, logo="Images\\Logo.png"):
     """ Creates title page. 
 
     c -- canvas
-    logo -- string, path to logo - default: "HTML\\Images\\Logo.png"
+    logo -- string, path to logo - default: "Images\\Logo.png"
     """
 
     # code for title page
@@ -172,13 +172,13 @@ def regular_page(c, title, fig):
     side_bar(c)
 
 
-def watermark(c, watermark="HTML\\Images\\watermark.png"):
+def watermark(c, watermark="Images\\watermark.png"):
     """ Sets watermark.
 
     c -- canvas
     watermark -- string, path to watermark
     """
-    c.drawImage(watermark, 350, 10, width=250, height=200, mask=None) 
+    c.drawImage(watermark, 380, 10, width=200, height=200, mask=None) 
     
 
 def footer(c, pages=1):
@@ -212,6 +212,6 @@ def side_bar(c):
 # # What is bookmarkpage()
 
 if __name__ == '__main__':
-    fake_list = [("Marijke", "HTML\\Images\\dp.png"), 
-                ("Marijke Thijssen", "HTML\\Images\\dp.png")]
+    fake_list = [("Marijke", "Images\\dp.png"), 
+                ("Marijke Thijssen", "Images\\dp.png")]
     make_pdf(fake_list)
