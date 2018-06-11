@@ -1,12 +1,14 @@
 from function import product_type
-from reportlab_report import make_pdf
-import sys
-import tkinter.messagebox
-from tkinter import *
-from functools import partial
 import numpy as np
 import os.path
 import pandas as pd
+from reportlab_report import make_pdf
+import sys
+import tkinter.messagebox
+from functools import partial
+from tkinter import *
+from tkinter import filedialog
+from tkinter.filedialog import askopenfilename
 
 
 root = Tk()
@@ -75,7 +77,7 @@ def pre_proc(excel_file,column_name):
         unique_values = np.unique(without_nan) # Here we keep only the unique values
         return(unique_values)
     except KeyError:
-        tkinter.messagebox.showinfo("Missing column", "The column {} is missing.".format(column_name))
+        tkinter.messagebox.showinfo("Missing column", "The column \"{}\" is missing.".format(column_name))
         pass
         
 
