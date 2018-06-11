@@ -62,16 +62,22 @@ def scroll_fun(e): ## Function for adding scrollbars into the listbox
     scrollbar_h.pack(side= "bottom", fill= "x")
     e.config(xscrollcommand= scrollbar_h.set)
 
+
 def pre_proc(excel_file,column_name):  
+    """ Returns column with unique values.
+
+    excel_file -- pandas df, dataframe from Excel file
+    column_name -- string, name of column
+    """
     try:
         specific_column = excel_file[column_name]  # Here we chose the column that we want to choose a value from
         without_nan = specific_column[pd.isna(specific_column) == FALSE] # Here we keep the column without the NaN values
         unique_values = np.unique(without_nan) # Here we keep only the unique values
-        return unique_values
+        return(unique_values)
     except KeyError:
-        tkinter.messagebox.showinfo("Name missing",column_name)
+        tkinter.messagebox.showinfo("Missing column", "The column {} is missing.".format(column_name))
         pass
-
+        
 
 imagelist = []
 back_next_counter = -1
