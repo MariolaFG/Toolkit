@@ -13,15 +13,13 @@ from reportlab.platypus import Paragraph, Frame
 import os.path
 import time
 
-####### PRACTICE ######################
 
-
-# ####### OWN STUFF ####################
 ########## COLORS FROM LOGO ##########
 # divide by 256
 # (70, 165, 66) - green
 # (31, 79, 116) - blue
 
+#################### REPORT ######################
 def make_pdf(saved_list, title="SATAlytics Report"):
     """ Creates a PDF from a HTML template with date of today.
 
@@ -39,7 +37,7 @@ def make_pdf(saved_list, title="SATAlytics Report"):
     c = canvas.Canvas(report_name)
     c.setAuthor("Marijke Thijssen") # what use
     c.setTitle(title)
-    title_page(c)
+    title_page(c, title)
     c.showPage()
     toc_page(c, saved_list)
     c.showPage()
@@ -50,7 +48,23 @@ def make_pdf(saved_list, title="SATAlytics Report"):
     os.startfile(report_name)
 
 
-def title_page(c, logo="Images\\Logo.png"):
+def make_manual(title="SATAlytics Manual"):
+    """ Creates manual as a PDF.
+
+    title -- string, name of PDF - default: "SATAlytics Manual"
+    """
+    manual_name = "{}.pdf".format(title)
+    c = canvas.Canvas(manual_name)
+    c.setAuthor("Marijke Thijssen") # what use
+    c.setTitle(title)
+    title_page(c, title)
+    c.showPage()
+
+    c.save()
+    os.startfile(manual_name)    
+
+
+def title_page(c, title, logo="Images\\Logo.png"):
     """ Creates title page. 
 
     c -- canvas
@@ -72,7 +86,7 @@ def title_page(c, logo="Images\\Logo.png"):
     c.rect(0, 300, 600, 100, stroke=0, fill=1)
     c.setFont("Times-BoldItalic", 40, leading=None)
     c.setFillGray(1.0) # white text
-    c.drawString(50, 335, "SATAlytics Report")
+    c.drawString(50, 335, title)
 
 
 def toc_page(c, saved_list):
@@ -206,30 +220,32 @@ def side_bar(c):
 
 
 if __name__ == '__main__':
-    fake_list = [("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png"),
-                ("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png")]
-    make_pdf(fake_list)
+    # fake_list = [("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png")]
+    # make_pdf(fake_list)
+
+    make_manual()
