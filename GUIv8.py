@@ -78,7 +78,21 @@ def pre_proc(excel_file,column_name):
         return(unique_values)
     except KeyError:
         tkinter.messagebox.showinfo("Missing column", "The column \"{}\" is missing.".format(column_name))
-        
+
+ 
+def timed_msgbox(msg, top_title="Selection successful", duration=2000):
+    """ Display messagebox that closes after specified time.
+    
+    msg -- string, message to display
+    top_title -- string, title of msgbox -default: "Selection successful"
+    duration -- integer, number of milliseconds -default: 3000
+    """        
+    top = Toplevel()
+    top.title(top_title)
+    Message(top, text=msg, padx=20, pady=20).pack()
+    top.after(duration, top.destroy)
+
+timed_msgbox("Hello Marijke")
 
 imagelist = []
 back_next_counter = -1
@@ -106,13 +120,13 @@ def create_global_curr_fig(fig):
 ## FUNCTIONS OF EXCEL BUTTONS
         
 def ex1_button():
-    global filename
+    global filename ## NAME SHOULD BE CHANGED!
     global excel1
     global excel1_columns
 
-    filename = askopenfilename() #Import information file about rice
-    splitfilename = filename.rsplit('/',1)
-    excel1 = pd.read_excel(filename)
+    filename = askopenfilename() # open screen to select file
+    splitfilename = filename.rsplit('/', 1) 
+    excel1 = pd.read_excel(filename, sheet_name=0)
     if filename:        
         excel1_columns = excel1.columns.values.tolist()
 
@@ -150,7 +164,7 @@ def ex2_button():
 
 ## FUNCTIONS OF STATISTIC BUTTONS
 
-def act_button1():       
+def act_button1():     
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb11.grid(row=2, column=1, sticky="nsew")
     # Adding scrollbar for lb11
@@ -202,6 +216,14 @@ def act_button1():
     lb13.bind("<<ListboxSelect>>", cur_selection13)
     
 def act_button2():
+    """ Shows listboxes for product, compound and year 
+    to select from for function 2.  
+    """
+    # check if values are selected from listbox
+    global selected_value21
+    selected_value21 = False
+
+    # create listboxes
     lb21 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb21.grid(row=3, column=1, sticky="nsew")
     ## Adding scrollbar for lb21
@@ -216,39 +238,58 @@ def act_button2():
         global value21
         value21 = (lb21.get(lb21.curselection()))
         print (value21)
+        select_value21 = True
     lb21.bind("<<ListboxSelect>>", cur_selection21)
-   
-    lb22 = Listbox(root, selectmode=EXTENDED, exportselection=0)
-    lb22.grid(row=3, column=2, sticky="nsew")
-    ## Adding scrollbar for lb22
-    scroll_fun(lb22)
 
-    for y in excel1_specific_column_uniq_Prova:
-        lb22.insert(END, y)
-    b = lb22.curselection()
-    for y in a:
-        print (lb22.get(y))
-    def cur_selection22(*y):
-        global value22
-        value22 = lb22.get(lb22.curselection())
-        print (value22)
-    lb22.bind("<<ListboxSelect>>", cur_selection22)
+    # show timed messagebox
+    select_msg = "You selected \"{}\".".format(value21)
+    timed_msgbox(select_msg)
+
+#     act_lb22()
+
+# def act_lb22():
+#     """ Changes selection for Listbox 2 of function 2.
+
+#     """ 
+#     # create Listbox  
+#     lb22 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+#     lb22.grid(row=3, column=2, sticky="nsew")
+#     ## Adding scrollbar for lb22
+#     scroll_fun(lb22)
+
+#     if selected_value21 == False:
+#         for y in excel1_specific_column_uniq_Prova:
+#             lb22.insert(END, y)
+#     else:
+#         adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
+#         # adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21] #this works, but how to change selection
+#         unique_prova = pre_proc(adjusted_excel, "Prova")
+#         for y in unique_prova:
+#             lb22.insert(END, y)
+#     b = lb22.curselection()
+#     for y in b:
+#         print (lb22.get(y))
+#     def cur_selection22(*y):
+#         global value22
+#         value22 = lb22.get(lb22.curselection())
+#         print (value22)
+#     lb22.bind("<<ListboxSelect>>", cur_selection22)
     
-    lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
-    lb23.grid(row=3, column=3, sticky="nsew")
-    # ## Adding scrollbar for lb23
-    # scroll_fun(lb23)
+#     lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+#     lb23.grid(row=3, column=3, sticky="nsew")
+#     # ## Adding scrollbar for lb23
+#     # scroll_fun(lb23)
 
-    for z in excel1_specific_column_uniq_ANNO:
-        lb23.insert(END, z)
-    b = lb23.curselection()
-    for z in a:
-        print (lb23.get(z))
-    def cur_selection23(*z):
-        global value23
-        value23 = (lb23.get(lb23.curselection()))
-        print (value23)
-    lb23.bind("<<ListboxSelect>>", cur_selection23)
+#     for z in excel1_specific_column_uniq_ANNO:
+#         lb23.insert(END, z)
+#     b = lb23.curselection()
+#     for z in b:
+#         print (lb23.get(z))
+#     def cur_selection23(*z):
+#         global value23
+#         value23 = (lb23.get(lb23.curselection()))
+#         print (value23)
+#     lb23.bind("<<ListboxSelect>>", cur_selection23)
 
     
 def act_button3():
