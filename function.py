@@ -2,11 +2,13 @@
 """
 
 """
+
 from __future__ import division
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import numpy as np
+from sys import argv
 import heapq
 
 def number_clients(infofile, date):
@@ -238,7 +240,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                 threshold = "nan"
             try:
                 threshold = float(str(threshold).replace(",", "."))
-                prod[name] = [np.mean(map(float, prev2.tolist())), threshold]
+                prod[name] = [np.mean(list(map(float, prev2.tolist()))), threshold]
             except ValueError:
                 err_val[name] = prev2.tolist() # This is just to store the weird values
     
@@ -347,7 +349,7 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 2
                 threshold = "nan"
             try:
                 threshold = float(str(threshold).replace(",", "."))
-                prod[name] = [np.mean(map(float, prev.tolist())), threshold]
+                prod[name] = [np.mean(list(map(float, prev.tolist()))), threshold]
             except ValueError:
                 err_val[name] = prev.tolist()
 
@@ -608,7 +610,7 @@ if __name__ == "__main__":
 #    print number_clients(infofile, date)  
 #    samples_product_type(resultfile)
 #    clients_graph(resultfile, date= date)
-#    residues_graph(resultfile, client, crop = "Carote", date = "all")
+    residues_graph(pd.read_excel("prove_16-17.xlsx", sheetname=0), "A.A.SAN SALUTO DI LAZZARINO EDMONDO", "Terreno")
 #    residues_graph_esp(resultfile, client, crop = "Carote", compound= compound)
 #    bar_per_sample(resultfile, client, crop="Carote", compound=compound, date = "all")
 #    products_of_client(resultfile, client)
