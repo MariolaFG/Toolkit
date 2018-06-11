@@ -49,7 +49,7 @@ import time
 def make_pdf(saved_list, title="SATAlytics Report"):
     """ Creates a PDF from a HTML template with date of today.
 
-    saved_list -- list of tuples (strings), saved images from GUI (title, fig)
+    saved_list -- list of tuples (strings), saved images from GUI (title, figpath)
     title -- string, title of report, default: SAVI Analytics Report 
     """   
 
@@ -61,7 +61,7 @@ def make_pdf(saved_list, title="SATAlytics Report"):
         report_name = "{} {} ({}).pdf".format(title, time.strftime("%Y%m%d"), version)
 
     c = canvas.Canvas(report_name)
-    # c.setAuthor() #how does this work?
+    c.setAuthor("Marijke Thijssen") # what use
     c.setTitle(title)
     title_page(c)
     c.showPage()
@@ -145,11 +145,11 @@ def toc_page(c, saved_list):
     footer(c)
 
 
-def regular_page(c, title, fig):
+def regular_page(c, title, fig_path):
     """ Creates regular page. 
 
     title -- string, title of figure
-    fig -- string, path to figure
+    fig_path -- string, path to figure
     c -- canvas
     """   
     
@@ -161,7 +161,7 @@ def regular_page(c, title, fig):
     c.setStrokeColorRGB(0.3, 0.4, 0.2)
     c.setFillColorRGB(0.3, 0.4, 0.2)
     c.rect(120, 270, 400, 400, stroke=0, fill=0)
-    c.drawImage(fig, 120, 280, width=390, height=390, mask=None,
+    c.drawImage(fig_path, 120, 280, width=390, height=390, mask=None,
         preserveAspectRatio=True)   
    
     # ## check if this is faster for func images: 
@@ -182,7 +182,7 @@ def watermark(c, watermark="Images\\watermark.png"):
     
 
 def footer(c, pages=1):
-    """ Sets footer. Displays copyright and page number (True of False).
+    """ Sets footer. Displays copyright and optional page number.
     
     c -- canvas
     pages -- integer, displays page number (True=0, False=1) - default: 1
