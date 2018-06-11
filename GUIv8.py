@@ -1,12 +1,12 @@
+from function import product_type
+from reportlab_report import make_pdf
 import sys
 import tkinter.messagebox
 from tkinter import *
 from functools import partial
-import os.path
 import numpy as np
+import os.path
 import pandas as pd
-from reportlab_report import make_pdf # takes list of tuples [(title, fig)]
-from function import product_type
 
 
 root = Tk()
