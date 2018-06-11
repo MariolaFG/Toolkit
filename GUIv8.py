@@ -78,7 +78,6 @@ def pre_proc(excel_file,column_name):
         return(unique_values)
     except KeyError:
         tkinter.messagebox.showinfo("Missing column", "The column \"{}\" is missing.".format(column_name))
-        pass
         
 
 imagelist = []
