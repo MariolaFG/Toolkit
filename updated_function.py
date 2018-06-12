@@ -125,7 +125,6 @@ def residues_graph(resultfile, client, crop, date = "all", title="Function 1"): 
     return(fig_name)   
 
 
-
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
     """This function creates a graph on average amount of residues in a single 
     crop for a single client in a certain time span, including the limit.
