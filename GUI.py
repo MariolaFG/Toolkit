@@ -1,4 +1,4 @@
-from function import product_type
+from function import *
 import numpy as np
 import os.path
 import pandas as pd
@@ -105,7 +105,7 @@ def list(item):
 def listcounter(x):
     global back_next_counter
     if x == True:
-        back_next_counter = back_next_counter - 1
+        back_next_counter = back_next_counter -1
     else:
         back_next_counter = back_next_counter + 1
 
@@ -129,7 +129,7 @@ def ex1_button():
 
     filename = askopenfilename() # open selection of files
     splitfilename11 = filename.rsplit('/', 1)
-    excel1 = pd.read_excel(filename, sheet_name = 0)
+    excel1 = pd.read_excel(filename)
     if filename:        
         excel1_columns = excel1.columns.values.tolist()
 
@@ -158,7 +158,7 @@ def ex1_button():
 def ex2_button():
     global filename1
     filename1 = askopenfilename()
-    splitfilename1 = filename1.rsplit('/', 1)
+    splitfilename1 = filename1.rsplit('/',1)
     if filename1:
         print ("selected:", filename1)
         buttonshow2 = Button(root, text=splitfilename1[1], bg="blue")
@@ -266,29 +266,27 @@ def act_lb22():
         global value22
         value22 = lb22.get(lb22.curselection())
 
-        act_lb23()
+        # show timed messagebox
+        select_msg = "You selected \"{}\".".format(value22)
+        timed_msgbox(select_msg)
+        act_lb22()
     lb22.bind("<<ListboxSelect>>", cur_selection22)
+    
+#     lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+#     lb23.grid(row=3, column=3, sticky="nsew")
+#     # ## Adding scrollbar for lb23
+#     # scroll_fun(lb23)
 
-def act_lb23():
-    """ Changes selection for Listbox 2 of function 2.
-    """    
-    lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
-    lb23.grid(row=3, column=3, sticky="nsew")
-    # ## Adding scrollbar for lb23
-    # scroll_fun(lb23)
-
-    adjusted_excel = excel1.loc[(excel1["Gruppo_prodotto"] == value21) & (excel1["Prova"] == value22)]
-    unique_anno = pre_proc(adjusted_excel, "ANNO")
-    for z in excel1_specific_column_uniq_ANNO:
-        lb23.insert(END, z)
-    b = lb23.curselection()
-    for z in b:
-        print (lb23.get(z))
-    def cur_selection23(*z):
-        global value23
-        value23 = (lb23.get(lb23.curselection()))
-        print (value23)
-    lb23.bind("<<ListboxSelect>>", cur_selection23)
+#     for z in excel1_specific_column_uniq_ANNO:
+#         lb23.insert(END, z)
+#     b = lb23.curselection()
+#     for z in b:
+#         print (lb23.get(z))
+#     def cur_selection23(*z):
+#         global value23
+#         value23 = (lb23.get(lb23.curselection()))
+#         print (value23)
+#     lb23.bind("<<ListboxSelect>>", cur_selection23)
 
     
 def act_button3():
@@ -467,9 +465,9 @@ def act_download():
     
 def act_go():
     try:
-        residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)    
+        print (splitfilename11[1])
+        residues_graph(pd.read_excel(splitfilename11[1], sheetname=0), value11, value12)
     except:
-        
         tkinter.messagebox.showinfo("Error","Company and product not match")
 ##    canvas = Canvas(root)
 ##    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)

@@ -315,6 +315,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                       + str(date), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/Kl'))
             plt.show()
+        print (plt)
+
 
 def residues_graph_esp(resultfile, client, crop, compound):  ## 2 
     """ This function creates a graph with the average concentration of a compound 
@@ -610,7 +612,7 @@ if __name__ == "__main__":
 #    print number_clients(infofile, date)  
 #    samples_product_type(resultfile)
 #    clients_graph(resultfile, date= date)
-    residues_graph(pd.read_excel("prove_16-17.xlsx", sheetname=0), "A.A.SAN SALUTO DI LAZZARINO EDMONDO", "Terreno")
+#    residues_graph(pd.read_excel("prove_16-17.xlsx", sheetname=0), "A.A.SAN SALUTO DI LAZZARINO EDMONDO", "Terreno")
 #    residues_graph_esp(resultfile, client, crop = "Carote", compound= compound)
 #    bar_per_sample(resultfile, client, crop="Carote", compound=compound, date = "all")
 #    products_of_client(resultfile, client)
