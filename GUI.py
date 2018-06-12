@@ -109,7 +109,7 @@ def draw_image(img):
     canvas = Canvas(root)
     canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
     fig = PhotoImage(file=img)
-    canvas.create_image(100,100, image=fig)
+    canvas.create_image(200,200, image=fig)
     list(fig)
     listcounter(False)
 
