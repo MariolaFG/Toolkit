@@ -94,7 +94,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             for element in limits_0:
                 barlist[element].set_color('indianred')
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(date), fontsize= 16)
+                      + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             plt.show()
             
@@ -105,7 +105,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             for element in limits_1:
                 barlist[element].set_color('indianred')
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(date), fontsize= 16)
+                      + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             plt.show()
         if len(sizes_5) > 0:
@@ -115,7 +115,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             for element in limits_5:
                 barlist[element].set_color('indianred')
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(date), fontsize= 16)
+                      + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             plt.show()
 
@@ -141,13 +141,13 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         prod = {}
         err_val = {}
         data2 = data[data["ANNO"] == year]
+        list_check = []
         # data2 contains the information for single crop, year and compound.
         for element in data["Cliente"]:
             if hide == False:
                 name = element + "_" + year
             if hide == True:
                 name = client_count
-                client_count = client_count + 1
                 client_dic["Client_" + str(name)] = element+ "_" + year
                 
             prev = data2[data2["Cliente"] == element]
@@ -158,8 +158,11 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
             if len(prev["Limite"].tolist()) == 0:
                 threshold = "nan"
             try:
-                threshold = float(str(threshold).replace(",", "."))
-                prod[name] = [np.mean(map(float, prev2.tolist())), threshold]
+                if not element + "_" + year in list_check:
+                    list_check.append(element + "_" + year)
+                    client_count = client_count + 1
+                    threshold = float(str(threshold).replace(",", "."))
+                    prod[name] = [np.mean(map(float, prev2.tolist())), threshold]
             except ValueError:
                 err_val[name] = prev2.tolist()
                 
@@ -224,21 +227,32 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
     
 
 
-def samples_product_type(resultfile, client = "all"): # n.3 and n.6
+def samples_product_type(resultfile, client = "all", detail = False,\
+                         date = "all"): # n.3 and n.6
     """ This function creates a graph on number of samples per product/cultivar
     Variables:
         - Client = optional"""
     
     if client != "all":
         resultfile = resultfile[resultfile["Cliente"] == str(client)]
-    dates = list(set(resultfile["ANNO"].tolist()))
+    years = list(set(resultfile["ANNO"].tolist()))
     
-    for date in dates:
+    if date != "all":
+        resultfile = resultfile[resultfile["ANNO"] == str(date)]
+        years = [str(date)]
+    
+    # This is to choose if we want the pie chart for product detail:
+    if detail == True:
+        product_detail = "dettaglio_prodotto"
+    if detail == False:
+        product_detail = "Gruppo_prodotto"   
+    
+    for year in years:
         prod = {}
         explode = []
-        for element in resultfile["Gruppo_prodotto"]:
+        for element in resultfile[product_detail]:
             if not element in prod:
-                data = resultfile[resultfile["Gruppo_prodotto"] == element]
+                data = resultfile[resultfile[product_detail] == element]
                 samples = list(set(data["N_campione"].tolist()))
                 # Creates a list without repetitions
                 prod[element] = len(samples)
@@ -247,8 +261,12 @@ def samples_product_type(resultfile, client = "all"): # n.3 and n.6
         # Create pie chart:
         sizes = []
         labels = []
+        
         if "NON NORMATO" in prod.keys():
             del prod['NON NORMATO']
+        if "..." in prod.keys():
+            del prod["..."]
+        
         max_labels = heapq.nlargest(10, prod, key=prod.get)
         for element in max_labels:
             sizes.append(prod[element])
@@ -267,6 +285,7 @@ def samples_product_type(resultfile, client = "all"): # n.3 and n.6
             labels.append("Other")
             sizes.append(other)
             explode.append(0.1)
+        plt.title(str(year))
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
         plt.show
@@ -297,8 +316,9 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
     err_val = {}
     for date in dates:
         data2 = data[data["Data_Arrivo"] == date]
-        for element in data2["Prova"]:
-            name = element + "_" + str(date)
+        
+        for element in data2["N_campione"]:
+            name = "Sample_" + str(int(element)) + "_" + str(date)[:-9]
             prev = data2["Risultato"].astype(str).str.replace(',','.')
             if len(data2["Limite"].tolist()) > 0:
                 threshold = data2["Limite"].tolist()[0]
@@ -361,7 +381,6 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         
         # This update is just to make sure that the graph is not messy, dividing
         # the samples in groups of 20
-
 
 def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     """ This function creates a graph on average number of molecules per crop
@@ -453,8 +472,8 @@ def threshold_pie(resultfile, date="all"): ## 7
     
     plt.show()
     
-    return list2.count("Maggiore o uguale a 100")
-
+    over_threshold(resultfile[resultfile['Classi_Ris_Lim_perc'] == \
+                              "Maggiore o uguale a 100"])
 
 
 def clients_graph(resultfile, date = "all"): ## 8
@@ -545,31 +564,39 @@ def products_of_client(resultfile, client, date = "all"):
             color = "lightgreen")
     plt.title("Crops analyzed from " + client + " in " + str(date), fontsize= 16)
     plt.show()
-    
-
-            
-
+             
+#def over_threshold(reducedfile):
+#   
+#    count = 0
+#    prod = {}
+#    for element in reducedfile["Prova"]:
         
+       
  
 if __name__ == "__main__":
     
     resultfile = pd.read_excel("prove_16-17.xlsx", sheetname=0)
     infofile = pd.read_excel("campioni-16-18.xlsx", sheetname=0)
-    date = 2018
-    area="Pavia"
-    compound = "Aflatossina B1"
-    client = "MOLINO F.LLI BRUNATTI"
-    crop = "Mais"
+    date = 2016
+    compound = "Boscalid"
+    client = "CONAD SOC. COOP."
+    crop = "Fragole"
+    
     hide = True
+    detail = False
+
+#    residues_graph(resultfile, client=client, crop=crop)
+    
+#    compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
+
+#    samples_product_type(resultfile, client=client, date=date, detail=True)
+   
+#    residues_graph_esp(resultfile, client=client, crop = crop, compound= compound)
+
+#    number_of_molecules(resultfile, client= client)
     
 #    threshold_pie(resultfile, date)
-#    product_type(resultfile)
-#    print number_clients(infofile, date)  
-#    samples_product_type(resultfile, client=client)
+    
 #    clients_graph(resultfile, date= date)
-#    residues_graph(resultfile, client=client, crop=crop)
-#    residues_graph_esp(resultfile, client=client, crop = crop, compound= compound)
-#    bar_per_sample(resultfile, client=client, crop=crop, compound=compound, date = "all")
+     
 #    products_of_client(resultfile, client=client)
-    compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
-#    number_of_molecules(resultfile, client= client)
