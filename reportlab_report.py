@@ -13,39 +13,13 @@ from reportlab.platypus import Paragraph, Frame
 import os.path
 import time
 
-####### PRACTICE ######################
-# def hello(c):
-#     c.drawString(0,0, "0, 0")
-#     c.drawString(100, 100, "100, 100")
-#     c.drawString(100, 200, "100, 200")
-#     c.drawString(100, 300, "100, 300")
-#     c.drawString(100, 400, "100, 400")
-#     c.drawString(100, 500, "100, 500")
-#     c.drawString(100, 600, "100, 600")
-#     c.drawString(100, 700, "100, 700")
-#     c.drawString(100, 800, "100, 800")
-#     c.drawString(100, 900, "100, 900")
-#     c.drawString(200, 100, "200, 100")
-#     c.drawString(300, 100, "300, 100")
-#     c.drawString(400, 100, "400, 100")
-#     c.drawString(500, 100, "500, 100")
-#     c.drawString(550, 100, "550, 100")
-#     c.drawString(600, 100, "600, 100")
 
-# if __name__ == '__main__':
-
-#     c = canvas.Canvas("hello.pdf")
-#     hello(c)
-#     c.showPage()    # to stop drawing in current page
-#     c.save()        # to save page
-
-
-# ####### OWN STUFF ####################
 ########## COLORS FROM LOGO ##########
 # divide by 256
 # (70, 165, 66) - green
 # (31, 79, 116) - blue
 
+#################### REPORT ######################
 def make_pdf(saved_list, title="SATAlytics Report"):
     """ Creates a PDF from a HTML template with date of today.
 
@@ -63,7 +37,7 @@ def make_pdf(saved_list, title="SATAlytics Report"):
     c = canvas.Canvas(report_name)
     c.setAuthor("Marijke Thijssen") # what use
     c.setTitle(title)
-    title_page(c)
+    title_page(c, title)
     c.showPage()
     toc_page(c, saved_list)
     c.showPage()
@@ -74,7 +48,23 @@ def make_pdf(saved_list, title="SATAlytics Report"):
     os.startfile(report_name)
 
 
-def title_page(c, logo="Images\\Logo.png"):
+def make_manual(title="SATAlytics Manual"):
+    """ Creates manual as a PDF.
+
+    title -- string, name of PDF - default: "SATAlytics Manual"
+    """
+    manual_name = "{}.pdf".format(title)
+    c = canvas.Canvas(manual_name)
+    c.setAuthor("Marijke Thijssen") # what use
+    c.setTitle(title)
+    title_page(c, title)
+    c.showPage()
+
+    c.save()
+    os.startfile(manual_name)    
+
+
+def title_page(c, title, logo="Images\\Logo.png"):
     """ Creates title page. 
 
     c -- canvas
@@ -96,7 +86,7 @@ def title_page(c, logo="Images\\Logo.png"):
     c.rect(0, 300, 600, 100, stroke=0, fill=1)
     c.setFont("Times-BoldItalic", 40, leading=None)
     c.setFillGray(1.0) # white text
-    c.drawString(50, 335, "SATAlytics Report")
+    c.drawString(50, 335, title)
 
 
 def toc_page(c, saved_list):
@@ -105,6 +95,8 @@ def toc_page(c, saved_list):
     saved_list -- list of tuples (strings), (title, fig)
     c -- canvas
     """
+    watermark(c)
+
     styles = getSampleStyleSheet()
     info = []
     # styles["ToC_info"] = ParagraphStyle("Normal", 
@@ -122,14 +114,30 @@ def toc_page(c, saved_list):
     c.setFont("Helvetica-Oblique", 16, leading=None)
     # c.setLineWidth(1)
     # c.setDash(1, 2) #dots
-    y = 660
+    y = 700
     for i in range(len(saved_list)):
         y -= 30
+        
+        if y <= 50:
+            # new page
+            c.showPage()
+            watermark(c)
+
+            # display title of page
+            c.setFont("Helvetica-Bold", 20, leading=None)
+            c.drawCentredString(325, 750, "Table of Contents")
+
+            # display table of contents
+            c.setFont("Helvetica-Oblique", 16, leading=None)
+            # c.setLineWidth(1)
+            # c.setDash(1, 2) #dots
+            y = 660
+            side_bar(c)
+            footer(c)    
+
         c.drawString(65, y, saved_list[i][0]) # text
         # c.line(x1, y1, x2, y2)
-        c.drawRightString(580, y, "{}".format(i+3)) #page number
-#### WHAT TO DO IF PAGE ENDS? ###########
-    watermark(c)
+        c.drawRightString(580, y, "{}".format(i+3)) #page number    
 
     # draw line
     c.setLineWidth(1)
@@ -212,6 +220,32 @@ def side_bar(c):
 
 
 if __name__ == '__main__':
-    fake_list = [("Marijke", "Images\\dp.png"), 
-                ("Marijke Thijssen", "Images\\dp.png")]
-    make_pdf(fake_list)
+    # fake_list = [("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png"),
+    #             ("Marijke", "Images\\dp.png"), 
+    #             ("Marijke Thijssen", "Images\\dp.png")]
+    # make_pdf(fake_list)
+
+    make_manual()
