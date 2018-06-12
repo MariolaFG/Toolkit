@@ -17,6 +17,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
         - Date: Optional. """
+    fig_name = "Function 1.png"
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -32,7 +33,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         err_val = {}
         data2 = data[data["ANNO"] == year]
         for element in data["Prova"]:
-            name = element + "_" + year
+            name = element + "_" + str(year)
             prev = data2[data2["Prova"] == element]
             # prev contains the data from a single year, client, crop and compound
             prev2 = prev["Risultato"].astype(str).str.replace(',','.')
@@ -86,7 +87,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                 if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
                     limits_5.append(count_5)
                 count_5 = count_5 + 1
-        
+
+        fig = plt.figure()
         if len(sizes_0) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
@@ -96,7 +98,6 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
             
         if len(sizes_1) > 0:
             plt.xticks(rotation='vertical')
@@ -107,7 +108,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
+
         if len(sizes_5) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
@@ -117,7 +118,9 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
+        
+        fig.savefig(fig_name)
+        return(fig_name) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
 
 
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
@@ -127,6 +130,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         - Compound: compulsory (column Prova)
         - Crop: compulsory (column Gruppo_prodotto
         - Date: optional"""
+    fig_name "Function_2.png"   ## CHANGE!
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Prova"] == compound]
@@ -145,10 +149,10 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         # data2 contains the information for single crop, year and compound.
         for element in data["Cliente"]:
             if hide == False:
-                name = element + "_" + year
+                name = element + "_" + str(year)
             if hide == True:
                 name = client_count
-                client_dic["Client_" + str(name)] = element+ "_" + year
+                client_dic["Client " + str(name)] = element+ "_" + year
                 
             prev = data2[data2["Cliente"] == element]
             # prev contains the information for single crop, year, compound and client.
@@ -174,12 +178,13 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         count = 0
         for element in sorted(prod.keys()):
             sizes.append(prod[element][0])
-            label.append("Client_" + str(element))
+            label.append("Client " + str(element))
             bool_th =  prod[element][0] > prod[element][1]
             if bool_th == True and prod[name][1] != float("nan"):
                 limits.append(count)
             count = count + 1
         
+        fig = plt.figure()
         if len(sizes) < 30:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(x, sizes, width=0.4, tick_label = label)
@@ -188,7 +193,6 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
             plt.title(compound + " in " + crop + " - " + str(year)\
                       , fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
         
         if len(sizes) > 30:
             start = 0
@@ -216,9 +220,11 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                           fontsize= 16)
                 
                 plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-                plt.show()
                 
                 start = start + 30
+
+        fig.savefig(fig_name)
+        return(fig_name)
                 
     data_client = pd.DataFrame.from_dict(client_dic, orient="index")
     writer = pd.ExcelWriter('Client_index.xlsx', engine='xlsxwriter')
@@ -233,6 +239,8 @@ def samples_product_type(resultfile, client = "all", detail = False,\
     Variables:
         - Client = optional"""
     
+    fig_name = "Function_3.png"
+
     if client != "all":
         resultfile = resultfile[resultfile["Cliente"] == str(client)]
     years = list(set(resultfile["ANNO"].tolist()))
@@ -285,10 +293,13 @@ def samples_product_type(resultfile, client = "all", detail = False,\
             labels.append("Other")
             sizes.append(other)
             explode.append(0.1)
+        fig = plt.figure()
         plt.title(str(year))
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-        plt.show
+
+        fig.savefig(fig_name)
+        return(fig_name)
 
 
 
@@ -304,13 +315,12 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         concentration.
         - Order dates chronologicaly
         """
-    
+    fig_name = "Function_4.png"
+
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
     data = data[data["Prova"] == compound]
     dates = list(set(data["Data_Arrivo"].tolist()))
-    
-    
     
     prod = {}
     err_val = {}
@@ -326,22 +336,26 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
                 threshold = "nan"
             try:
                 threshold = float(str(threshold).replace(",", "."))
-                prod[name] = [np.mean(list(map(float, prev.tolist()))), threshold]
+                prod[name] = [np.mean(list(map(float, prev.tolist()))), threshold, date]
+                
             except ValueError:
                 err_val[name] = prev.tolist()
-
+    
     # Create bar chart:
-    labels = prod.keys()
+    labels = []
     sizes = []
     limits = []
     x = range(len(prod))
     count = 0
-    for element in prod:
+    for el in sorted(prod.items(), key=lambda prod: prod[1][2]): # This sorts the dates
+        element = el[0] # This is necessary because previous function produces a tuple
+        labels.append(element)
         sizes.append(prod[element][0])
         if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
             limits.append(count)
         count = count + 1
 
+    fig = plt.figure()
     if len(sizes) <= 20:    
         plt.xticks(rotation='vertical')
         barlist = plt.bar(x, sizes, width=0.4, tick_label = labels)
@@ -350,7 +364,7 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         plt.title(compound + " analyzed in " + crop + " from " + client \
                   , fontsize= 16)
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-        plt.show()
+
     
     if len(sizes) > 20:
         ind = 20
@@ -375,9 +389,11 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             plt.title(compound + " analyzed in " + crop + " from " + client \
                       , fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
             
             ind = ind + 20
+
+    fig.savefig(fig_name)
+    return(fig_name)
         
         # This update is just to make sure that the graph is not messy, dividing
         # the samples in groups of 20
@@ -387,7 +403,8 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     over a certain time span.
     Variables:
         Date: optional"""   
-        
+    fig_name = "Function_5.png"
+
     if date != "all":
         infofile = infofile[infofile["ANNO"] == str(date)]
     if date != "all":
@@ -425,19 +442,24 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
             labels.append(element)
             explode.append(0.1)
 
+        fig = plt.figure()
         plt.xticks(rotation='vertical')
         plt.title(str(year))
         plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels, color="aquamarine")
-        plt.show()
+        fig.savefig(fig_name)
+        return(fig_name)
 
-def threshold_pie(resultfile, date="all"): ## 7
+def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
     """ This function creates a graph on percentage of samples that exceeds 
     the limit in timeline.
     Variables:
         - Date: optional"""
-    
+    fig_name = "Fucntion_6.png"
+
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == str(date)]
+    if client != "all":
+        resultfile = resultfile[resultfile["Cliente"] == str(client)]
     
     list2 = []
     for element in resultfile['Classi_Ris_Lim_perc']:
@@ -465,15 +487,18 @@ def threshold_pie(resultfile, date="all"): ## 7
               "Maggiore o uguale a 100"]
     colors = ['lightskyblue', 'lightblue', 'cyan',"aquamarine", "coral"]
     explode = (0.05, 0.05, 0.05, 0.05, 0.2)
+
+    fig = plt.figure()
     plt.xticks(rotation='vertical')
     plt.pie(list3, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, \
             pctdistance=0.7, explode=explode)
     plt.title("Samples grouped by threshold in " + str(date), fontsize= 16)
     
-    plt.show()
-    
     over_threshold(resultfile[resultfile['Classi_Ris_Lim_perc'] == \
                               "Maggiore o uguale a 100"])
+
+    fig.savefig(fig_name)
+    return(fig_name)
 
 
 def clients_graph(resultfile, date = "all"): ## 8
@@ -481,7 +506,8 @@ def clients_graph(resultfile, date = "all"): ## 8
     exceeding the limit. 
     
     Variables needed: None, date is optional."""
-    
+    fig_name = "Function_8.png"
+
     if date != "all":
         data = resultfile[resultfile["ANNO"] == str(date)]
     if date == "all":
@@ -523,11 +549,15 @@ def clients_graph(resultfile, date = "all"): ## 8
     labels = ["All samples over threshold", "Some samples over threshold",\
               "No samples over threshold"]
     colors = ['coral', 'gold', 'lightgreen']
+
+    fig = plt.figure()
     plt.pie(np.array([len(client_dic[1]), len(client_dic[2]), len(client_dic[3])]),\
             labels=labels, shadow=True, explode=explode, autopct='%1.1f%%',\
             pctdistance=0.6, colors=colors)
     plt.title("Clients grouped by threshold in " + str(date), fontsize= 16)
-    plt.show()
+    
+    fig.savefig(fig_name)
+    # return(fig_name) ## uncommented this because of return of dict
 
     return client_dic
 
@@ -537,7 +567,8 @@ def products_of_client(resultfile, client, date = "all"):
     Variables:
         - Client: compulsory (column Cliente)
         - Date: Optional."""
-    
+    fig_name = "Function_?.png"
+
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == str(date)]
     
@@ -558,19 +589,75 @@ def products_of_client(resultfile, client, date = "all"):
     for element in prod:
         sizes.append(prod[element][0])
         labels.append(element)
-        
+    
+    fig = plt.figure()
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
     plt.title("Crops analyzed from " + client + " in " + str(date), fontsize= 16)
-    plt.show()
+    fig.savefig(fig_name)
+    return(fig_name)
              
-#def over_threshold(reducedfile):
-#   
-#    count = 0
-#    prod = {}
-#    for element in reducedfile["Prova"]:
+def over_threshold(reducedfile):
+   
+    prod = {}
+    for element in reducedfile["Prova"]:
+        if not element in prod:
+            prod[element] = 1
+        if element in prod:
+            prev = prod[element]
+            prod[element] = prev + 1
+            
+    sizes = []
+    labels = []
+    explode = []
+    max_labels = heapq.nlargest(20, prod, key=prod.get)
+        # It selects the 20 greatest averages
         
+    for element in max_labels:
+        sizes.append(prod[element])
+        labels.append(element)
+        explode.append(0.1)
+    
+    other = 0
+    for element in prod:
+        if not element in max_labels:
+            other = other + prod[element]
+    
+    colors = ['lightskyblue', 'lightblue', 'cyan', "coral", "gold",\
+              "lightcoral", "lavender", "cyan", "lime", "lightgreen","aquamarine"]
+    
+    if other != 0:
+        labels.append("Other")
+        sizes.append(other)
+        explode.append(0.1)
+        
+    plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
+            explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
+    plt.show()
+    
+    prod = {}
+    for element in reducedfile["Gruppo_prodotto"]:
+        if not element in prod:
+            prod[element] = 1
+        if element in prod:
+            prev = prod[element]
+            prod[element] = prev + 1
+            
+    sizes = []
+    labels = []
+    max_labels = heapq.nlargest(15, prod, key=prod.get)
+        # It selects the 20 greatest averages
+        
+    for element in max_labels:
+        sizes.append(prod[element])
+        labels.append(element)
+        
+    plt.xticks(rotation='vertical')
+    plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
+            color = "lightgreen")
+    plt.title("Products over the threshold", fontsize= 16)
+    plt.show()
        
  
 if __name__ == "__main__":
@@ -578,11 +665,11 @@ if __name__ == "__main__":
     resultfile = pd.read_excel("prove_16-17.xlsx", sheetname=0)
     infofile = pd.read_excel("campioni-16-18.xlsx", sheetname=0)
     date = 2016
-    compound = "Boscalid"
+    compound = "Clorpirifos"
     client = "CONAD SOC. COOP."
-    crop = "Fragole"
+    crop = "Pesche"
     
-    hide = True
+    hide = False
     detail = False
 
 #    residues_graph(resultfile, client=client, crop=crop)
@@ -595,7 +682,7 @@ if __name__ == "__main__":
 
 #    number_of_molecules(resultfile, client= client)
     
-#    threshold_pie(resultfile, date)
+#    threshold_pie(resultfile, date = 2016, client=client, detail = True)
     
 #    clients_graph(resultfile, date= date)
      

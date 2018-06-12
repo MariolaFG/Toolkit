@@ -1,4 +1,6 @@
 from updated_function import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.backends.tkagg as tkagg
 import numpy as np
 import os.path
 import pandas as pd
@@ -104,10 +106,13 @@ def draw_image(img):
 
     img -- string, image to display
     """
+
+    # canvas_fig = FigureCanvasAgg(fig)
+    # canvas_fig.draw()
     canvas = Canvas(root)
     canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    fig = PhotoImage( file=img)
-    canvas.create_image(100,100, image=fig)
+    fig = PhotoImage(file=img)
+    canvas.create_image(200,200, image=fig)
     list(fig)
     listcounter(False)
 
@@ -134,6 +139,13 @@ def create_global_curr_fig(fig):
     """
     global current_figure
     current_figure = fig
+
+
+def _quit():
+    root.quit()     # stops mainloop
+    root.destroy()  # this is necessary on Windows to prevent
+                    # Fatal Python Error: PyEval_RestoreThread: NULL tstate
+
 
 
 ## FUNCTIONS OF EXCEL BUTTONS
@@ -607,11 +619,13 @@ buttonex2.grid(row=1, column=2, sticky="ew")
 textBox=Text(root)
 infophoto = PhotoImage( file="infobutton.png")
 buttoninfo = Button(root, image=infophoto, height=20, width=20, command=openInstrucktion)
-buttoninfo.grid(row=0, column=10, sticky="ew")
+buttoninfo.grid(row=0, column=9, sticky="ew")
 
 canvas = Canvas(root, bg="black")
 canvas.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
 
+quit = Button(root, text="Quit", command=_quit)
+quit.grid(row=0, column=10, sticky="ew")
 
 root.mainloop()
 
