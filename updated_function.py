@@ -4,19 +4,22 @@
 
 from __future__ import division
 import pandas as pd
+from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import numpy as np
 import heapq
 
 
-def residues_graph(resultfile, client, crop, date = "all"): ## n.1
+def residues_graph(resultfile, client, crop, date = "all", title="Function 1"): ## n.1
     """ This function creates a graph on average amount of residues per client 
     for a single crop in a certain time span, including the limit. 
     Variables:
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
         - Date: Optional. """
+
+    fig_name = "{}.png".format(title)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -32,7 +35,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         err_val = {}
         data2 = data[data["ANNO"] == year]
         for element in data["Prova"]:
-            name = element + "_" + year
+            name = element + "_" + str(year)
             prev = data2[data2["Prova"] == element]
             # prev contains the data from a single year, client, crop and compound
             prev2 = prev["Risultato"].astype(str).str.replace(',','.')
@@ -86,7 +89,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                 if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
                     limits_5.append(count_5)
                 count_5 = count_5 + 1
-        
+       
+        fig = plt.figure()
         if len(sizes_0) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
@@ -96,7 +100,6 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
             
         if len(sizes_1) > 0:
             plt.xticks(rotation='vertical')
@@ -107,7 +110,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
+
         if len(sizes_5) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
@@ -117,7 +120,10 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
+
+    fig.savefig(fig_name)
+    return(fig_name)   
+
 
 
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
@@ -581,7 +587,6 @@ if __name__ == "__main__":
     compound = "Boscalid"
     client = "CONAD SOC. COOP."
     crop = "Fragole"
-    
     hide = True
     detail = False
 
@@ -600,3 +605,8 @@ if __name__ == "__main__":
 #    clients_graph(resultfile, date= date)
      
 #    products_of_client(resultfile, client=client)
+#    residues_graph_esp(resultfile, client=client, crop = crop, compound= compound)
+#    bar_per_sample(resultfile, client=client, crop=crop, compound=compound, date = "all")
+#    products_of_client(resultfile, client=client)
+    # compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
+#    number_of_molecules(resultfile, client= client)
