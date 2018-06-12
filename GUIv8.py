@@ -91,6 +91,9 @@ def timed_msgbox(msg, top_title="Selection successful", duration=800):
     top.title(top_title)
     Message(top, text=msg, padx=20, pady=20).pack()
     top.after(duration, top.destroy)
+        # # show timed messagebox
+        # select_msg = "You selected \"{}\".".format(value21)
+        # timed_msgbox(select_msg)
 
 
 imagelist = []
@@ -133,7 +136,7 @@ def ex1_button():
         buttonshow1 = Button(root, text=splitfilename[1], bg="blue")
         buttonshow1.grid(row=1, column=1, sticky="ew")    
     else:
-        print ("file not selected")
+        print ("File not selected")
     
     ## Some pre-process to the excel1 file. It is connected with help functions
     global excel1_specific_column_uniq_Cliente
@@ -163,7 +166,7 @@ def ex2_button():
 
 ## FUNCTIONS OF STATISTIC BUTTONS
 
-def act_button1():     
+def act_button1():       
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb11.grid(row=2, column=1, sticky="nsew")
     # Adding scrollbar for lb11
@@ -233,9 +236,6 @@ def act_button2():
         value21 = lb21.get(lb21.curselection())
         # selected_value21 = True
 
-        # show timed messagebox
-        select_msg = "You selected \"{}\".".format(value21)
-        timed_msgbox(select_msg)
         act_lb22()
     lb21.bind("<<ListboxSelect>>", cur_selection21)
 
@@ -462,8 +462,18 @@ def act_download():
                 "Unable to download report.")
     
 def act_go():
-    tkinter.messagebox.showinfo("GO!", "Your selection is: {}".format(value61))
-    
+    try:
+        residues_graph(pd.read_excel(splitfilename11[1], sheetname=0), value11, value12)    
+    except:
+        
+        tkinter.messagebox.showinfo("Error","Company and product not match")
+##    canvas = Canvas(root)
+##    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+##    img = PhotoImage( file=fig)
+##    canvas.create_image(100,100, image=img)
+##    list(img)
+##    listcounter(False)
+##    create_global_curr_fig(fig)   
     
 def act_add():
     selection = current_figure.partition(".")[0]
