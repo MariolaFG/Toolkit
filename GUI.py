@@ -96,6 +96,20 @@ def timed_msgbox(msg, top_title="Selection successful", duration=800):
         # timed_msgbox(select_msg)
 
 
+def draw_image(img):
+    """ Displays image in canvas.
+
+    img -- string, image to display
+    """
+    canvas = Canvas(root)
+    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    fig = PhotoImage( file=img)
+    canvas.create_image(100,100, image=fig)
+    list(fig)
+    listcounter(False)
+
+
+
 imagelist = []
 back_next_counter = -1
 def list(item):
@@ -387,6 +401,7 @@ def act_button5():
 
     lb51.bind("<<ListboxSelect>>", cur_selection51)
 
+
 def act_button6():
     lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb61.grid(row=7, column=1, sticky="nsew")
@@ -401,6 +416,7 @@ def act_button6():
         value61 = (lb61.get(lb61.curselection()))
 
     lb61.bind("<<ListboxSelect>>", cur_selection61)
+
 
 def act_button7():
     lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -417,6 +433,7 @@ def act_button7():
 
     lb71.bind("<<ListboxSelect>>", cur_selection71)
 
+
 def act_button8():
     lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb81.grid(row=9, column=1, sticky="nsew")
@@ -432,6 +449,7 @@ def act_button8():
 
     lb81.bind("<<ListboxSelect>>", cur_selection81)
 
+
 def act_button9():
     lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb91.grid(row=9, column=3, sticky="nsew")
@@ -446,14 +464,6 @@ def act_button9():
         value91 = (lb91.get(lb91.curselection()))
 
     lb91.bind("<<ListboxSelect>>", cur_selection91)
-
-    # canvas = Canvas(root)
-    # canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    # gif4 = PhotoImage( file="cat1.png")
-    # canvas.create_image(100,100, image=gif4)
-    # list(gif4)
-    # listcounter(False)
-
 
 
     
@@ -472,22 +482,15 @@ def act_download():
                 "Unable to download report.")
     
 def act_go():
-    try:
-        print (splitfilename11[1])
-        print(value11)
-        print(value12)
-        residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
-    except:
-        tkinter.messagebox.showinfo("Error","Company and product not match")
+    # try:
+    print (splitfilename11[1])
+    print(value11)
+    print(value12)
+    img = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
+    draw_image(img)
+    # except:
+    #     tkinter.messagebox.showinfo("Error","Company and product not match")
 
-
-##    canvas = Canvas(root)
-##    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-##    img = PhotoImage( file=fig)
-##    canvas.create_image(100,100, image=img)
-##    list(img)
-##    listcounter(False)
-##    create_global_curr_fig(fig) 
     
 def act_add():
     selection = current_figure.partition(".")[0]
