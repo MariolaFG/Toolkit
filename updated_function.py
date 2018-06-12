@@ -17,7 +17,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
         - Date: Optional. """
-    fig_name = "Function 1.png"
+    fig_name = "Function_1.png"
+    # fig_name = "Function 1 {}.png".format(version)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -121,7 +122,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         
         fig.savefig(fig_name)
         return(fig_name) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
-
+        
 
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
     """This function creates a graph on average amount of residues in a single 
@@ -130,7 +131,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         - Compound: compulsory (column Prova)
         - Crop: compulsory (column Gruppo_prodotto
         - Date: optional"""
-    fig_name "Function_2.png"   ## CHANGE!
+    fig_name = "Function_2.png"   ## CHANGE!
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Prova"] == compound]
