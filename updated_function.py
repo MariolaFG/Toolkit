@@ -403,7 +403,8 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     over a certain time span.
     Variables:
         Date: optional"""   
-        
+    fig_name = "Function_5.png"
+
     if date != "all":
         infofile = infofile[infofile["ANNO"] == str(date)]
     if date != "all":
@@ -441,17 +442,20 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
             labels.append(element)
             explode.append(0.1)
 
+        fig = plt.figure()
         plt.xticks(rotation='vertical')
         plt.title(str(year))
         plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels, color="aquamarine")
-        plt.show()
+        fig.savefig(fig_name)
+        return(fig_name)
 
 def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
     """ This function creates a graph on percentage of samples that exceeds 
     the limit in timeline.
     Variables:
         - Date: optional"""
-    
+    fig_name = "Fucntion_6.png"
+
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == str(date)]
     if client != "all":
@@ -483,15 +487,18 @@ def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
               "Maggiore o uguale a 100"]
     colors = ['lightskyblue', 'lightblue', 'cyan',"aquamarine", "coral"]
     explode = (0.05, 0.05, 0.05, 0.05, 0.2)
+
+    fig = plt.figure()
     plt.xticks(rotation='vertical')
     plt.pie(list3, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, \
             pctdistance=0.7, explode=explode)
     plt.title("Samples grouped by threshold in " + str(date), fontsize= 16)
     
-    plt.show()
-    
     over_threshold(resultfile[resultfile['Classi_Ris_Lim_perc'] == \
                               "Maggiore o uguale a 100"])
+
+    fig.savefig(fig_name)
+    return(fig_name)
 
 
 def clients_graph(resultfile, date = "all"): ## 8
@@ -499,7 +506,8 @@ def clients_graph(resultfile, date = "all"): ## 8
     exceeding the limit. 
     
     Variables needed: None, date is optional."""
-    
+    fig_name = "Function_8.png"
+
     if date != "all":
         data = resultfile[resultfile["ANNO"] == str(date)]
     if date == "all":
@@ -541,11 +549,15 @@ def clients_graph(resultfile, date = "all"): ## 8
     labels = ["All samples over threshold", "Some samples over threshold",\
               "No samples over threshold"]
     colors = ['coral', 'gold', 'lightgreen']
+
+    fig = plt.figure()
     plt.pie(np.array([len(client_dic[1]), len(client_dic[2]), len(client_dic[3])]),\
             labels=labels, shadow=True, explode=explode, autopct='%1.1f%%',\
             pctdistance=0.6, colors=colors)
     plt.title("Clients grouped by threshold in " + str(date), fontsize= 16)
-    plt.show()
+    
+    fig.savefig(fig_name)
+    # return(fig_name) ## uncommented this because of return of dict
 
     return client_dic
 
@@ -555,7 +567,8 @@ def products_of_client(resultfile, client, date = "all"):
     Variables:
         - Client: compulsory (column Cliente)
         - Date: Optional."""
-    
+    fig_name = "Function_?.png"
+
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == str(date)]
     
@@ -576,12 +589,14 @@ def products_of_client(resultfile, client, date = "all"):
     for element in prod:
         sizes.append(prod[element][0])
         labels.append(element)
-        
+    
+    fig = plt.figure()
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
     plt.title("Crops analyzed from " + client + " in " + str(date), fontsize= 16)
-    plt.show()
+    fig.savefig(fig_name)
+    return(fig_name)
              
 def over_threshold(reducedfile):
    
