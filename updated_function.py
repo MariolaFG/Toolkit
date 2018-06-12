@@ -4,6 +4,7 @@
 
 from __future__ import division
 import pandas as pd
+from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import numpy as np
@@ -17,6 +18,8 @@ def residues_graph(resultfile, client, crop, date = "all", title="Function 1"): 
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
         - Date: Optional. """
+
+    fig_name = "{}.png".format(title)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -118,8 +121,8 @@ def residues_graph(resultfile, client, crop, date = "all", title="Function 1"): 
                       + str(date), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
 
-    fig.savefig("{}.png".format(title))
-    return(fig)   
+    fig.savefig(fig_name)
+    return(fig_name)   
 
 
 
