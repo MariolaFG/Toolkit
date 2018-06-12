@@ -53,6 +53,9 @@ root.rowconfigure(10, weight=1)
 
 # FUNCTIONS OF HELP TO OTHER FUNCTIONS
 
+global most_recent_function
+most_recent_function = 0
+
 def scroll_fun(e): ## Function for adding scrollbars into the listbox
     scrollbar_v = Scrollbar(e, orient= "vertical")
     scrollbar_v.config(command= e.yview)
@@ -186,6 +189,9 @@ def act_button1():
     """ Shows listboxes for client, product and year 
     to select from for function 1.  
     """   
+    global most_recent_function
+    most_recent_function = 1
+
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb11.grid(row=2, column=1, sticky="nsew")
     # Adding scrollbar for lb11
@@ -246,6 +252,9 @@ def act_button2():
     """ Shows listboxes for product, compound and year 
     to select from for function 2.  
     """
+    global most_recent_function
+    most_recent_function = 2
+
     # create listboxes
     lb21 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb21.grid(row=3, column=1, sticky="nsew")
@@ -482,16 +491,22 @@ def act_download():
                 "Unable to download report.")
     
 def act_go():
-    # try:
-    print (splitfilename11[1])
-    print(value11)
-    print(value12)
-    img = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
-    draw_image(img)
-    # except:
-    #     tkinter.messagebox.showinfo("Error","Company and product not match")
-
     
+    if most_recent_function == 0:
+        tkinter.messagebox.showinfo("Error","Pick a graph first")
+    elif most_recent_function == 1:
+        print (splitfilename11[1])
+        residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
+    elif most_recent_function == 2:
+        print("THis is  compound",value21)
+        print("THis is  crop",value22)
+        print (splitfilename11[1])
+        compound_per_client(pd.read_excel(splitfilename11[1]), compound=value22, crop=value21, date = "all", hide=True)   
+    else:
+        tkinter.messagebox.showinfo("Graph 2","Graph 2 is executed")
+
+
+
 def act_add():
     selection = current_figure.partition(".")[0]
 
