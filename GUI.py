@@ -117,9 +117,6 @@ def draw_image(fig):
     label = Label(image=resized)
     label.img = resized
     label.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
-    ## resized is an image, but in create_image it is the path
-    # canvas.create_image(200,200, image=resized)
-
     list(img)
     listcounter(False)
     create_global_curr_fig(fig)

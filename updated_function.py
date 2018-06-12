@@ -90,6 +90,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                 count_5 = count_5 + 1
 
         fig = plt.figure()
+        fig.set_size_inches(18.0, 18.0, forward=True)
+        # fig.figsize(8.0, 6.0)
         if len(sizes_0) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
@@ -120,9 +122,9 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
         
-        fig.savefig(fig_name)
+        fig.savefig(fig_name, dpi=100)
         return(fig_name) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
-        
+
 
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
     """This function creates a graph on average amount of residues in a single 
