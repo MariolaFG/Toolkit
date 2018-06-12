@@ -17,6 +17,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
         - Date: Optional. """
+    fig_name = "Function 1.png"
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -32,7 +33,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         err_val = {}
         data2 = data[data["ANNO"] == year]
         for element in data["Prova"]:
-            name = element + "_" + year
+            name = element + "_" + str(year)
             prev = data2[data2["Prova"] == element]
             # prev contains the data from a single year, client, crop and compound
             prev2 = prev["Risultato"].astype(str).str.replace(',','.')
@@ -86,7 +87,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                 if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
                     limits_5.append(count_5)
                 count_5 = count_5 + 1
-        
+
+        fig = plt.figure()
         if len(sizes_0) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
@@ -96,7 +98,6 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
             
         if len(sizes_1) > 0:
             plt.xticks(rotation='vertical')
@@ -107,7 +108,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
+
         if len(sizes_5) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
@@ -117,7 +118,9 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
+        
+        fig.savefig(fig_name)
+        return(fig_name) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
 
 
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
@@ -127,6 +130,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         - Compound: compulsory (column Prova)
         - Crop: compulsory (column Gruppo_prodotto
         - Date: optional"""
+    fig_name "Function_2.png"   ## CHANGE!
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Prova"] == compound]
@@ -145,7 +149,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         # data2 contains the information for single crop, year and compound.
         for element in data["Cliente"]:
             if hide == False:
-                name = element + "_" + year
+                name = element + "_" + str(year)
             if hide == True:
                 name = client_count
                 client_dic["Client " + str(name)] = element+ "_" + year
@@ -180,6 +184,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                 limits.append(count)
             count = count + 1
         
+        fig = plt.figure()
         if len(sizes) < 30:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(x, sizes, width=0.4, tick_label = label)
@@ -188,7 +193,6 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
             plt.title(compound + " in " + crop + " - " + str(year)\
                       , fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
         
         if len(sizes) > 30:
             start = 0
@@ -216,9 +220,11 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                           fontsize= 16)
                 
                 plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-                plt.show()
                 
                 start = start + 30
+
+        fig.savefig(fig_name)
+        return(fig_name)
                 
     data_client = pd.DataFrame.from_dict(client_dic, orient="index")
     writer = pd.ExcelWriter('Client_index.xlsx', engine='xlsxwriter')
@@ -233,6 +239,8 @@ def samples_product_type(resultfile, client = "all", detail = False,\
     Variables:
         - Client = optional"""
     
+    fig_name = "Function_3.png"
+
     if client != "all":
         resultfile = resultfile[resultfile["Cliente"] == str(client)]
     years = list(set(resultfile["ANNO"].tolist()))
@@ -285,10 +293,13 @@ def samples_product_type(resultfile, client = "all", detail = False,\
             labels.append("Other")
             sizes.append(other)
             explode.append(0.1)
+        fig = plt.figure()
         plt.title(str(year))
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-        plt.show
+
+        fig.savefig(fig_name)
+        return(fig_name)
 
 
 
@@ -304,13 +315,12 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         concentration.
         - Order dates chronologicaly
         """
-    
+    fig_name = "Function_4.png"
+
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
     data = data[data["Prova"] == compound]
     dates = list(set(data["Data_Arrivo"].tolist()))
-    
-    
     
     prod = {}
     err_val = {}
@@ -345,6 +355,7 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             limits.append(count)
         count = count + 1
 
+    fig = plt.figure()
     if len(sizes) <= 20:    
         plt.xticks(rotation='vertical')
         barlist = plt.bar(x, sizes, width=0.4, tick_label = labels)
@@ -353,7 +364,7 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         plt.title(compound + " analyzed in " + crop + " from " + client \
                   , fontsize= 16)
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-        plt.show()
+
     
     if len(sizes) > 20:
         ind = 20
@@ -378,9 +389,11 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             plt.title(compound + " analyzed in " + crop + " from " + client \
                       , fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            plt.show()
             
             ind = ind + 20
+
+    fig.savefig(fig_name)
+    return(fig_name)
         
         # This update is just to make sure that the graph is not messy, dividing
         # the samples in groups of 20
