@@ -113,7 +113,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
 
         if len(sizes_5) > 0:
-            plt.xticks(rotation='vertical')
+            plt.xticks(rotation='verticaal')
             barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
                               tick_label = labels_5)
             for element in limits_5:
@@ -226,13 +226,13 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                 
                 start = start + 30
         fig.savefig(fig_name)
-        return(fig_name)
+        
                 
     data_client = pd.DataFrame.from_dict(client_dic, orient="index")
     writer = pd.ExcelWriter('Client_index.xlsx', engine='xlsxwriter')
     data_client.to_excel(writer, sheet_name='Sheet1')
     writer.save()
-    
+    return(fig_name)
 
 
 def samples_product_type(resultfile, client = "all", detail = False,\
