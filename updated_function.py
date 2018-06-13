@@ -246,7 +246,6 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                 plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
                 
                 start = start + 30
-
         fig.savefig(fig_name)
         return(fig_name)
                 
@@ -322,7 +321,6 @@ def samples_product_type(resultfile, client = "all", detail = False,\
         plt.title(str(year))
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-
         fig.savefig(fig_name)
         return(fig_name)
 
@@ -417,7 +415,6 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
             ind = ind + 20
-
     fig.savefig(fig_name)
     return(fig_name)
         
@@ -475,6 +472,7 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
         plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels, color="aquamarine")
         fig.savefig(fig_name)
         return(fig_name)
+
 
 def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
     """ This function creates a graph on percentage of samples that exceeds 
@@ -572,7 +570,8 @@ def clients_graph(resultfile, date = "all"): ## 8
                     client_dic[2].append(element)
                 if count == 0:
                     client_dic[3].append(element)
-    
+
+
     # Create the plot:
     explode = (0.1, 0.05, 0.05) 
     labels = ["All samples over threshold", "Some samples over threshold",\
@@ -586,9 +585,9 @@ def clients_graph(resultfile, date = "all"): ## 8
     plt.title("Clients grouped by threshold in " + str(date), fontsize= 16)
     
     fig.savefig(fig_name)
+    return(fig_name)
     # return(fig_name) ## uncommented this because of return of dict
-
-    return client_dic
+    #return client_dic
 
         
 def products_of_client(resultfile, client, date = "all"):
@@ -666,7 +665,7 @@ def over_threshold(reducedfile):
         
     plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
             explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-    plt.show()
+    #plt.show()
     
     prod = {}
     for element in reducedfile["Gruppo_prodotto"]:
@@ -689,7 +688,7 @@ def over_threshold(reducedfile):
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
     plt.title("Products over the threshold", fontsize= 16)
-    plt.show()
+
        
  
 if __name__ == "__main__":

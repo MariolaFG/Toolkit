@@ -342,6 +342,8 @@ def act_button3():
     """ Shows listboxes for product, client and year 
     to select from for function 3.  
     """
+    global most_recent_function
+    most_recent_function = 3
     lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb31.grid(row=4, column=1, sticky="nsew")
     ## Adding scrollbar for lb31
@@ -415,6 +417,8 @@ def act_button4():
 
 
 def act_button5():
+    global most_recent_function
+    most_recent_function = 5
     lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb51.grid(row=6, column=1, sticky="nsew")
     ## Adding scrollbar for lb51
@@ -431,6 +435,8 @@ def act_button5():
 
 
 def act_button6():
+    global most_recent_function
+    most_recent_function = 6
     lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb61.grid(row=7, column=1, sticky="nsew")
     ## Adding scrollbar for lb61
@@ -447,6 +453,8 @@ def act_button6():
 
 
 def act_button7():
+    global most_recent_function
+    most_recent_function = 7
     lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb71.grid(row=8, column=1, sticky="nsew")
     ## Adding scrollbar for lb71
@@ -463,6 +471,8 @@ def act_button7():
 
 
 def act_button8():
+    global most_recent_function
+    most_recent_function = 8
     lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb81.grid(row=9, column=1, sticky="nsew")
     ## Adding scrollbar for lb81
@@ -479,6 +489,8 @@ def act_button8():
 
 
 def act_button9():
+    global most_recent_function
+    most_recent_function = 9
     lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb91.grid(row=9, column=3, sticky="nsew")
     ## Adding scrollbar for lb91
@@ -521,12 +533,29 @@ def act_go():
         print (imagelist)
         timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)))
     elif most_recent_function == 2:
-        print("THis is  compound",value21)
-        print("THis is  crop",value22)
-        print (splitfilename11[1])
-        compound_per_client(pd.read_excel(splitfilename11[1]), compound=value22, crop=value21, date = "all", hide=True)   
+        img = compound_per_client(pd.read_excel(splitfilename11[1]), compound=value22, crop=value21, date = "all", hide=True)
+        draw_image(img)  
+    elif  most_recent_function == 3:
+        img = residues_graph_esp(pd.read_excel(splitfilename11[1]), client=value32, crop = value31, compound= value33)
+        draw_image(img)
+    elif most_recent_function == 5:
+        img = number_of_molecules(pd.read_excel(splitfilename11[1]), client= value51)
+        draw_image(img)
+    elif most_recent_function == 6:
+        img = samples_product_type(pd.read_excel(splitfilename11[1]), client="all", date=value61, detail=True)
+        draw_image(img)
+    elif most_recent_function == 7:
+        img = samples_product_type(pd.read_excel(splitfilename11[1]), client= value71, date="all", detail=True)
+        draw_image(img)
+    elif most_recent_function == 8:
+        img = threshold_pie(pd.read_excel(splitfilename11[1]), date = value81, client="all", detail = True)
+        print ("BLA")
+        draw_image(img)
+    elif most_recent_function == 9:
+        img = clients_graph(pd.read_excel(splitfilename11[1]), date= value91)
+        draw_image(img)
     else:
-        tkinter.messagebox.showinfo("Graph 2","Graph 2 is executed")
+        tkinter.messagebox.showinfo("Error","Pick a graph first")
 
 
 
