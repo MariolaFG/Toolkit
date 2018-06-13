@@ -229,7 +229,6 @@ def act_button1():
     """ Shows listboxes for client, product and year 
     to select from for function 1.  
     """   
-    # global most_recent_function
     most_recent_function = 1
 
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -238,7 +237,7 @@ def act_button1():
     scroll_fun(lb11)
     # Put the data into the listbox
     for i in excel1_specific_column_uniq_Cliente:
-        lb11.insert(END, i)
+        lb11.insert(END, i.upper())
 
     def cur_selection11(*x):
         global value11
@@ -292,7 +291,6 @@ def act_button2():
     """ Shows listboxes for product, compound and year 
     to select from for function 2.  
     """
-    global most_recent_function
     most_recent_function = 2
 
     # create listboxes
@@ -318,7 +316,7 @@ def act_lb22():
     """ Changes selection for Listbox 2 of function 2.
     """ 
     # create Listbox 
-    lb22 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb22 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb22.grid(row=3, column=2, sticky="nsew")
     ## Adding scrollbar for lb22
     scroll_fun(lb22)
@@ -326,7 +324,7 @@ def act_lb22():
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
     unique_prova = pre_proc(adjusted_excel, "Prova")
     for y in unique_prova:
-        lb22.insert(END, y)
+        lb22.insert(END, y.upper())
 
     def cur_selection22(*y):
         global value22
@@ -338,7 +336,7 @@ def act_lb22():
 def act_lb23():
     """ Changes selection for Listbox 3 of function 2.
     """    
-    lb23 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb23 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb23.grid(row=3, column=3, sticky="nsew")
     # ## Adding scrollbar for lb23
     # scroll_fun(lb23)
@@ -359,7 +357,6 @@ def act_button3():
     """ Shows listboxes for product, client and year 
     to select from for function 3.  
     """
-    global most_recent_function
     most_recent_function = 3
     lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb31.grid(row=4, column=1, sticky="nsew")
@@ -381,7 +378,7 @@ def act_lb32():
     """ Changes selection for Listbox 2 of function 3.
 
     """    
-    lb32 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb32 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb32.grid(row=4, column=2, sticky="nsew")
     ## Adding scrollbar for lb32
     scroll_fun(lb32)
@@ -389,7 +386,7 @@ def act_lb32():
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value31]
     unique_cliente = pre_proc(adjusted_excel, "Cliente")
     for y in unique_cliente:
-        lb32.insert(END, y)
+        lb32.insert(END, y.upper())
 
     def cur_selection32(*y):
         global value32
@@ -402,7 +399,7 @@ def act_lb33():
     """ Changes selection for Listbox 3 of function 3.
 
     """        
-    lb33 = Listbox(root, selectmode=EXTENDED, exportselection=0)
+    lb33 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb33.grid(row=4, column=3, sticky="nsew")
     # ## Adding scrollbar for lb33
     # scroll_fun(lb33)
@@ -434,7 +431,6 @@ def act_button4():
 
 
 def act_button5():
-    global most_recent_function
     most_recent_function = 5
     lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb51.grid(row=6, column=1, sticky="nsew")
@@ -452,7 +448,6 @@ def act_button5():
 
 
 def act_button6():
-    global most_recent_function
     most_recent_function = 6
     lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb61.grid(row=7, column=1, sticky="nsew")
@@ -470,7 +465,6 @@ def act_button6():
 
 
 def act_button7():
-    global most_recent_function
     most_recent_function = 7
     lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb71.grid(row=8, column=1, sticky="nsew")
@@ -478,7 +472,7 @@ def act_button7():
     scroll_fun(lb71)
 
     for i in excel1_specific_column_uniq_Cliente:
-        lb71.insert(END, i)
+        lb71.insert(END, i.upper())
 
     def cur_selection71(*x):
         global value71
@@ -488,7 +482,6 @@ def act_button7():
 
 
 def act_button8():
-    global most_recent_function
     most_recent_function = 8
     try:
         lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -510,7 +503,6 @@ def act_button8():
 
 
 def act_button9():
-    global most_recent_function
     most_recent_function = 9
     lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb91.grid(row=9, column=3, sticky="nsew")
