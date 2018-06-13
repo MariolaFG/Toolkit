@@ -92,7 +92,7 @@ def timed_msgbox(msg, top_title="Results", duration=1000):
     
     msg -- string, message to display
     top_title -- string, title of msgbox -default: "Results"
-    duration -- integer, number of milliseconds -default: 800
+    duration -- integer, number of milliseconds -default: 1000
     """        
     top = Toplevel()
     top.title(top_title)
