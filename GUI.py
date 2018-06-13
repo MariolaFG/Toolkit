@@ -4,6 +4,8 @@ import matplotlib.backends.tkagg as tkagg
 import numpy as np
 import os.path
 import pandas as pd
+import PIL.Image
+import PIL.ImageTk
 from reportlab_report import make_pdf
 import sys
 import tkinter.messagebox
@@ -101,20 +103,25 @@ def timed_msgbox(msg, top_title="Selection successful", duration=800):
         # timed_msgbox(select_msg)
 
 
-def draw_image(img):
+def draw_image(fig):
     """ Displays image in canvas.
 
     img -- string, image to display
     """
-
-    # canvas_fig = FigureCanvasAgg(fig)
-    # canvas_fig.draw()
-    canvas = Canvas(root)
-    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    fig = PhotoImage(file=img)
-    canvas.create_image(200,200, image=fig)
-    list(fig)
+    # canvas = Canvas(root)
+    # canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    img = PIL.Image.open(fig)
+    # img = PhotoImage( file=fig)
+    img = img.resize((500, 500), PIL.Image.ANTIALIAS)
+    resized = PIL.ImageTk.PhotoImage(img)
+    label = Label(image=resized)
+    label.img = resized
+    label.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
+    list(img)
     listcounter(False)
+    create_global_curr_fig(fig)
+    return(0)
+
 
 
 
@@ -508,7 +515,8 @@ def act_go():
         tkinter.messagebox.showinfo("Error","Pick a graph first")
     elif most_recent_function == 1:
         print (splitfilename11[1])
-        residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
+        img = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
+        draw_image(img)
     elif most_recent_function == 2:
         print("THis is  compound",value21)
         print("THis is  crop",value22)

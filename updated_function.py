@@ -17,7 +17,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
         - Date: Optional. """
-    fig_name = "Function 1.png"
+    fig_name = "Function_1.png"
+    # fig_name = "Function 1 {}.png".format(version)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -89,6 +90,8 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                 count_5 = count_5 + 1
 
         fig = plt.figure()
+        fig.set_size_inches(18.0, 18.0, forward=True)
+        # fig.figsize(8.0, 6.0)
         if len(sizes_0) > 0:
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
@@ -119,7 +122,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                       + str(year), fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
         
-        fig.savefig(fig_name)
+        fig.savefig(fig_name, dpi=100)
         return(fig_name) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
 
 
@@ -130,7 +133,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         - Compound: compulsory (column Prova)
         - Crop: compulsory (column Gruppo_prodotto
         - Date: optional"""
-    fig_name "Function_2.png"   ## CHANGE!
+    fig_name = "Function_2.png"   ## CHANGE!
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Prova"] == compound]
