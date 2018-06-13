@@ -13,6 +13,8 @@ from functools import partial
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename
+#import mp3play
+from winsound import *
 
 
 root = Tk()
@@ -120,7 +122,7 @@ def draw_image(fig):
     list(fig)
     listcounter(False)
     create_global_curr_fig(fig)
-    return(0)
+    pass
 
 
 
@@ -147,6 +149,21 @@ def create_global_curr_fig(fig):
     global current_figure
     current_figure = fig
 
+hidecounter = False
+def act_hide():
+    global hidecounter
+    if hidecounter == False:
+        hidecounter = True
+        print("1")
+    else:
+        hidecounter = False
+        print("2")
+    if hidecounter == True:
+        buttonHide.config(bg = "red", text= "Hide OFF")
+        print("3")
+    else:
+        buttonHide.config(bg = "blue", text= "Hide ON")
+        print("4")
 
 def _quit():
     root.quit()     # stops mainloop
@@ -473,19 +490,23 @@ def act_button7():
 def act_button8():
     global most_recent_function
     most_recent_function = 8
-    lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb81.grid(row=9, column=1, sticky="nsew")
-    ## Adding scrollbar for lb81
-    scroll_fun(lb81)
+    try:
+        lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb81.grid(row=9, column=1, sticky="nsew")
+        ## Adding scrollbar for lb81
+        scroll_fun(lb81)
 
-    for i in excel1_specific_column_uniq_ANNO:
-        lb81.insert(END, i)
+        for i in excel1_specific_column_uniq_ANNO:
+            lb81.insert(END, i)
 
-    def cur_selection81(*x):
-        global value81
-        value81 = (lb81.get(lb81.curselection()))
+        def cur_selection81(*x):
+            global value81
+            value81 = (lb81.get(lb81.curselection()))
 
-    lb81.bind("<<ListboxSelect>>", cur_selection81)
+        lb81.bind("<<ListboxSelect>>", cur_selection81)
+    except:
+        tkinter.messagebox.showinfo("ERROR","No Excel file available")
+        winsound.Beep("")
 
 
 def act_button9():
@@ -520,6 +541,7 @@ def act_download():
     except:
         tkinter.messagebox.showinfo("Download report",
                 "Unable to download report.")
+        play = lambda: PlaySound("Error_sound.wmv", SND_FILENAME)
  
     
 def act_go():
@@ -529,7 +551,7 @@ def act_go():
     elif most_recent_function == 1:
         # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
         img_list = residues_graph(excel1, value11, value12)
-    elif most_recent_function == 2:
+    elif most_recent_function == 2:  
         img_list = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
     elif  most_recent_function == 3:
         img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
@@ -584,6 +606,7 @@ def forwardbutton():
     except IndexError:
         draw_image(imagelist[back_next_counter])
         tkinter.messagebox.showinfo("ERROR","No more graphs")
+        
 
 def openInstrucktion():
     os.startfile("Instructions.pdf")
@@ -602,7 +625,7 @@ button2.grid(row=3, column=0, sticky="nsew")
 button3 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command=act_button3)
 button3.grid(row=4, column=0, sticky="nsew")
 
-button4 = Button(root,text="", command=act_button4)
+button4 = Button(root,text="Button_4")
 button4.grid(row=5, column=0, sticky="nsew")
 
 button5 = Button(root,text="5. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button5)
@@ -632,8 +655,11 @@ addbutton.grid(row=10, column=10, sticky="ewsn")
 buttonDownload = Button(root, text="Download Summary", bg="green", command=act_download)
 buttonDownload.grid(row=10, column=0, columnspan=2, sticky="nsew")
 
-buttonGo = Button(root, text="GO!", bg="blue", command=act_go)
+buttonGo = Button(root, text="GO!", bg="blue", command= act_go)
 buttonGo.grid(row=10, column=3, sticky="nsew")
+
+buttonHide = Button(root, text="Hide ON", bg="blue", command= act_hide)
+buttonHide.grid(row=10, column=8, sticky="ew")
 
 buttonex1 = Button(root, text="Excel file 1", command=ex1_button)
 buttonex1.grid(row=1, column=0, sticky="ew")

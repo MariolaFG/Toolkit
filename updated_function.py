@@ -265,7 +265,6 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
 
     print(fig_list)
     return(fig_list)
-    
 
 
 def samples_product_type(resultfile, client = "all", detail = False,\
