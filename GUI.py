@@ -14,7 +14,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename
 #import mp3play
-from winsound import *
+import winsound
 
 
 root = Tk()
@@ -122,8 +122,6 @@ def draw_image(fig):
     label = Label(image=resized)
     label.img = resized
     label.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
-    list(fig)
-    listcounter(False)
     create_global_curr_fig(fig)
     pass
 
@@ -133,20 +131,23 @@ def draw_image(fig):
 imagelist = []
 back_next_counter = -1
 def list(item):
-    global imagelist    
+    global imagelist
+    print ("List is reached this time")
     imagelist.append(item)
 
 def listcounter(x):
     global back_next_counter
+    print ("The number of listcounter is:",back_next_counter)
     if x == True:
         back_next_counter = back_next_counter - 1
+        print (x)
     else:
         back_next_counter = back_next_counter + 1
+        print(x)
 
 
 def create_global_curr_fig(fig):
     """ Creates global of current figure.
-
     fig -- string, name of figure
     """
     global current_figure
@@ -157,16 +158,12 @@ def act_hide():
     global hidecounter
     if hidecounter == False:
         hidecounter = True
-        print("1")
     else:
         hidecounter = False
-        print("2")
-    if hidecounter == True:
-        buttonHide.config(bg = "red", text= "Hide OFF")
-        print("3")
+    if hidecounter == False:
+        buttonHide.config(bg = "blue", text= "Show Client")
     else:
-        buttonHide.config(bg = "blue", text= "Hide ON")
-        print("4")
+        buttonHide.config(bg = "red", text= "Hide Client")
 
 def _quit():
     root.quit()     # stops mainloop
@@ -278,6 +275,7 @@ def act_lb13():
     unique_anno = pre_proc(adjusted_excel, "ANNO")
     for z in excel1_specific_column_uniq_ANNO:
         lb13.insert(END, z)
+    lb13.insert(END, "all")
 
     def cur_selection13(*z):
         global value13
@@ -345,6 +343,7 @@ def act_lb23():
     unique_anno = pre_proc(adjusted_excel, "ANNO")
     for z in unique_anno:
         lb23.insert(END, z)
+    lb23.insert(END, "all")
 
     def cur_selection23(*z):
         global value23
@@ -420,14 +419,16 @@ def act_button4():
     # works but GUI can't close
     # resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
     # fig = product_type(resultfile,"Function_5" )
-    fig = "cat.png"
-    canvas = Canvas(root)
-    canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    img = PhotoImage( file=fig)
-    canvas.create_image(100,100, image=img)
-    list(img)
-    listcounter(False)
-    create_global_curr_fig(fig)
+    # fig = "cat.png"
+    # canvas = Canvas(root)
+    # canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    # img = PhotoImage( file=fig)
+    # canvas.create_image(100,100, image=img)
+    # list(img)
+    # listcounter(False)
+    # create_global_curr_fig(fig)
+    winsound.PlaySound("Feeling Happy Sound Effect", winsound.SND_FILENAME)
+    winsound.PlaySound(None, winsound.SND_PURGE)
 
 
 def act_button5():
@@ -537,35 +538,35 @@ def act_download():
  
     
 def act_go():
-    try:
-        if most_recent_function == 0:
-            tkinter.messagebox.showinfo("Error","Pick a graph first")
-        elif most_recent_function == 1:
-            # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
-            img_list = residues_graph(excel1, value11, value12, value13)
-        elif most_recent_function == 2:  
-            img_list = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
-        elif  most_recent_function == 3:
-            img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
-        elif most_recent_function == 5:
-            img_list = number_of_molecules(excel1, client= value51)
-        elif most_recent_function == 6:
-            img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
-        elif most_recent_function == 7:
-            img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
-        elif most_recent_function == 8:
-            img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
-        elif most_recent_function == 9:
-            img_list = clients_graph(excel1, date= value91)
+    # try:
+    if most_recent_function == 0:
+        tkinter.messagebox.showinfo("Error","Pick a graph first")
+    elif most_recent_function == 1:
+        # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
+        img_list = residues_graph(excel1, value11, value12, value13)
+    elif most_recent_function == 2:
+        print ("THe go button is:",hidecounter)
+        img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
+    elif  most_recent_function == 3:
+        img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
+    elif most_recent_function == 5:
+        img_list = number_of_molecules(excel1, client= value51)
+    elif most_recent_function == 6:
+        img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
+    elif most_recent_function == 7:
+        img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
+    elif most_recent_function == 8:
+        img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
+    elif most_recent_function == 9:
+        img_list = clients_graph(excel1, date= value91)
 
-        for img in img_list:
-            draw_image(img)
-        print (imagelist)
-        timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+     for img in img_list:
+        draw_image(img)
+     print (imagelist)
+     timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
             "Created graphs", 1500)
-    except:
-        tkinter.messagebox.showinfo("Error","Pick a function first")
-
+    # except:
+    #     tkinter.messagebox.showinfo("Error","Pick a function first")
 
 
 def act_add():
@@ -616,7 +617,7 @@ button2.grid(row=3, column=0, sticky="nsew")
 button3 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command=act_button3)
 button3.grid(row=4, column=0, sticky="nsew")
 
-button4 = Button(root,text="Button_4")
+button4 = Button(root,text="Button_4", command = act_button4)
 button4.grid(row=5, column=0, sticky="nsew")
 
 button5 = Button(root,text="5. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button5)
@@ -649,7 +650,7 @@ buttonDownload.grid(row=10, column=0, columnspan=2, sticky="nsew")
 buttonGo = Button(root, text="GO!", bg="blue", command= act_go)
 buttonGo.grid(row=10, column=3, sticky="nsew")
 
-buttonHide = Button(root, text="Hide ON", bg="blue", command= act_hide)
+buttonHide = Button(root, text="Show Client", bg="blue", command= act_hide)
 buttonHide.grid(row=10, column=8, sticky="ew")
 
 buttonex1 = Button(root, text="Excel file 1", command=ex1_button)
