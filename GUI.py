@@ -18,6 +18,9 @@ import winsound
 
 
 root = Tk()
+#FOR LOGO:
+# root.iconbitmap(r"Images\GUIlogo.ico")
+# root.iconbitmap(r"Images\LogoIco.ico")
 
 ## Create the main window
 root.title("SATAlytics")
@@ -179,7 +182,9 @@ def ex1_button():
 
     filename = askopenfilename() # open selection of files
     splitfilename11 = filename.rsplit('/', 1)
-    excel1 = pd.read_excel(filename)
+    excel1 = pd.read_excel(filename, sheet_name=0)
+    excel1.drop(excel1.index[len(excel1) - 1], inplace=True) #drop total row
+    excel1 = excel1.loc[(excel1["Gruppo_prodotto"] != "NON NORMATO")]
     if filename:        
         excel1_columns = excel1.columns.values.tolist()
 
@@ -200,9 +205,8 @@ def ex1_button():
     global excel1_specific_column_uniq_ANNO
     excel1_specific_column_uniq_ANNO = pre_proc(excel1,'ANNO')
 
-    global excel1_specific_column_uniq_Prova
-    excel1_specific_column_uniq_Prova = pre_proc(excel1,"Prova")
-
+    global most_recent_function
+    most_recent_function = 0
 
 
 def ex2_button():
@@ -222,7 +226,6 @@ def act_button1():
     """ Shows listboxes for client, product and year 
     to select from for function 1.  
     """   
-    global most_recent_function
     most_recent_function = 1
 
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -231,7 +234,7 @@ def act_button1():
     scroll_fun(lb11)
     # Put the data into the listbox
     for i in excel1_specific_column_uniq_Cliente:
-        lb11.insert(END, i)
+        lb11.insert(END, i.upper())
 
     def cur_selection11(*x):
         global value11
@@ -286,7 +289,6 @@ def act_button2():
     """ Shows listboxes for product, compound and year 
     to select from for function 2.  
     """
-    global most_recent_function
     most_recent_function = 2
 
     # create listboxes
@@ -317,14 +319,10 @@ def act_lb22():
     ## Adding scrollbar for lb22
     scroll_fun(lb22)
 
-    # if selected_value21 == False:
-    #     for y in excel1_specific_column_uniq_Prova:
-    #         lb22.insert(END, y)
-    # elif selected_value21 == True:
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
     unique_prova = pre_proc(adjusted_excel, "Prova")
     for y in unique_prova:
-        lb22.insert(END, y)
+        lb22.insert(END, y.upper())
 
     def cur_selection22(*y):
         global value22
@@ -358,7 +356,6 @@ def act_button3():
     """ Shows listboxes for product, client and year 
     to select from for function 3.  
     """
-    global most_recent_function
     most_recent_function = 3
     lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb31.grid(row=4, column=1, sticky="nsew")
@@ -388,7 +385,7 @@ def act_lb32():
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value31]
     unique_cliente = pre_proc(adjusted_excel, "Cliente")
     for y in unique_cliente:
-        lb32.insert(END, y)
+        lb32.insert(END, y.upper())
 
     def cur_selection32(*y):
         global value32
@@ -435,7 +432,6 @@ def act_button4():
 
 
 def act_button5():
-    global most_recent_function
     most_recent_function = 5
     lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb51.grid(row=6, column=1, sticky="nsew")
@@ -453,7 +449,6 @@ def act_button5():
 
 
 def act_button6():
-    global most_recent_function
     most_recent_function = 6
     lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb61.grid(row=7, column=1, sticky="nsew")
@@ -471,7 +466,6 @@ def act_button6():
 
 
 def act_button7():
-    global most_recent_function
     most_recent_function = 7
     lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb71.grid(row=8, column=1, sticky="nsew")
@@ -479,7 +473,7 @@ def act_button7():
     scroll_fun(lb71)
 
     for i in excel1_specific_column_uniq_Cliente:
-        lb71.insert(END, i)
+        lb71.insert(END, i.upper())
 
     def cur_selection71(*x):
         global value71
@@ -489,7 +483,6 @@ def act_button7():
 
 
 def act_button8():
-    global most_recent_function
     most_recent_function = 8
     try:
         lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -511,7 +504,6 @@ def act_button8():
 
 
 def act_button9():
-    global most_recent_function
     most_recent_function = 9
     lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb91.grid(row=9, column=3, sticky="nsew")
@@ -568,15 +560,13 @@ def act_go():
     elif most_recent_function == 9:
         img_list = clients_graph(excel1, date= value91)
 
-    for img in img_list:
-        list(img)
-        listcounter(False)
+     for img in img_list:
         draw_image(img)
-    print (imagelist)
-    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)))
+     print (imagelist)
+     timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+            "Created graphs", 1500)
     # except:
     #     tkinter.messagebox.showinfo("Error","Pick a function first")
-
 
 
 def act_add():
@@ -585,14 +575,12 @@ def act_add():
     if not 'saved_list' in globals():
         global saved_list
         saved_list = [(selection, current_figure)]
-        #"{}".format(current_figure)
     else:
         saved_list += [(selection, current_figure)]
 
     print(saved_list)
 
-    tkinter.messagebox.showinfo("Add figure to report", 
-        "\"{}\" is added to the report.".format(selection))
+    timed_msgbox("\"{}\" is added to the report.".format(selection), "Added figure to report")
 
 
 def backbutton():
