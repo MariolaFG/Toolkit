@@ -87,12 +87,12 @@ def pre_proc(excel_file,column_name):
         tkinter.messagebox.showinfo("Missing column", "The column \"{}\" is missing.".format(column_name))
 
  
-def timed_msgbox(msg, top_title="Selection successful", duration=800):
+def timed_msgbox(msg, top_title="Results", duration=1000):
     """ Display messagebox that closes after specified time.
     
     msg -- string, message to display
-    top_title -- string, title of msgbox -default: "Selection successful"
-    duration -- integer, number of milliseconds -default: 3000
+    top_title -- string, title of msgbox -default: "Results"
+    duration -- integer, number of milliseconds -default: 800
     """        
     top = Toplevel()
     top.title(top_title)
@@ -117,7 +117,7 @@ def draw_image(fig):
     label = Label(image=resized)
     label.img = resized
     label.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
-    list(img)
+    list(fig)
     listcounter(False)
     create_global_curr_fig(fig)
     return(0)
@@ -134,7 +134,7 @@ def list(item):
 def listcounter(x):
     global back_next_counter
     if x == True:
-        back_next_counter = back_next_counter -1
+        back_next_counter = back_next_counter - 1
     else:
         back_next_counter = back_next_counter + 1
 
@@ -514,9 +514,12 @@ def act_go():
     if most_recent_function == 0:
         tkinter.messagebox.showinfo("Error","Pick a graph first")
     elif most_recent_function == 1:
-        print (splitfilename11[1])
-        img = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
-        draw_image(img)
+        # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
+        img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12)
+        for img in img_list:
+            draw_image(img)
+        print (imagelist)
+        timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)))
     elif most_recent_function == 2:
         print("THis is  compound",value21)
         print("THis is  crop",value22)
@@ -545,28 +548,19 @@ def act_add():
 
 def backbutton():
     if back_next_counter >= 1:
-        canvas = Canvas(root)
-        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[back_next_counter - 1])
+        draw_image(imagelist[back_next_counter - 1])
         listcounter(True)
     else:
-        canvas = Canvas(root)
-        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[back_next_counter])
+        draw_image(imagelist[back_next_counter])
         tkinter.messagebox.showinfo("ERROR","No more graphs")
     
 def forwardbutton():
     try:
-        canvas = Canvas(root)
-        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[back_next_counter + 1])
+        draw_image(imagelist[back_next_counter + 1])
         listcounter(False)
     except IndexError:
-        canvas = Canvas(root)
-        canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-        canvas.create_image(100,100, image=imagelist[back_next_counter])
+        draw_image(imagelist[back_next_counter])
         tkinter.messagebox.showinfo("ERROR","No more graphs")
-        pass
 
 def openInstrucktion():
     os.startfile("Instructions.pdf")
