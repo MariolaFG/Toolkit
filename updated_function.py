@@ -185,8 +185,8 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
             if len(prev["Limite"].tolist()) == 0:
                 threshold = "nan"
             try:
-                if not element + "_" + year in list_check:
-                    list_check.append(element + "_" + year)
+                if not element + "_" + str(year) in list_check:
+                    list_check.append(element + "_" + str(year))
                     client_count = client_count + 1
                     threshold = float(str(threshold).replace(",", "."))
                     prod[name] = [np.mean(list(map(float, prev2.tolist()))), threshold]
@@ -218,8 +218,8 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
             fig_title = compound + " in " + crop + " - " + str(year) + " 1"
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            # fig_name = "{}.png".format(fig_title)
-            fig_name = "Function21.png"
+            fig_name = "{}.png".format(fig_title)
+            # fig_name = "Function21.png"
             fig.savefig(fig_name, dpi=100)
             fig_list.append(fig_name)  
 
@@ -252,8 +252,7 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
                           fontsize= 16)
                 plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
                 
-                # fig_name = "{}.png".format(fig_title)
-                fig_name = "Function22.png"   
+                fig_name = "{}.png".format(fig_title)   
                 fig.savefig(fig_name, dpi=100)
                 fig_list.append(fig_name)  
 
@@ -264,6 +263,7 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
     data_client.to_excel(writer, sheet_name='Sheet1')
     writer.save()
 
+    print(fig_list)
     return(fig_list)
     
 
@@ -275,14 +275,13 @@ def samples_product_type(resultfile, client = "all", detail = False,\
         - Client = optional"""
     
     fig_list = []
-    fig_name = "Function_3.png"
 
     if client != "all":
         resultfile = resultfile[resultfile["Cliente"] == str(client)]
     years = list(set(resultfile["ANNO"].tolist()))
     
     if date != "all":
-        resultfile = resultfile[resultfile["ANNO"] == str(date)]
+        resultfile = resultfile[resultfile["ANNO"] == date]
         years = [str(date)]
     
     # This is to choose if we want the pie chart for product detail:
@@ -330,12 +329,18 @@ def samples_product_type(resultfile, client = "all", detail = False,\
             sizes.append(other)
             explode.append(0.1)
         fig = plt.figure()
-        plt.title(str(year))
+        fig.set_size_inches(18.0, 18.0)
+        fig_title = str(year)
+        plt.title(fig_title)
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-        fig.savefig(fig_name)
-        return(fig_name)
+        
+        fig_name = "{}.png".format(fig_title)   
+        fig.savefig(fig_name, dpi=100)
+        fig_list.append(fig_name)  
 
+    print(fig_list)
+    return(fig_list)
 
 
 def residues_graph_esp(resultfile, client, crop, compound):  ## 4 
@@ -351,7 +356,6 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         - Order dates chronologicaly
         """
     fig_list = []
-    fig_name = "Function_4.png"
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -392,15 +396,19 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         count = count + 1
 
     fig = plt.figure()
-    if len(sizes) <= 20:    
+    if len(sizes) <= 20:  
+        fig = plt.figure()
+        fig.set_size_inches(18.0, 18.0)  
         plt.xticks(rotation='vertical')
         barlist = plt.bar(x, sizes, width=0.4, tick_label = labels)
         for element in limits:
             barlist[element].set_color('indianred')
-        plt.title(compound + " analyzed in " + crop + " from " + client \
-                  , fontsize= 16)
+        fig_title = compound + " analyzed in " + crop + " from " + client + " 1"
+        plt.title(fig_title, fontsize= 16)
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-
+        fig_name = "{}.png".format(fig_title)   
+        fig.savefig(fig_name, dpi=100)
+        fig_list.append(fig_name)  
     
     if len(sizes) > 20:
         ind = 20
@@ -408,7 +416,9 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         while ind < len(sizes):
             sizes1 = sizes[ind-20:ind]
             labels1 = labels[ind-20:ind]
-            
+
+            fig = plt.figure()
+            fig.set_size_inches(18.0, 18.0)        
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes1)), sizes1, width=0.4, \
                               tick_label = labels1)
@@ -422,14 +432,17 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
                     
             limits1 = limits2    
             
-            plt.title(compound + " analyzed in " + crop + " from " + client \
-                      , fontsize= 16)
+            fig_title = compound + " analyzed in " + crop + " from " + client + " 2"
+            plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
             ind = ind + 20
-    fig.savefig(fig_name)
-    return(fig_name)
+        fig_name = "{}.png".format(fig_title)   
+        fig.savefig(fig_name, dpi=100)
+        fig_list.append(fig_name)  
         
+    print(fig_list)
+    return(fig_list)
         # This update is just to make sure that the graph is not messy, dividing
         # the samples in groups of 20
 
@@ -439,7 +452,6 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     Variables:
         Date: optional"""   
     fig_list = []
-    fig_name = "Function_5.png"
 
     if date != "all":
         infofile = infofile[infofile["ANNO"] == str(date)]
@@ -452,7 +464,7 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
         
     
     for year in years: # Produces a graph per year
-        data2 = infofile[infofile["ANNO"]==str(year)]
+        data2 = infofile[infofile["ANNO"] == year]
         prod = {}
         for element in data2["Gruppo_prodotto"]:
             if not element in prod:
@@ -479,11 +491,17 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
             explode.append(0.1)
 
         fig = plt.figure()
+        fig.set_size_inches(18.0, 18.0)  
         plt.xticks(rotation='vertical')
+        fig_title = str(year)
         plt.title(str(year))
         plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels, color="aquamarine")
-        fig.savefig(fig_name)
-        return(fig_name)
+        fig_name = "{}.png".format(fig_title)   
+        fig.savefig(fig_name, dpi=100)
+        fig_list.append(fig_name) 
+
+    print(fig_list)
+    return(fig_list) 
 
 
 def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
@@ -492,10 +510,9 @@ def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
     Variables:
         - Date: optional"""
     fig_list = []
-    fig_name = "Fucntion_6.png"
 
     if date != "all":
-        resultfile = resultfile[resultfile["ANNO"] == str(date)]
+        resultfile = resultfile[resultfile["ANNO"] == date]
     if client != "all":
         resultfile = resultfile[resultfile["Cliente"] == str(client)]
     
@@ -527,17 +544,23 @@ def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
     explode = (0.05, 0.05, 0.05, 0.05, 0.2)
 
     fig = plt.figure()
+    fig.set_size_inches(18.0, 18.0)
     plt.xticks(rotation='vertical')
     plt.pie(list3, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, \
             pctdistance=0.7, explode=explode)
-    plt.title("Samples grouped by threshold in " + str(date), fontsize= 16)
+    
+    fig_title = "Samples grouped by threshold in " + str(date)
+    plt.title(fig_title, fontsize= 16)
     
     over_threshold(resultfile[resultfile['Classi_Ris_Lim_perc'] == \
                               "Maggiore o uguale a 100"])
 
-    fig.savefig(fig_name)
-    return(fig_name)
+    fig_name = "{}.png".format(fig_title)   
+    fig.savefig(fig_name, dpi=100)
+    fig_list.append(fig_name)  
 
+    print(fig_list)
+    return(fig_list)
 
 def clients_graph(resultfile, date = "all"): ## 8
     """ This function produces a Graph on clients always, sometimes and never 
@@ -545,10 +568,9 @@ def clients_graph(resultfile, date = "all"): ## 8
     
     Variables needed: None, date is optional."""
     fig_list = []
-    fig_name = "Function_8.png"
 
     if date != "all":
-        data = resultfile[resultfile["ANNO"] == str(date)]
+        data = resultfile[resultfile["ANNO"] == date]
     if date == "all":
         data = resultfile
 
@@ -591,15 +613,21 @@ def clients_graph(resultfile, date = "all"): ## 8
     colors = ['coral', 'gold', 'lightgreen']
 
     fig = plt.figure()
+    fig.set_size_inches(18.0, 18.0)
     plt.pie(np.array([len(client_dic[1]), len(client_dic[2]), len(client_dic[3])]),\
             labels=labels, shadow=True, explode=explode, autopct='%1.1f%%',\
             pctdistance=0.6, colors=colors)
-    plt.title("Clients grouped by threshold in " + str(date), fontsize= 16)
+    fig_title = "Clients grouped by threshold in " + str(date)
+    plt.title(fig_title, fontsize= 16)
     
-    fig.savefig(fig_name)
-    return(fig_name)
-    # return(fig_name) ## uncommented this because of return of dict
+    fig_name = "{}.png".format(fig_title)   
+    fig.savefig(fig_name, dpi=100)
+    fig_list.append(fig_name)  
+    
+    print(fig_list)
+    return(fig_list)
     #return client_dic
+
 
         
 def products_of_client(resultfile, client, date = "all"):
@@ -608,7 +636,6 @@ def products_of_client(resultfile, client, date = "all"):
         - Client: compulsory (column Cliente)
         - Date: Optional."""
     fig_list = []
-    fig_name = "Function_?.png"
 
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == str(date)]
@@ -632,12 +659,18 @@ def products_of_client(resultfile, client, date = "all"):
         labels.append(element)
     
     fig = plt.figure()
+    fig.set_size_inches(18.0, 18.0)
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
-    plt.title("Crops analyzed from " + client + " in " + str(date), fontsize= 16)
-    fig.savefig(fig_name)
-    return(fig_name)
+    fig_title = "Crops analyzed from " + client + " in " + str(date)
+    plt.title(fig_title, fontsize= 16)
+    fig_name = "{}.png".format(fig_title)   
+    fig.savefig(fig_name, dpi=100)
+    fig_list.append(fig_name)  
+
+    print(fig_list)
+    return(fig_list)
              
 def over_threshold(reducedfile):
    
@@ -674,11 +707,17 @@ def over_threshold(reducedfile):
         labels.append("Other")
         sizes.append(other)
         explode.append(0.1)
-        
+
+    fig = plt.figure()
+    fig.set_size_inches(18.0, 18.0)        
     plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
             explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-    #plt.show()
-    
+    fig_title = "Products over the threshold 1"    
+    plt.title(fig_title, fontsize= 16)
+    fig_name = "{}.png".format(fig_title)   
+    fig.savefig(fig_name, dpi=100)
+    fig_list.append(fig_name)  
+
     prod = {}
     for element in reducedfile["Gruppo_prodotto"]:
         if not element in prod:
@@ -695,13 +734,20 @@ def over_threshold(reducedfile):
     for element in max_labels:
         sizes.append(prod[element])
         labels.append(element)
-        
+
+    fig = plt.figure()
+    fig.set_size_inches(18.0, 18.0)     
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
-    plt.title("Products over the threshold", fontsize= 16)
-
-       
+    fig_title = "Products over the threshold 2"
+    plt.title(fig_title, fontsize= 16)
+    fig_name = "{}.png".format(fig_title)   
+    fig.savefig(fig_name, dpi=100)
+    fig_list.append(fig_name)  
+    
+    print(fig_list)
+    return(fig_list)
  
 if __name__ == "__main__":
     
@@ -715,22 +761,23 @@ if __name__ == "__main__":
     resultfile = pd.read_excel("test_analysis_18.xlsx", sheet_name=0)
     client = "AZIENDA AGRICOLA PONZIO S.R.L. -  SOCIETA' AGRICOLA"
     crop = "Rucola"
-    
+    compound = "Spinosyn A"
+
     hide = False
     detail = False
 
-    residues_graph(resultfile, client=client, crop=crop)
+    # residues_graph(resultfile, client=client, crop=crop)
     
-#    compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
+    # compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
 
-#    samples_product_type(resultfile, client=client, date=date, detail=True)
+    # samples_product_type(resultfile, client=client, date=date, detail=True)
    
-#    residues_graph_esp(resultfile, client=client, crop = crop, compound= compound)
+    # residues_graph_esp(resultfile, client=client, crop = crop, compound= compound)
 
-#    number_of_molecules(resultfile, client= client)
+    # number_of_molecules(resultfile, client= client)
     
-#    threshold_pie(resultfile, date = 2016, client=client, detail = True)
+    # threshold_pie(resultfile, date = 2016, client=client, detail = True)
     
-#    clients_graph(resultfile, date= date)
+    # clients_graph(resultfile, date= date)
      
-#    products_of_client(resultfile, client=client)
+    # products_of_client(resultfile, client=client)
