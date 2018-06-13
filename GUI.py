@@ -16,8 +16,10 @@ from tkinter.filedialog import askopenfilename
 #import mp3play
 import winsound
 
-
+bgcolor = "black"
+fgcolor = "white"
 root = Tk()
+root.configure(background=bgcolor)
 #FOR LOGO:
 # root.iconbitmap(r"Images\GUIlogo.ico")
 # root.iconbitmap(r"Images\LogoIco.ico")
@@ -33,7 +35,7 @@ x_coordinate = (screen_width/2) - (width_of_window/2) ## Make it pop up at the c
 y_coordinate = (screen_height/2) - (height_of_window/2)
 root.geometry("%dx%d+%d+%d" % (width_of_window,height_of_window,x_coordinate,y_coordinate))
 label = tkinter.Label(root,text="Welcome to SATAlytics")
-label.config(font=("Comic", 20))
+label.config(font=("Comic", 20), bg=bgcolor, fg=fgcolor)
 label.grid(row=0, column=3, columnspan=4)
 
 root.columnconfigure(0, weight=1)
@@ -123,9 +125,6 @@ def draw_image(fig):
     label.img = resized
     label.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
     create_global_curr_fig(fig)
-    pass
-
-
 
 
 imagelist = []
@@ -538,35 +537,34 @@ def act_download():
  
     
 def act_go():
-    # try:
-    if most_recent_function == 0:
-        tkinter.messagebox.showinfo("Error","Pick a graph first")
-    elif most_recent_function == 1:
-        # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
-        img_list = residues_graph(excel1, value11, value12, value13)
-    elif most_recent_function == 2:
-        print ("THe go button is:",hidecounter)
-        img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
-    elif  most_recent_function == 3:
-        img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
-    elif most_recent_function == 5:
-        img_list = number_of_molecules(excel1, client= value51)
-    elif most_recent_function == 6:
-        img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
-    elif most_recent_function == 7:
-        img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
-    elif most_recent_function == 8:
-        img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
-    elif most_recent_function == 9:
-        img_list = clients_graph(excel1, date= value91)
+    try:
+        if most_recent_function == 0:
+            tkinter.messagebox.showinfo("Error","Pick a graph first")
+        elif most_recent_function == 1:
+            img_list = residues_graph(excel1, value11, value12, value13)
+        elif most_recent_function == 2:
+            print ("THe go button is:",hidecounter)
+            img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
+        elif  most_recent_function == 3:
+            img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
+        elif most_recent_function == 5:
+            img_list = number_of_molecules(excel1, client= value51)
+        elif most_recent_function == 6:
+            img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
+        elif most_recent_function == 7:
+            img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
+        elif most_recent_function == 8:
+            img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
+        elif most_recent_function == 9:
+            img_list = clients_graph(excel1, date= value91)
 
-     for img in img_list:
-        draw_image(img)
-     print (imagelist)
-     timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
-            "Created graphs", 1500)
-    # except:
-    #     tkinter.messagebox.showinfo("Error","Pick a function first")
+        for img in img_list:
+            draw_image(img)
+        print (imagelist)
+        timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+                "Created graphs", 1500)
+    except:
+        tkinter.messagebox.showinfo("Error","Pick a function first")
 
 
 def act_add():
@@ -608,66 +606,69 @@ def openInstrucktion():
 
 ## CREATE BUTTONS CODE
 
-button1 = Button(root,text="1. Graph on average amount of residues \n per client for a single crop \n in a certain time span", command=act_button1)
+button1 = Button(root,text="1. Graph on average amount of residues \n per client for a single crop \n in a certain time span", command=act_button1, bg=bgcolor, fg=fgcolor)
 button1.grid(row=2, column=0, sticky="nsew")
 
-button2 = Button(root,text="2. Graph on average amount of a certain compound \n per crop per year \n for all clients", command=act_button2)
+button2 = Button(root,text="2. Graph on average amount of a certain compound \n per crop per year \n for all clients", command=act_button2, bg=bgcolor, fg=fgcolor)
 button2.grid(row=3, column=0, sticky="nsew")
 
-button3 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command=act_button3)
+button3 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command=act_button3, bg=bgcolor, fg=fgcolor)
 button3.grid(row=4, column=0, sticky="nsew")
 
-button4 = Button(root,text="Button_4", command = act_button4)
+button4 = Button(root,text="Button_4", command = act_button4, bg=bgcolor, fg=fgcolor)
 button4.grid(row=5, column=0, sticky="nsew")
 
-button5 = Button(root,text="5. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button5)
+button5 = Button(root,text="5. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button5, bg=bgcolor, fg=fgcolor)
 button5.grid(row=6, column=0, sticky="nsew")
 
-button6 = Button(root,text="3. Chart on number of samples per product \n collected by SATA in a certain year", command=act_button6) #command= lambda: [f() for f in [selection61, selection62]])
+button6 = Button(root,text="3. Chart on number of samples per product \n collected by SATA in a certain year", command=act_button6, bg=bgcolor, fg=fgcolor) #command= lambda: [f() for f in [selection61, selection62]])
 button6.grid(row=7, column=0, sticky="nsew")
 
-button7 = Button(root,text="6. Graph on total number of samples \n per product for one client", command=act_button7)
+button7 = Button(root,text="6. Graph on total number of samples \n per product for one client", command=act_button7, bg=bgcolor, fg=fgcolor)
 button7.grid(row=8, column=0, sticky="nsew")
 
-button8 = Button(root,text="7. Chart on percentage of samples \n that exceeds the limit in one year", command=act_button8)
+button8 = Button(root,text="7. Chart on percentage of samples \n that exceeds the limit in one year", command=act_button8, bg=bgcolor, fg=fgcolor)
 button8.grid(row=9, column=0, sticky="nsew")
 
-button9 = Button(root, text="8. Chart on clients \n always-sometimes-never \n exceeding the limit per year", command=act_button9)
+button9 = Button(root, text="8. Chart on clients \n always-sometimes-never \n exceeding the limit per year", command=act_button9, bg=bgcolor, fg=fgcolor)
 button9.grid(row=9, column=2, sticky="nsew")
 
-backbutton = Button(root, text= "Previous Screen", command = backbutton)
+backbutton = Button(root, text= "Previous Screen", command = backbutton, bg=bgcolor, fg=fgcolor)
 backbutton.grid(row=10, column=4, sticky="ewsn")
 
-forwardbutton = Button(root, text= "Next Screen", command = forwardbutton)
+forwardbutton = Button(root, text= "Next Screen", command = forwardbutton, bg=bgcolor, fg=fgcolor)
 forwardbutton.grid(row=10, column=5, sticky="ewsn")
 
-addbutton = Button(root, text="Add Item", command=act_add)
+addbutton = Button(root, text="Add Item", command=act_add, bg=bgcolor, fg=fgcolor)
 addbutton.grid(row=10, column=10, sticky="ewsn")
 
-buttonDownload = Button(root, text="Download Summary", bg="green", command=act_download)
+buttonDownload = Button(root, text="Download Summary", bg="green", command=act_download, fg=fgcolor)
 buttonDownload.grid(row=10, column=0, columnspan=2, sticky="nsew")
 
-buttonGo = Button(root, text="GO!", bg="blue", command= act_go)
+buttonGo = Button(root, text="GO!", bg="blue", command= act_go, fg=fgcolor)
 buttonGo.grid(row=10, column=3, sticky="nsew")
 
-buttonHide = Button(root, text="Show Client", bg="blue", command= act_hide)
+buttonHide = Button(root, text="Show Client", bg="blue", command= act_hide, fg=fgcolor)
 buttonHide.grid(row=10, column=8, sticky="ew")
 
-buttonex1 = Button(root, text="Excel file 1", command=ex1_button)
+buttonex1 = Button(root, text="Excel file 1", command=ex1_button, bg=bgcolor, fg=fgcolor)
 buttonex1.grid(row=1, column=0, sticky="ew")
 
-buttonex2 = Button(root, text="Excel file 2", command=ex2_button)
+buttonex2 = Button(root, text="Excel file 2", command=ex2_button, bg=bgcolor, fg=fgcolor)
 buttonex2.grid(row=1, column=2, sticky="ew")
 
 textBox=Text(root)
 infophoto = PhotoImage( file="infobutton.png")
-buttoninfo = Button(root, image=infophoto, height=20, width=20, command=openInstrucktion)
+buttoninfo = Button(root, image=infophoto, height=20, width=20, command=openInstrucktion, bg="blue", fg=fgcolor)
 buttoninfo.grid(row=0, column=9, sticky="ew")
+
+# buttonInfo = CustomButton(root, 100, 25, "blue", command=openInstrucktion)
+# buttonInfo.grid(row=0, column=9)
 
 canvas = Canvas(root, bg="black")
 canvas.grid(row=1,column=4,rowspan=9,columnspan=10 , sticky="nwes")
 
-quit = Button(root, text="Quit", command=_quit)
+quit = Button(root, text="Quit", command=_quit, bg=bgcolor, fg=fgcolor)
 quit.grid(row=0, column=10, sticky="ew")
 
 root.mainloop()
