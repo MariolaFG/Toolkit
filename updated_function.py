@@ -161,6 +161,7 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
     
     if date != "all":
         data[data["ANNO"] == str(date)]
+        dates = [date]
     
     client_count = 1
     client_dic = {}
