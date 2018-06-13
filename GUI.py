@@ -18,6 +18,9 @@ from winsound import *
 
 
 root = Tk()
+#FOR LOGO:
+# root.iconbitmap(r"Images\GUIlogo.ico")
+# root.iconbitmap(r"Images\LogoIco.ico")
 
 ## Create the main window
 root.title("SATAlytics")
@@ -205,6 +208,9 @@ def ex1_button():
     global excel1_specific_column_uniq_ANNO
     excel1_specific_column_uniq_ANNO = pre_proc(excel1,'ANNO')
 
+    global most_recent_function
+    most_recent_function = 0
+
 
 def ex2_button():
     global filename1
@@ -223,7 +229,7 @@ def act_button1():
     """ Shows listboxes for client, product and year 
     to select from for function 1.  
     """   
-    global most_recent_function
+    # global most_recent_function
     most_recent_function = 1
 
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -539,34 +545,34 @@ def act_download():
  
     
 def act_go():
-    # try:
-    if most_recent_function == 0:
-        tkinter.messagebox.showinfo("Error","Pick a graph first")
-    elif most_recent_function == 1:
-        # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
-        img_list = residues_graph(excel1, value11, value12, value13)
-    elif most_recent_function == 2:  
-        img_list = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
-    elif  most_recent_function == 3:
-        img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
-    elif most_recent_function == 5:
-        img_list = number_of_molecules(excel1, client= value51)
-    elif most_recent_function == 6:
-        img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
-    elif most_recent_function == 7:
-        img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
-    elif most_recent_function == 8:
-        img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
-    elif most_recent_function == 9:
-        img_list = clients_graph(excel1, date= value91)
+    try:
+        if most_recent_function == 0:
+            tkinter.messagebox.showinfo("Error","Pick a graph first")
+        elif most_recent_function == 1:
+            # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
+            img_list = residues_graph(excel1, value11, value12, value13)
+        elif most_recent_function == 2:  
+            img_list = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
+        elif  most_recent_function == 3:
+            img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
+        elif most_recent_function == 5:
+            img_list = number_of_molecules(excel1, client= value51)
+        elif most_recent_function == 6:
+            img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
+        elif most_recent_function == 7:
+            img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
+        elif most_recent_function == 8:
+            img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
+        elif most_recent_function == 9:
+            img_list = clients_graph(excel1, date= value91)
 
-    for img in img_list:
-        draw_image(img)
-    print (imagelist)
-    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
-        "Created graphs", 1500)
-    # except:
-    #     tkinter.messagebox.showinfo("Error","Pick a function first")
+        for img in img_list:
+            draw_image(img)
+        print (imagelist)
+        timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+            "Created graphs", 1500)
+    except:
+        tkinter.messagebox.showinfo("Error","Pick a function first")
 
 
 
