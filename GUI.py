@@ -182,7 +182,9 @@ def ex1_button():
 
     filename = askopenfilename() # open selection of files
     splitfilename11 = filename.rsplit('/', 1)
-    excel1 = pd.read_excel(filename)
+    excel1 = pd.read_excel(filename, sheet_name=0)
+    excel1.drop(excel1.index[len(excel1) - 1], inplace=True) #drop total row
+    excel1 = excel1.loc[(excel1["Gruppo_prodotto"] != "NON NORMATO")]
     if filename:        
         excel1_columns = excel1.columns.values.tolist()
 
@@ -202,10 +204,6 @@ def ex1_button():
 
     global excel1_specific_column_uniq_ANNO
     excel1_specific_column_uniq_ANNO = pre_proc(excel1,'ANNO')
-
-    global excel1_specific_column_uniq_Prova
-    excel1_specific_column_uniq_Prova = pre_proc(excel1,"Prova")
-
 
 
 def ex2_button():
@@ -319,10 +317,6 @@ def act_lb22():
     ## Adding scrollbar for lb22
     scroll_fun(lb22)
 
-    # if selected_value21 == False:
-    #     for y in excel1_specific_column_uniq_Prova:
-    #         lb22.insert(END, y)
-    # elif selected_value21 == True:
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
     unique_prova = pre_proc(adjusted_excel, "Prova")
     for y in unique_prova:
@@ -550,7 +544,7 @@ def act_go():
         tkinter.messagebox.showinfo("Error","Pick a graph first")
     elif most_recent_function == 1:
         # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
-        img_list = residues_graph(excel1, value11, value12)
+        img_list = residues_graph(excel1, value11, value12, value13)
     elif most_recent_function == 2:  
         img_list = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
     elif  most_recent_function == 3:
@@ -569,7 +563,8 @@ def act_go():
     for img in img_list:
         draw_image(img)
     print (imagelist)
-    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)))
+    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+        "Created graphs", 1500)
     # except:
     #     tkinter.messagebox.showinfo("Error","Pick a function first")
 
@@ -581,14 +576,12 @@ def act_add():
     if not 'saved_list' in globals():
         global saved_list
         saved_list = [(selection, current_figure)]
-        #"{}".format(current_figure)
     else:
         saved_list += [(selection, current_figure)]
 
     print(saved_list)
 
-    tkinter.messagebox.showinfo("Add figure to report", 
-        "\"{}\" is added to the report.".format(selection))
+    timed_msgbox("\"{}\" is added to the report.".format(selection), "Added figure to report")
 
 
 def backbutton():
