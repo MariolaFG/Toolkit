@@ -16,8 +16,10 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
     Variables:
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
-        - Date: Optional. """
-    fig_name = "Function_1.png"
+        - Date: Optional. 
+    Returns list of figures as strings.
+    """
+    fig_list = []
     # fig_name = "Function 1 {}.png".format(version)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
@@ -89,41 +91,60 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
                     limits_5.append(count_5)
                 count_5 = count_5 + 1
 
-        fig = plt.figure()
-        fig.set_size_inches(18.0, 18.0, forward=True)
-        # fig.figsize(8.0, 6.0)
         if len(sizes_0) > 0:
+            fig = plt.figure()
+            fig.set_size_inches(18.0, 18.0, forward=True)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
                               tick_label = labels_0)
             for element in limits_0:
                 barlist[element].set_color('indianred')
-            plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(year), fontsize= 16)
-            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
+            fig_title = "Compounds analyzed in " + crop + " from " + client + " in "\
+                      + str(year) + " 1"
+            plt.title(fig_title, fontsize= 16)
+            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+            fig_name = "{}.png".format(fig_title)
+            # fig_name = "Function11.png"
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)            
+
         if len(sizes_1) > 0:
+            fig = plt.figure()
+            fig.set_size_inches(18.0, 18.0, forward=True)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_1)), sizes_1, width=0.4, \
                               tick_label = labels_1)
             for element in limits_1:
                 barlist[element].set_color('indianred')
-            plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(year), fontsize= 16)
+            
+            fig_title = "Compounds analyzed in " + crop + " from " + client + " in "\
+                      + str(year) + " 2"
+            plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+            fig.savefig("{}.png".format(fig_name), dpi=100)
+            fig_name = "{}.png".format(fig_title)
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)  
 
         if len(sizes_5) > 0:
+            fig = plt.figure()
+            fig.set_size_inches(18.0, 18.0, forward=True)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
                               tick_label = labels_5)
             for element in limits_5:
                 barlist[element].set_color('indianred')
-            plt.title("Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(year), fontsize= 16)
+            fig_title = "Compounds analyzed in " + crop + " from " + client + " in "\
+                      + str(year) + " 3"
+            plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+            fig_name = "{}.png".format(fig_title)
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)  
         
-        fig.savefig(fig_name, dpi=100)
-        return(fig_name) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
+        print(fig_list)
+        return(fig_list) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
 
 
 def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
@@ -169,7 +190,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                     list_check.append(element + "_" + year)
                     client_count = client_count + 1
                     threshold = float(str(threshold).replace(",", "."))
-                    prod[name] = [np.mean(map(float, prev2.tolist())), threshold]
+                    prod[name] = [np.mean(list(map(float, prev2.tolist()))), threshold]
             except ValueError:
                 err_val[name] = prev2.tolist()
                 
@@ -202,7 +223,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
             limits1 = limits            
             while start < len(sizes):
                 
-                sizes2 = map(float, sizes[start:start+30])
+                sizes2 = list(map(float, sizes[start:start+30]))
                 label2 = label[start:start+30]
 
                 x2 = range(len(sizes2))
@@ -665,17 +686,21 @@ def over_threshold(reducedfile):
  
 if __name__ == "__main__":
     
-    resultfile = pd.read_excel("prove_16-17.xlsx", sheetname=0)
-    infofile = pd.read_excel("campioni-16-18.xlsx", sheetname=0)
+    # resultfile = pd.read_excel("prove_16-17.xlsx", sheetname=0)
+    # infofile = pd.read_excel("campioni-16-18.xlsx", sheetname=0)
     date = 2016
-    compound = "Clorpirifos"
-    client = "CONAD SOC. COOP."
-    crop = "Pesche"
+    # compound = "Clorpirifos"
+    # client = "CONAD SOC. COOP."
+    # # crop = "Pesche"
+    # crop = "Albicocche"
+    resultfile = pd.read_excel("test_analysis_18.xlsx", sheet_name=0)
+    client = "AZIENDA AGRICOLA PONZIO S.R.L. -  SOCIETA' AGRICOLA"
+    crop = "Rucola"
     
     hide = False
     detail = False
 
-#    residues_graph(resultfile, client=client, crop=crop)
+    residues_graph(resultfile, client=client, crop=crop)
     
 #    compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
 
