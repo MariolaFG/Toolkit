@@ -520,6 +520,7 @@ def act_download():
     except:
         tkinter.messagebox.showinfo("Download report",
                 "Unable to download report.")
+ 
     
 def act_go():
     # try:
