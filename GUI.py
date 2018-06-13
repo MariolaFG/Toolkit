@@ -19,6 +19,7 @@ import winsound
 bgcolor = "black"
 fgcolor = "white"
 root = Tk()
+root.state()
 root.configure(background=bgcolor)
 #FOR LOGO:
 # root.iconbitmap(r"Images\GUIlogo.ico")
@@ -31,12 +32,13 @@ width_of_window = 800
 height_of_window = 600
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-x_coordinate = (screen_width/2) - (width_of_window/2) ## Make it pop up at the center of the screen
-y_coordinate = (screen_height/2) - (height_of_window/2)
-root.geometry("%dx%d+%d+%d" % (width_of_window,height_of_window,x_coordinate,y_coordinate))
+root.geometry("%dx%d+0+0" % (screen_width, screen_height))
+# x_coordinate = (screen_width/2) - (width_of_window/2) ## Make it pop up at the center of the screen
+# y_coordinate = (screen_height/2) - (height_of_window/2)
+# root.geometry("%dx%d+%d+%d" % (width_of_window,height_of_window,x_coordinate,y_coordinate))
 label = tkinter.Label(root,text="Welcome to SATAlytics")
 label.config(font=("Comic", 20), bg=bgcolor, fg=fgcolor)
-label.grid(row=0, column=3, columnspan=4)
+label.grid(row=0, column=2, columnspan=8)
 
 root.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=1)
