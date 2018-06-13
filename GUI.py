@@ -522,40 +522,33 @@ def act_download():
                 "Unable to download report.")
     
 def act_go():
-    
+    # try:
     if most_recent_function == 0:
         tkinter.messagebox.showinfo("Error","Pick a graph first")
     elif most_recent_function == 1:
         # img_list = residues_graph(pd.read_excel(splitfilename11[1], sheet_name=0), value11, value12, value13)
         img_list = residues_graph(excel1, value11, value12)
-        for img in img_list:
-            draw_image(img)
-        print (imagelist)
-        timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)))
     elif most_recent_function == 2:
-        img = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
-        draw_image(img)  
+        img_list = compound_per_client(excel1, compound=value22, crop=value21, date = "all", hide=True)
     elif  most_recent_function == 3:
-        img = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
-        draw_image(img)
+        img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
     elif most_recent_function == 5:
-        img = number_of_molecules(excel1, client= value51)
-        draw_image(img)
+        img_list = number_of_molecules(excel1, client= value51)
     elif most_recent_function == 6:
-        img = samples_product_type(excel1, client="all", date=value61, detail=True)
-        draw_image(img)
+        img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
     elif most_recent_function == 7:
-        img = samples_product_type(excel1, client= value71, date="all", detail=True)
-        draw_image(img)
+        img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
     elif most_recent_function == 8:
-        img = threshold_pie(excel1, date = value81, client="all", detail = True)
-        print ("BLA")
-        draw_image(img)
+        img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
     elif most_recent_function == 9:
-        img = clients_graph(excel1, date= value91)
+        img_list = clients_graph(excel1, date= value91)
+
+    for img in img_list:
         draw_image(img)
-    else:
-        tkinter.messagebox.showinfo("Error","Pick a graph first")
+    print (imagelist)
+    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)))
+    # except:
+    #     tkinter.messagebox.showinfo("Error","Pick a function first")
 
 
 
