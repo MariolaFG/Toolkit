@@ -146,7 +146,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         return(fig_list) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
 
 
-def compound_per_client(resultfile, compound, crop, date = "all", hide = False): ## n.2 
+def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ## n.2 
     """This function creates a graph on average amount of residues in a single 
     crop for a single client in a certain time span, including the limit.
     Variables:
@@ -154,7 +154,6 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         - Crop: compulsory (column Gruppo_prodotto
         - Date: optional"""
     fig_list = []
-    fig_name = "Function_2.png"   ## CHANGE!
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Prova"] == compound]
@@ -176,7 +175,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                 name = element + "_" + str(year)
             if hide == True:
                 name = client_count
-                client_dic["Client " + str(name)] = element+ "_" + year
+                client_dic["Client " + str(name)] = element+ "_" + str(year)
                 
             prev = data2[data2["Cliente"] == element]
             # prev contains the information for single crop, year, compound and client.
@@ -208,21 +207,29 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                 limits.append(count)
             count = count + 1
         
-        fig = plt.figure()
         if len(sizes) < 30:
+            fig = plt.figure()
+            fig.set_size_inches(18.0, 18.0)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(x, sizes, width=0.4, tick_label = label)
             for element in limits:
                 barlist[element].set_color('indianred')
-            plt.title(compound + " in " + crop + " - " + str(year)\
-                      , fontsize= 16)
+            
+            fig_title = compound + " in " + crop + " - " + str(year) + " 1"
+            plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-        
+            # fig_name = "{}.png".format(fig_title)
+            fig_name = "Function21.png"
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)  
+
         if len(sizes) > 30:
             start = 0
             limits1 = limits            
             while start < len(sizes):
-                
+                fig = plt.figure()
+                fig.set_size_inches(18.0, 18.0)
+
                 sizes2 = list(map(float, sizes[start:start+30]))
                 label2 = label[start:start+30]
 
@@ -239,20 +246,25 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
                         limits2.append(element-30)
                         
                 limits1 = limits2 
-                        
-                plt.title(compound + " in " + crop + " - " + str(year), \
-                          fontsize= 16)
                 
+                fig_title = compound + " in " + crop + " - " + str(year) + " 2" 
+                plt.title(fig_title, \
+                          fontsize= 16)
                 plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
                 
+                # fig_name = "{}.png".format(fig_title)
+                fig_name = "Function22.png"   
+                fig.savefig(fig_name, dpi=100)
+                fig_list.append(fig_name)  
+
                 start = start + 30
-        fig.savefig(fig_name)
-        return(fig_name)
                 
     data_client = pd.DataFrame.from_dict(client_dic, orient="index")
     writer = pd.ExcelWriter('Client_index.xlsx', engine='xlsxwriter')
     data_client.to_excel(writer, sheet_name='Sheet1')
     writer.save()
+
+    return(fig_list)
     
 
 
