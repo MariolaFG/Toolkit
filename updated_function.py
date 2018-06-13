@@ -20,7 +20,6 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
     Returns list of figures as strings.
     """
     fig_list = []
-    # fig_name = "Function 1 {}.png".format(version)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -93,7 +92,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
 
         if len(sizes_0) > 0:
             fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0, forward=True)
+            fig.set_size_inches(18.0, 18.0)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
                               tick_label = labels_0)
@@ -111,7 +110,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
 
         if len(sizes_1) > 0:
             fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0, forward=True)
+            fig.set_size_inches(18.0, 18.0)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_1)), sizes_1, width=0.4, \
                               tick_label = labels_1)
@@ -129,7 +128,7 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
 
         if len(sizes_5) > 0:
             fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0, forward=True)
+            fig.set_size_inches(18.0, 18.0)
             plt.xticks(rotation='vertical')
             barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
                               tick_label = labels_5)
@@ -154,6 +153,7 @@ def compound_per_client(resultfile, compound, crop, date = "all", hide = False):
         - Compound: compulsory (column Prova)
         - Crop: compulsory (column Gruppo_prodotto
         - Date: optional"""
+    fig_list = []
     fig_name = "Function_2.png"   ## CHANGE!
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
@@ -263,6 +263,7 @@ def samples_product_type(resultfile, client = "all", detail = False,\
     Variables:
         - Client = optional"""
     
+    fig_list = []
     fig_name = "Function_3.png"
 
     if client != "all":
@@ -339,6 +340,7 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         concentration.
         - Order dates chronologicaly
         """
+    fig_list = []
     fig_name = "Function_4.png"
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
@@ -427,6 +429,7 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     over a certain time span.
     Variables:
         Date: optional"""   
+    fig_list = []
     fig_name = "Function_5.png"
 
     if date != "all":
@@ -478,6 +481,7 @@ def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
     the limit in timeline.
     Variables:
         - Date: optional"""
+    fig_list = []
     fig_name = "Fucntion_6.png"
 
     if date != "all":
@@ -530,6 +534,7 @@ def clients_graph(resultfile, date = "all"): ## 8
     exceeding the limit. 
     
     Variables needed: None, date is optional."""
+    fig_list = []
     fig_name = "Function_8.png"
 
     if date != "all":
@@ -591,6 +596,7 @@ def products_of_client(resultfile, client, date = "all"):
     Variables:
         - Client: compulsory (column Cliente)
         - Date: Optional."""
+    fig_list = []
     fig_name = "Function_?.png"
 
     if date != "all":
@@ -624,6 +630,8 @@ def products_of_client(resultfile, client, date = "all"):
              
 def over_threshold(reducedfile):
    
+    fig_list = []
+
     prod = {}
     for element in reducedfile["Prova"]:
         if not element in prod:
