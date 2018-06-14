@@ -305,8 +305,6 @@ def samples_product_type(resultfile, client = "all", detail = False,\
         sizes = []
         labels = []
         
-        if "NON NORMATO" in prod.keys():
-            del prod['NON NORMATO']
         if "..." in prod.keys():
             del prod["..."]
         
@@ -330,7 +328,7 @@ def samples_product_type(resultfile, client = "all", detail = False,\
             explode.append(0.1)
         fig = plt.figure()
         fig.set_size_inches(18.0, 18.0)
-        fig_title = str(year)
+        fig_title = str(year) + " 1"
         plt.title(fig_title)
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
@@ -493,7 +491,7 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
         fig = plt.figure()
         fig.set_size_inches(18.0, 18.0)  
         plt.xticks(rotation='vertical')
-        fig_title = str(year)
+        fig_title = str(year) + " 2"
         plt.title(str(year))
         plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels, color="aquamarine")
         fig_name = "{}.png".format(fig_title)   
@@ -504,7 +502,7 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     return(fig_list) 
 
 
-def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
+def threshold_pie(resultfile, infofile, date="all", client="all", detail = False): ## 7
     """ This function creates a graph on percentage of samples that exceeds 
     the limit in timeline.
     Variables:
@@ -550,10 +548,19 @@ def threshold_pie(resultfile, date="all", client="all", detail = False): ## 7
             pctdistance=0.7, explode=explode)
     
     fig_title = "Samples grouped by threshold in " + str(date)
-    plt.title(fig_title, fontsize= 16)
+    plt.title(fig_title, fontsize=16)
     
-    over_threshold(resultfile[resultfile['Classi_Ris_Lim_perc'] == \
-                              "Maggiore o uguale a 100"])
+    
+    if detail == True:
+        sample_count = {}
+        list_samples = infofile["Gruppo_prodotto"].tolist()
+        for element in set(list_samples):
+            if not element in sample_count:
+                sample_count[element] = list_samples.count(element)
+                
+        over_threshold(resultfile[resultfile['Classi_Ris_Lim_perc'] == \
+                                  "Maggiore o uguale a 100"], sample_count,\
+                                    client, date)
 
     fig_name = "{}.png".format(fig_title)   
     fig.savefig(fig_name, dpi=100)
@@ -672,8 +679,9 @@ def products_of_client(resultfile, client, date = "all"):
     print(fig_list)
     return(fig_list)
              
-def over_threshold(reducedfile):
-   
+def over_threshold(reducedfile, sample_count, client, date):
+    """This function creates detailed information about the samples that are 
+    over the threshold. It only apears if detail == True"""
     fig_list = []
 
     prod = {}
@@ -686,6 +694,7 @@ def over_threshold(reducedfile):
             
     sizes = []
     labels = []
+    sample_sizes = []
     explode = []
     max_labels = heapq.nlargest(20, prod, key=prod.get)
         # It selects the 20 greatest averages
@@ -707,9 +716,9 @@ def over_threshold(reducedfile):
         labels.append("Other")
         sizes.append(other)
         explode.append(0.1)
-
+    
     fig = plt.figure()
-    fig.set_size_inches(18.0, 18.0)        
+    fig.set_size_inches(18.0, 18.0)     
     plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
             explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
     fig_title = "Products over the threshold 1"    
@@ -717,7 +726,7 @@ def over_threshold(reducedfile):
     fig_name = "{}.png".format(fig_title)   
     fig.savefig(fig_name, dpi=100)
     fig_list.append(fig_name)  
-
+    
     prod = {}
     for element in reducedfile["Gruppo_prodotto"]:
         if not element in prod:
@@ -730,16 +739,23 @@ def over_threshold(reducedfile):
     labels = []
     max_labels = heapq.nlargest(15, prod, key=prod.get)
         # It selects the 20 greatest averages
-        
+    
     for element in max_labels:
         sizes.append(prod[element])
         labels.append(element)
-
+        if element in sample_count:
+            sample_sizes.append(sample_count[element])
+    
     fig = plt.figure()
-    fig.set_size_inches(18.0, 18.0)     
+    fig.set_size_inches(18.0, 18.0)       
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
+    for i, v in enumerate(sizes):
+        plt.text(i, v+0.25, str(sample_sizes[i]), horizontalalignment='center', \
+                 color='darkgreen', fontweight='bold', fontsize = 8)
+    plt.ylim(0, max(sizes) + 1)
+    plt.ylabel("Number of samples", fontsize = 14)
     fig_title = "Products over the threshold 2"
     plt.title(fig_title, fontsize= 16)
     fig_name = "{}.png".format(fig_title)   
@@ -748,6 +764,23 @@ def over_threshold(reducedfile):
     
     print(fig_list)
     return(fig_list)
+
+
+def drop_rows(resultfile):
+
+    dic_todrop = {"Prova":["Grado Rifrattometrico", "Acidita", "Acidità", \
+    "Acidita (espr. in ac.citrico)", "Acidità (espr. in ac.citrico)", "Calibro medio",\
+    "Durezza", "Durezza totale"], "Gruppo_prodotto": ["NON NORMATO"], "ANNO": ["Totale"]}
+    # Contains what we want to erase from the database
+
+    for key in dic_todrop:
+        for element in dic_todrop[key]:
+            #For all the elements and keys in the dictionary
+            if element in resultfile[key].tolist():
+                # Checks if it is on the file and erase it
+                resultfile = resultfile[resultfile[key] != element]
+    
+    return resultfile
  
 if __name__ == "__main__":
     
