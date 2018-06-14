@@ -239,7 +239,7 @@ def act_button1():
     scroll_fun(lb11)
     # Put the data into the listbox
     for i in excel1_specific_column_uniq_Cliente:
-        lb11.insert(END, i.upper())
+        lb11.insert(END, i)
 
     def cur_selection11(*x):
         global value11
@@ -328,7 +328,7 @@ def act_lb22():
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
     unique_prova = pre_proc(adjusted_excel, "Prova")
     for y in unique_prova:
-        lb22.insert(END, y.upper())
+        lb22.insert(END, y)
 
     def cur_selection22(*y):
         global value22
@@ -392,7 +392,7 @@ def act_lb32():
     adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value31]
     unique_cliente = pre_proc(adjusted_excel, "Cliente")
     for y in unique_cliente:
-        lb32.insert(END, y.upper())
+        lb32.insert(END, y)
 
     def cur_selection32(*y):
         global value32
@@ -486,7 +486,7 @@ def act_button7():
     scroll_fun(lb71)
 
     for i in excel1_specific_column_uniq_Cliente:
-        lb71.insert(END, i.upper())
+        lb71.insert(END, i)
 
     def cur_selection71(*x):
         global value71
@@ -555,34 +555,35 @@ def act_download():
  
     
 def act_go():
-    try:
-        if most_recent_function == 0:
-            tkinter.messagebox.showinfo("Error","Pick a graph first")
-        elif most_recent_function == 1:
-            img_list = residues_graph(excel1, value11, value12, value13)
-        elif most_recent_function == 2:
-            print ("THe go button is:",hidecounter)
-            img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
-        elif  most_recent_function == 3:
-            img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
-        elif most_recent_function == 5:
-            img_list = number_of_molecules(excel1, client= value51)
-        elif most_recent_function == 6:
-            img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
-        elif most_recent_function == 7:
-            img_list = samples_product_type(excel1, excel2, client=value71, date="all", detail=True)
-        elif most_recent_function == 8:
-            img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
-        elif most_recent_function == 9:
-            img_list = clients_graph(excel1, date= value91)
+    # try:
+    if most_recent_function == 0:
+        tkinter.messagebox.showinfo("Error","Pick a graph first")
+    elif most_recent_function == 1:
+        img_list = residues_graph(excel1, value11, value12, value13)
+    elif most_recent_function == 2:
+        img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
+    elif  most_recent_function == 3:
+        img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
+    elif most_recent_function == 5:
+        img_list = number_of_molecules(excel1, client= value51)
+    elif most_recent_function == 6:
+        img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
+    elif most_recent_function == 7:
+        img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
+    elif most_recent_function == 8:
+        img_list = threshold_pie(excel1, excel2, date = value81, client="all", detail=True)
+    elif most_recent_function == 9:
+        img_list = clients_graph(excel1, date= value91)
 
-        for img in img_list:
-            draw_image(img)
-        print (imagelist)
-        timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
-                "Created graphs", 1500)
-    except:
-        tkinter.messagebox.showinfo("Error","Pick a function first")
+    for img in img_list:
+        draw_image(img)
+        imagelist.append(img)
+        listcounter(False)
+    print (imagelist)
+    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+            "Created graphs", 1500)
+    # except:
+    #     tkinter.messagebox.showinfo("Error","Pick a function first")
 
 
 def act_add():
