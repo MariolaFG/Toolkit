@@ -16,8 +16,8 @@ from tkinter.filedialog import askopenfilename
 #import mp3play
 import winsound
 
-bgcolor = "black"
-fgcolor = "white"
+bgcolor = "white"
+fgcolor = "black"
 root = Tk()
 root.state()
 root.configure(background=bgcolor)
@@ -27,9 +27,9 @@ root.configure(background=bgcolor)
 
 ## Create the main window
 root.title("SATAlytics")
-root.geometry("800x600")
-width_of_window = 800
-height_of_window = 600
+# root.geometry("800x600")
+# width_of_window = 800
+# height_of_window = 600
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 root.geometry("%dx%d+0+0" % (screen_width, screen_height))
@@ -206,9 +206,6 @@ def ex1_button():
     global excel1_specific_column_uniq_ANNO
     excel1_specific_column_uniq_ANNO = pre_proc(excel1,'ANNO')
 
-    global most_recent_function
-    most_recent_function = 0
-
 
 def ex2_button():
     global filename1
@@ -227,6 +224,7 @@ def act_button1():
     """ Shows listboxes for client, product and year 
     to select from for function 1.  
     """   
+    global most_recent_function
     most_recent_function = 1
 
     lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
@@ -290,6 +288,7 @@ def act_button2():
     """ Shows listboxes for product, compound and year 
     to select from for function 2.  
     """
+    global most_recent_function
     most_recent_function = 2
 
     # create listboxes
@@ -357,6 +356,7 @@ def act_button3():
     """ Shows listboxes for product, client and year 
     to select from for function 3.  
     """
+    global most_recent_function
     most_recent_function = 3
     lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb31.grid(row=4, column=1, sticky="nsew")
@@ -433,7 +433,9 @@ def act_button4():
 
 
 def act_button5():
+    global most_recent_function
     most_recent_function = 5
+
     lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb51.grid(row=6, column=1, sticky="nsew")
     ## Adding scrollbar for lb51
@@ -450,7 +452,9 @@ def act_button5():
 
 
 def act_button6():
+    global most_recent_function
     most_recent_function = 6
+
     lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb61.grid(row=7, column=1, sticky="nsew")
     ## Adding scrollbar for lb61
@@ -467,7 +471,9 @@ def act_button6():
 
 
 def act_button7():
+    global most_recent_function
     most_recent_function = 7
+
     lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb71.grid(row=8, column=1, sticky="nsew")
     ## Adding scrollbar for lb71
@@ -484,7 +490,9 @@ def act_button7():
 
 
 def act_button8():
+    global most_recent_function
     most_recent_function = 8
+
     try:
         lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
         lb81.grid(row=9, column=1, sticky="nsew")
@@ -505,7 +513,9 @@ def act_button8():
 
 
 def act_button9():
+    global most_recent_function
     most_recent_function = 9
+
     lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb91.grid(row=9, column=3, sticky="nsew")
     ## Adding scrollbar for lb91
