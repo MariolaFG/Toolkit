@@ -7,6 +7,7 @@ Module to create a PDF report with ReportLab.
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Frame
 # from reportlab.pdfbase.ttfonts import TTFont  # other fonts
@@ -115,7 +116,24 @@ def toc_page(c, saved_list):
     # c.setLineWidth(1)
     # c.setDash(1, 2) #dots
     y = 700
+    saved_nr_tuple = []
+    saved_text = []
     for i in range(len(saved_list)):
+        # # if using paragraphs:
+        saved_text.append(Paragraph(saved_list[i][0], 
+            styles["Heading2"]))
+        saved_text.append(Paragraph("<para align=\"RIGHT\">{}".format(i+3),
+            styles["Heading2"]))
+
+        # i = saved_list[i][0] + "<br/>"
+        # saved_text += i
+        # saved_nr_tuple.append(saved_list[i][0], styles["Heading1"])
+        # aW = 485 #start 65
+        # aH = 635 #start 65
+        # p.drawOn(c, 0, aH)
+        # aH -= h
+
+        # if using drawString:
         y -= 30
         
         if y <= 50:
@@ -135,9 +153,13 @@ def toc_page(c, saved_list):
             side_bar(c)
             footer(c)    
 
-        c.drawString(65, y, saved_list[i][0]) # text
-        # c.line(x1, y1, x2, y2)
-        c.drawRightString(580, y, "{}".format(i+3)) #page number    
+        # c.drawString(65, y, saved_list[i][0]) # text
+        # # c.line(x1, y1, x2, y2)
+        # c.drawRightString(580, y, "{}".format(i+3)) #page number    
+
+    fr = Frame(65, 150, 515, 550, leftPadding=0, bottomPadding=0,
+        rightPadding=0, topPadding=0, id=None, showBoundary=0)
+    fr.addFromList(saved_text, c)
 
     # draw line
     c.setLineWidth(1)
@@ -162,8 +184,16 @@ def regular_page(c, title, fig_path):
     """   
     
     # display title
-    c.setFont("Helvetica-Bold", 20, leading=None)
-    c.drawCentredString(325, 700, title)
+    # c.setFont("Helvetica-Bold", 20, leading=None)
+
+    styles = getSampleStyleSheet()
+    info = []
+    info.append(Paragraph(title, styles["Title"]))
+    f = Frame(65, 670, 515, 100, leftPadding=0, bottomPadding=0,
+    rightPadding=0, topPadding=0, id=None, showBoundary=0)
+    f.addFromList(info, c)
+
+    # c.drawCentredString(325, 700, title)
 
     #display box with image
     c.setStrokeColorRGB(0.3, 0.4, 0.2)
@@ -217,35 +247,9 @@ def side_bar(c):
     c.rect(20, 0, 25, 850, stroke=1, fill=1)
 
 
-
-
 if __name__ == '__main__':
-    # fake_list = [("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png"),
-    #             ("Marijke", "Images\\dp.png"), 
-    #             ("Marijke Thijssen", "Images\\dp.png")]
-    # make_pdf(fake_list)
+    fake_list = [("Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"),]
+    make_pdf(fake_list)
 
-    make_manual()
+    # make_manual()
