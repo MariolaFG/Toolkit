@@ -69,6 +69,10 @@ root.rowconfigure(10, weight=1)
 global most_recent_function
 most_recent_function = 0
 
+check_excel_1_exist = False
+
+check_excel_2_exist = False
+
 def scroll_fun(e): ## Function for adding scrollbars into the listbox
     scrollbar_v = Scrollbar(e, orient= "vertical")
     scrollbar_v.config(command= e.yview)
@@ -166,6 +170,17 @@ def act_hide():
     else:
         buttonHide.config(bg = "red", text= "Hide Client")
 
+def act_details():
+    img_list = over_threshold(reduced1, reduced2, reduced3, reduced4)
+    for img in img_list:
+        draw_image(img)
+        imagelist.append(img)
+        listcounter(False)
+    print (imagelist)
+    timed_msgbox("Function was executed successfully ({} graphs were drawn)".format(len(img_list)),
+            "Created graphs", 1500)
+
+
 def _quit():
     root.quit()     # stops mainloop
     root.destroy()  # this is necessary on Windows to prevent
@@ -192,6 +207,8 @@ def ex1_button():
         buttonshow1 = Button(root, text=splitfilename11[1], bg="blue")
         buttonshow1.grid(row=1, column=1, sticky="ew")
         print (splitfilename11[1])
+        global check_excel_1_exist
+        check_excel_1_exist = True
     else:
         print ("File not selected")
     
@@ -221,6 +238,8 @@ def ex2_button():
         print ("selected: ", filename2)
         buttonshow2 = Button(root, text=splitfilename2[1], bg="blue")
         buttonshow2.grid(row=1, column=3, sticky="ew")
+        global check_excel_2_exist
+        check_excel_2_exist = True
     else:
         print ("File not selected")
 
@@ -419,7 +438,7 @@ def act_lb33():
         global value33
         value33 = (lb33.get(lb33.curselection()))
     lb33.bind("<<ListboxSelect>>", cur_selection33)    
-###
+
     
 
 def act_button4():
@@ -442,64 +461,76 @@ def act_button5():
     global most_recent_function
     most_recent_function = 5
 
-    lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb51.grid(row=6, column=1, sticky="nsew")
-    ## Adding scrollbar for lb51
-    scroll_fun(lb51)
+    if check_excel_1_exist == True:
+        lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb51.grid(row=6, column=1, sticky="nsew")
+        ## Adding scrollbar for lb51
+        scroll_fun(lb51)
 
-    for i in excel1_specific_column_uniq_ANNO:
-        lb51.insert(END, i)
+        for i in excel1_specific_column_uniq_ANNO:
+            lb51.insert(END, i)
 
-    def cur_selection51(*x):
-        global value51
-        value51 = (lb51.get(lb51.curselection()))
+        def cur_selection51(*x):
+            global value51
+            value51 = (lb51.get(lb51.curselection()))
 
-    lb51.bind("<<ListboxSelect>>", cur_selection51)
+        lb51.bind("<<ListboxSelect>>", cur_selection51)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
 
 
 def act_button6():
     global most_recent_function
     most_recent_function = 6
 
-    lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb61.grid(row=7, column=1, sticky="nsew")
-    ## Adding scrollbar for lb61
-    scroll_fun(lb61)
+    if check_excel_1_exist == True:
+        lb61 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb61.grid(row=7, column=1, sticky="nsew")
+        ## Adding scrollbar for lb61
+        scroll_fun(lb61)
 
-    for i in excel1_specific_column_uniq_ANNO:
-        lb61.insert(END, i)
+        for i in excel1_specific_column_uniq_ANNO:
+            lb61.insert(END, i)
 
-    def cur_selection61(*x):
-        global value61
-        value61 = (lb61.get(lb61.curselection()))
+        def cur_selection61(*x):
+            global value61
+            value61 = (lb61.get(lb61.curselection()))
 
-    lb61.bind("<<ListboxSelect>>", cur_selection61)
+        lb61.bind("<<ListboxSelect>>", cur_selection61)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
+
 
 
 def act_button7():
     global most_recent_function
     most_recent_function = 7
 
-    lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb71.grid(row=8, column=1, sticky="nsew")
-    ## Adding scrollbar for lb71
-    scroll_fun(lb71)
+    if check_excel_1_exist == True:
+        lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb71.grid(row=8, column=1, sticky="nsew")
+        ## Adding scrollbar for lb71
+        scroll_fun(lb71)
 
-    for i in excel1_specific_column_uniq_Cliente:
-        lb71.insert(END, i)
+        for i in excel1_specific_column_uniq_Cliente:
+            lb71.insert(END, i)
 
-    def cur_selection71(*x):
-        global value71
-        value71 = (lb71.get(lb71.curselection()))
+        def cur_selection71(*x):
+            global value71
+            value71 = (lb71.get(lb71.curselection()))
 
-    lb71.bind("<<ListboxSelect>>", cur_selection71)
+        lb71.bind("<<ListboxSelect>>", cur_selection71)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
 
 
 def act_button8():
     global most_recent_function
     most_recent_function = 8
+    print (check_excel_2_exist)
+    print (check_excel_1_exist)
+    if check_excel_1_exist == True and check_excel_2_exist == True:
 
-    try:
         lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
         lb81.grid(row=9, column=1, sticky="nsew")
         ## Adding scrollbar for lb81
@@ -513,8 +544,12 @@ def act_button8():
             value81 = (lb81.get(lb81.curselection()))
 
         lb81.bind("<<ListboxSelect>>", cur_selection81)
-    except:
-        tkinter.messagebox.showinfo("ERROR","No Excel file available")
+    elif check_excel_2_exist == False and check_excel_1_exist == False:
+        timed_msgbox("Both excel files are missing", top_title="ERROR", duration=1500)
+    elif check_excel_1_exist == False and check_excel_2_exist == True:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
+    else:
+        timed_msgbox("Excel file 2 is missing", top_title="ERROR", duration=1500)
         winsound.Beep("")
 
 
@@ -522,20 +557,23 @@ def act_button9():
     global most_recent_function
     most_recent_function = 9
 
-    lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb91.grid(row=9, column=3, sticky="nsew")
-    ## Adding scrollbar for lb91
-    scroll_fun(lb91)
+    if check_excel_1_exist == True:
+        lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb91.grid(row=9, column=3, sticky="nsew")
+        ## Adding scrollbar for lb91
+        scroll_fun(lb91)
 
-    for i in excel1_specific_column_uniq_ANNO:
-        lb91.insert(END, i)
+        for i in excel1_specific_column_uniq_ANNO:
+            lb91.insert(END, i)
 
-    def cur_selection91(*x):
-        global value91
-        value91 = (lb91.get(lb91.curselection()))
+        def cur_selection91(*x):
+            global value91
+            value91 = (lb91.get(lb91.curselection()))
 
-    lb91.bind("<<ListboxSelect>>", cur_selection91)
-
+        lb91.bind("<<ListboxSelect>>", cur_selection91)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
+        winsound.Beep("")
 
     
 
@@ -571,7 +609,13 @@ def act_go():
     elif most_recent_function == 7:
         img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
     elif most_recent_function == 8:
-        img_list = threshold_pie(excel1, excel2, date = value81, client="all", detail=True)
+        global reduced1
+        global reduced2
+        global reduced3
+        global reduced4
+        img_list, reduced1, reduced2, reduced3, reduced4 = threshold_pie(excel1, excel2, date = value81, client="all", detail=True)
+        buttonDetails = Button(root, text="Details", bg="blue", command= act_details)
+        buttonDetails.grid(row=10, column=7, sticky="ew")
     elif most_recent_function == 9:
         img_list = clients_graph(excel1, date= value91)
 
