@@ -178,16 +178,15 @@ def _quit():
 def ex1_button():
     global filename ## should be changed
     global excel1
-    global excel1_columns
+    # global excel1_columns
     global splitfilename11
 
     filename = askopenfilename() # open selection of files
     splitfilename11 = filename.rsplit('/', 1)
     excel1 = pd.read_excel(filename, sheet_name=0)
-    excel1.drop(excel1.index[len(excel1) - 1], inplace=True) #drop total row
-    excel1 = excel1.loc[(excel1["Gruppo_prodotto"] != "NON NORMATO")]
+    excel1 = drop_rows(excel1)
     if filename:        
-        excel1_columns = excel1.columns.values.tolist()
+        # excel1_columns = excel1.columns.values.tolist()
 
         ## Button to confirm that the program have the file
         buttonshow1 = Button(root, text=splitfilename11[1], bg="blue")
@@ -208,12 +207,19 @@ def ex1_button():
 
 
 def ex2_button():
-    global filename1
-    filename1 = askopenfilename()
-    splitfilename1 = filename1.rsplit('/',1)
-    if filename1:
-        print ("selected:", filename1)
-        buttonshow2 = Button(root, text=splitfilename1[1], bg="blue")
+    global filename2
+    global excel2
+    # global excel2_columns
+    global splitfilename2
+
+    filename2 = askopenfilename()
+    splitfilename2 = filename2.rsplit('/',1)
+    excel2 = pd.read_excel(filename2, sheet_name=0)
+    excel2.drop(excel2.index[len(excel2) - 1], inplace=True) #drop total row
+    # excel2 = drop_rows(excel2)
+    if filename2:
+        print ("selected: ", filename2)
+        buttonshow2 = Button(root, text=splitfilename2[1], bg="blue")
         buttonshow2.grid(row=1, column=3, sticky="ew")
     else:
         print ("File not selected")
@@ -564,7 +570,7 @@ def act_go():
         elif most_recent_function == 6:
             img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
         elif most_recent_function == 7:
-            img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
+            img_list = samples_product_type(excel1, excel2, client=value71, date="all", detail=True)
         elif most_recent_function == 8:
             img_list = threshold_pie(excel1, date = value81, client="all", detail=True)
         elif most_recent_function == 9:
