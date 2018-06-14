@@ -10,16 +10,15 @@ import numpy as np
 import heapq
 
 
-def residues_graph(resultfile, client, crop, date = "all"): ## n.1
+def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
     """ This function creates a graph on average amount of residues per client 
     for a single crop in a certain time span, including the limit. 
     Variables:
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
-        - Date: Optional. 
-    Returns list of figures as strings.
-    """
-    fig_list = []
+        - Date: Optional. """
+    
+    # fig_name = "Function 1 {}.png".format(version)
 
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
@@ -29,13 +28,23 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
         data[data["ANNO"] == str(date)]
         dates = [str(date)]
     
+    fig_list = []
     
+    client_count = 1
+    client_dic = {}
     for year in dates: # Will produce a graph for each date.
         prod = {}
         err_val = {}
         data2 = data[data["ANNO"] == year]
+        list_check = []
         for element in data["Prova"]:
-            name = element + "_" + str(year)
+            # This will hide the compound names if hide == True
+            if hide == False:
+                name = element + "_" + str(year)
+            if hide == True:
+                name = client_count
+                client_dic["Compound: " + str(name)] = element+ "_" + year
+                
             prev = data2[data2["Prova"] == element]
             # prev contains the data from a single year, client, crop and compound
             prev2 = prev["Risultato"].astype(str).str.replace(',','.')
@@ -45,105 +54,71 @@ def residues_graph(resultfile, client, crop, date = "all"): ## n.1
             if len(prev["Limite"].tolist()) == 0:
                 threshold = "nan"
             try:
-                threshold = float(str(threshold).replace(",", "."))
-                prod[name] = [np.mean(list(map(float, prev2.tolist()))), threshold]
+                if not element + "_" + year in list_check:
+                    list_check.append(element + "_" + year)
+                    threshold = float(str(threshold).replace(",", "."))
+                    client_count = client_count + 1
+                    prod[name] = [np.mean(list(map(float, prev2.tolist()))), threshold]
             except ValueError:
                 err_val[name] = prev2.tolist() # This is just to store the weird values
-    
         
-        # Create 3 bar charts (in case they are needed:
-        sizes_0 = []
-        labels_0 = []
-        limits_0 = []
-        count_0 = 0
-        #This is for concentrations smaller than 1.
+        sizes = []
+        label = []
+        limits = []
+        count = 0
+        fig = plt.figure()
+        fig.set_size_inches(18.0, 18.0, forward=True)
+        for element in sorted(prod.keys()):
+            sizes.append(prod[element][0])
+            label.append("Compound: " + str(element))
+            bool_th =  prod[element][0] > prod[element][1]
+            if bool_th == True and prod[name][1] != float("nan"):
+                limits.append(count)
+            count = count + 1
         
-        sizes_1 = []
-        labels_1 = []
-        limits_1 = []
-        count_1 = 0
-        #This is for concentrations bigger than 1 and smaller than 5.
         
-        sizes_5 = []
-        labels_5 = []
-        limits_5 = []
-        count_5 = 0
-        #This is for concentrations bigger than 5.
-        
-        for element in prod:
-            if prod[element][0] <= 1:
-                sizes_0.append(prod[element][0])
-                labels_0.append(element)
-                if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
-                    limits_0.append(count_0)
-                count_0 = count_0 + 1
-            if prod[element][0] > 1 and prod[element][0] < 5:
-                sizes_1.append(prod[element][0])
-                labels_1.append(element)
-                if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
-                    limits_1.append(count_1)
-                count_1 = count_1 + 1
-            if prod[element][0] >= 5:
-                sizes_5.append(prod[element][0])
-                labels_5.append(element)
-                if prod[element][0] > prod[element][1] and prod[element][1] != float("nan"):
-                    limits_5.append(count_5)
-                count_5 = count_5 + 1
+        if len(sizes) > 30: # Produces several graphs depending on the number of compounds
+            start = 0
+            limits1 = limits            
+            while start < len(sizes):
+                fig = plt.figure()
+                fig.set_size_inches(18.0, 18.0)
+                sizes2 = list(map(float, sizes[start:start+30]))
+                label2 = label[start:start+30]
 
-        if len(sizes_0) > 0:
-            fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0)
-            plt.xticks(rotation='vertical')
-            barlist = plt.bar(range(len(sizes_0)), sizes_0, width=0.4, \
-                              tick_label = labels_0)
-            for element in limits_0:
-                barlist[element].set_color('indianred')
-            
-            fig_title = "Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(year) + " 1"
-            plt.title(fig_title, fontsize= 16)
-            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            fig_name = "{}.png".format(fig_title)
-            # fig_name = "Function11.png"
-            fig.savefig(fig_name, dpi=100)
-            fig_list.append(fig_name)            
+                x2 = range(len(sizes2))
+                plt.xticks(rotation='vertical')
+                barlist = plt.bar(x2, sizes2, width=0.4, tick_label = label2, \
+                                  align='center')
+                
+                limits2 = []
+                for element in limits1:
+                    if element < 30:
+                        barlist[element].set_color('indianred')
+                    else:
+                        limits2.append(element-30)
+                        
+                limits1 = limits2 
+                
+                fig_title = "Compounds analyzed in " + crop + " from " + client\
+                            + " in " + str(year) + "_" + str(int(1+(start/30)))
+                
+                plt.title(fig_title, fontsize= 24)
+                plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+                
+                fig_name = "{}.png".format(fig_title)
+                fig.savefig(fig_name, dpi=100)
+                fig_list.append(fig_name)
+                
+                start = start + 30
 
-        if len(sizes_1) > 0:
-            fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0)
-            plt.xticks(rotation='vertical')
-            barlist = plt.bar(range(len(sizes_1)), sizes_1, width=0.4, \
-                              tick_label = labels_1)
-            for element in limits_1:
-                barlist[element].set_color('indianred')
-            
-            fig_title = "Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(year) + " 2"
-            plt.title(fig_title, fontsize= 16)
-            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            fig.savefig("{}.png".format(fig_name), dpi=100)
-            fig_name = "{}.png".format(fig_title)
-            fig.savefig(fig_name, dpi=100)
-            fig_list.append(fig_name)  
-
-        if len(sizes_5) > 0:
-            fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0)
-            plt.xticks(rotation='vertical')
-            barlist = plt.bar(range(len(sizes_5)), sizes_5, width=0.4, \
-                              tick_label = labels_5)
-            for element in limits_5:
-                barlist[element].set_color('indianred')
-            fig_title = "Compounds analyzed in " + crop + " from " + client + " in "\
-                      + str(year) + " 3"
-            plt.title(fig_title, fontsize= 16)
-            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-            fig_name = "{}.png".format(fig_title)
-            fig.savefig(fig_name, dpi=100)
-            fig_list.append(fig_name)  
+        data_client = pd.DataFrame.from_dict(client_dic, orient="index")
+        writer = pd.ExcelWriter('Compound_index.xlsx', engine='xlsxwriter')
+        data_client.to_excel(writer, sheet_name='Sheet1')
+        writer.save()
         
         print(fig_list)
-        return(fig_list) ## SHOULD BE CHANGED TO DISPLAY MULTIPLE FIGURES
+        return(fig_list)
 
 
 def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ## n.2 
