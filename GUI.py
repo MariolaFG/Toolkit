@@ -196,9 +196,14 @@ def ex1_button():
     # global excel1_columns
     global splitfilename11
 
+    used_cols = ["ANNO", "Cliente", "Data_Arrivo", "Gruppo_prodotto", 
+        "dettaglio_prodotto", "Prova", "Risultato", "Risultato", "Limite",
+        "N_Molecole", "Ris_Lim_perc", "Classi_Ris_Lim_perc"]
+
     filename = askopenfilename() # open selection of files
     splitfilename11 = filename.rsplit('/', 1)
-    excel1 = pd.read_excel(filename, sheet_name=0)
+    excel1 = pd.read_excel(filename, sheet_name=0, use_cols = used_cols)
+    # excel1 = pd.read_excel(filename, sheet_name=0)
     excel1 = drop_rows(excel1)
     if filename:        
         # excel1_columns = excel1.columns.values.tolist()
@@ -229,9 +234,12 @@ def ex2_button():
     # global excel2_columns
     global splitfilename2
 
+    used_cols = ["ANNO", "Cliente", "Gruppo_prodotto", 
+        "N_Molecole"]
+
     filename2 = askopenfilename()
     splitfilename2 = filename2.rsplit('/',1)
-    excel2 = pd.read_excel(filename2, sheet_name=0)
+    excel2 = pd.read_excel(filename2, sheet_name=0, use_cols=used_cols)
     excel2.drop(excel2.index[len(excel2) - 1], inplace=True) #drop total row
     # excel2 = drop_rows(excel2)
     if filename2:
@@ -602,6 +610,8 @@ def act_go():
         img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
     elif  most_recent_function == 3:
         img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
+        # if msg != None:
+        #     timed_msgbox("No samples detected.", "No results", 1500)
     elif most_recent_function == 5:
         img_list = number_of_molecules(excel1, client= value51)
     elif most_recent_function == 6:
