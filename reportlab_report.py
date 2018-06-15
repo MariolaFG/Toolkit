@@ -112,31 +112,27 @@ def toc_page(c, saved_list):
     c.drawCentredString(325, 750, "Table of Contents")
 
     # display table of contents
+    ## if using drawString():
     c.setFont("Helvetica-Oblique", 16, leading=None)
     # c.setLineWidth(1)
     # c.setDash(1, 2) #dots
     y = 700
-    saved_nr_tuple = []
     saved_text = []
     for i in range(len(saved_list)):
         # # if using paragraphs:
-        saved_text.append(Paragraph(saved_list[i][0], 
+        saved_text.append(Paragraph("<i>" + saved_list[i][0] + "</i>", 
             styles["Heading2"]))
         saved_text.append(Paragraph("<para align=\"RIGHT\">{}".format(i+3),
             styles["Heading2"]))
 
-        # i = saved_list[i][0] + "<br/>"
-        # saved_text += i
-        # saved_nr_tuple.append(saved_list[i][0], styles["Heading1"])
-        # aW = 485 #start 65
-        # aH = 635 #start 65
-        # p.drawOn(c, 0, aH)
-        # aH -= h
-
-        # if using drawString:
-        y -= 30
-        
-        if y <= 50:
+    fr = Frame(65, 150, 515, 550, leftPadding=0, bottomPadding=0,
+                rightPadding=0, topPadding=0, id=None, showBoundary=0)
+    side_bar(c)
+    footer(c)    
+    c.setFont("Helvetica-Bold", 20, leading=None) # otherwise green printing  
+    for para in saved_text:
+        while fr.add(para, c) == 0:
+            fr.split(para, c)
             # new page
             c.showPage()
             watermark(c)
@@ -147,19 +143,9 @@ def toc_page(c, saved_list):
 
             # display table of contents
             c.setFont("Helvetica-Oblique", 16, leading=None)
-            # c.setLineWidth(1)
-            # c.setDash(1, 2) #dots
-            y = 660
-            side_bar(c)
-            footer(c)    
 
-        # c.drawString(65, y, saved_list[i][0]) # text
-        # # c.line(x1, y1, x2, y2)
-        # c.drawRightString(580, y, "{}".format(i+3)) #page number    
-
-    fr = Frame(65, 150, 515, 550, leftPadding=0, bottomPadding=0,
-        rightPadding=0, topPadding=0, id=None, showBoundary=0)
-    fr.addFromList(saved_text, c)
+            fr = Frame(65, 150, 515, 550, leftPadding=0, bottomPadding=0,
+                rightPadding=0, topPadding=0, id=None, showBoundary=0)
 
     # draw line
     c.setLineWidth(1)
@@ -248,8 +234,17 @@ def side_bar(c):
 
 
 if __name__ == '__main__':
-    fake_list = [("Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
-                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"),]
+    fake_list = [("Marijke Thijssen Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"),
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke ThijssenMarijke Thijssen", "Images\\dp.png"), 
+                ("Marijke Thijssen Marijke Thijssen Marijke Thijssen Marijke ThijssenMarijkeMarijke Thijssen", "Images\\dp.png")]
     make_pdf(fake_list)
 
     # make_manual()
