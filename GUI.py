@@ -245,172 +245,92 @@ def ex2_button():
 
 ## FUNCTIONS OF STATISTIC BUTTONS
 ### actions for button 1
-def act_button1():    
+def act_button1():
+    global most_recent_function
+    most_recent_function = 1
+
+    if check_excel_1_exist == True:
+        lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb11.grid(row=2, column=1, sticky="nsew")
+        ## Adding scrollbar for lb71
+        scroll_fun(lb11)
+
+        for i in excel1_specific_column_uniq_Cliente:
+            lb11.insert(END, i)
+
+        def cur_selection11(*x):
+            global value11
+            value11 = (lb11.get(lb11.curselection()))
+
+        lb11.bind("<<ListboxSelect>>", cur_selection11)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
+
+def act_button2():
+    global most_recent_function
+    most_recent_function = 2
+    print (check_excel_2_exist)
+    print (check_excel_1_exist)
+    if check_excel_1_exist == True and check_excel_2_exist == True:
+
+        lb21 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb21.grid(row=3, column=1, sticky="nsew")
+        ## Adding scrollbar for lb81
+        scroll_fun(lb81)
+
+        for i in excel1_specific_column_uniq_ANNO:
+            lb21.insert(END, i)
+
+        def cur_selection21(*x):
+            global value21
+            value21 = (lb21.get(lb21.curselection()))
+
+        lb21.bind("<<ListboxSelect>>", cur_selection21)
+    elif check_excel_2_exist == False and check_excel_1_exist == False:
+        timed_msgbox("Both excel files are missing", top_title="ERROR", duration=1500)
+    elif check_excel_1_exist == False and check_excel_2_exist == True:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
+    else:
+        timed_msgbox("Excel file 2 is missing", top_title="ERROR", duration=1500)
+        winsound.Beep("")
+
+def act_button3():    
     """ Shows listboxes for client, product and year 
     to select from for function 1.  
     """   
     global most_recent_function
-    most_recent_function = 1
+    most_recent_function = 3
 
-    lb11 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb11.grid(row=2, column=1, sticky="nsew")
-    # Adding scrollbar for lb11
-    scroll_fun(lb11)
-    # Put the data into the listbox
-    for i in excel1_specific_column_uniq_Cliente:
-        lb11.insert(END, i)
+    if check_excel_1_exist == True:
+        lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb31.grid(row=4, column=1, sticky="nsew")
+        # Adding scrollbar for lb31
+        scroll_fun(lb31)
+        # Put the data into the listbox
+        for i in excel1_specific_column_uniq_Cliente:
+            lb31.insert(END, i)
 
-    def cur_selection11(*x):
-        global value11
-        value11 = (lb11.get(lb11.curselection()))
+        def cur_selection31(*x):
+            global value31
+            value31 = (lb31.get(lb31.curselection()))
 
-        act_lb12()
-    lb11.bind("<<ListboxSelect>>", cur_selection11)
+            act_lb32()
+        lb31.bind("<<ListboxSelect>>", cur_selection31)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
 
 def act_lb12():
     """ Changes selection for Listbox 2 of function 1.
 
     """ 
-    lb12 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb12.grid(row=2, column=2, sticky="nsew")
-    ## Adding scrollbar for lb12
-    scroll_fun(lb12)
-
-    adjusted_excel = excel1.loc[excel1["Cliente"] == value11]
-    unique_gruppo_prodotto = pre_proc(adjusted_excel, "Gruppo_prodotto")
-    for y in unique_gruppo_prodotto:
-        lb12.insert(END, y)
-
-    def cur_selection12(*y):
-        global value12
-        value12 = lb12.get(lb12.curselection())
-
-        act_lb13()
-    lb12.bind("<<ListboxSelect>>", cur_selection12)
-
-def act_lb13():
-    """ Changes selection for Listbox 3 of function 1.
-    """    
-    lb13 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb13.grid(row=2, column=3, sticky="nsew")
-    # ## Adding scrollbar for lb13
-    # scroll_fun(lb13)
-    adjusted_excel = excel1.loc[(excel1["Cliente"] == value11) & (excel1["Gruppo_prodotto"] == value12)]
-    unique_anno = pre_proc(adjusted_excel, "ANNO")
-    for z in excel1_specific_column_uniq_ANNO:
-        lb13.insert(END, z)
-    lb13.insert(END, "all")
-
-    def cur_selection13(*z):
-        global value13
-        value13 = (lb13.get(lb13.curselection()))
-
-    lb13.bind("<<ListboxSelect>>", cur_selection13)
-###
-    
-### actions for button 2    
-def act_button2():
-    """ Shows listboxes for product, compound and year 
-    to select from for function 2.  
-    """
-    global most_recent_function
-    most_recent_function = 2
-
-    # create listboxes
-    lb21 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb21.grid(row=3, column=1, sticky="nsew")
-    ## Adding scrollbar for lb21
-    scroll_fun(lb21)
-
-    for i in excel1_specific_column_uniq_Gruppo_prodotto:
-        lb21.insert(END, i)
-
-    def cur_selection21(*x):
-        # global selected_value21
-        global value21
-        value21 = lb21.get(lb21.curselection())
-        # selected_value21 = True
-
-        act_lb22()
-    lb21.bind("<<ListboxSelect>>", cur_selection21)
-
-
-def act_lb22():
-    """ Changes selection for Listbox 2 of function 2.
-    """ 
-    # create Listbox 
-    lb22 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb22.grid(row=3, column=2, sticky="nsew")
-    ## Adding scrollbar for lb22
-    scroll_fun(lb22)
-
-    adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value21]
-    unique_prova = pre_proc(adjusted_excel, "Prova")
-    for y in unique_prova:
-        lb22.insert(END, y)
-
-    def cur_selection22(*y):
-        global value22
-        value22 = lb22.get(lb22.curselection())
-
-        act_lb23()
-    lb22.bind("<<ListboxSelect>>", cur_selection22)
-
-def act_lb23():
-    """ Changes selection for Listbox 3 of function 2.
-    """    
-    lb23 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb23.grid(row=3, column=3, sticky="nsew")
-    # ## Adding scrollbar for lb23
-    # scroll_fun(lb23)
-
-    adjusted_excel = excel1.loc[(excel1["Gruppo_prodotto"] == value21) & (excel1["Prova"] == value22)]
-    unique_anno = pre_proc(adjusted_excel, "ANNO")
-    for z in unique_anno:
-        lb23.insert(END, z)
-    lb23.insert(END, "all")
-
-    def cur_selection23(*z):
-        global value23
-        value23 = (lb23.get(lb23.curselection()))
-    lb23.bind("<<ListboxSelect>>", cur_selection23)
-###
-
-### actions for button 3    
-def act_button3():
-    """ Shows listboxes for product, client and year 
-    to select from for function 3.  
-    """
-    global most_recent_function
-    most_recent_function = 3
-    lb31 = Listbox(root, selectmode=SINGLE, exportselection=0)
-    lb31.grid(row=4, column=1, sticky="nsew")
-    ## Adding scrollbar for lb31
-    scroll_fun(lb31)
-
-    for i in excel1_specific_column_uniq_Gruppo_prodotto:
-        lb31.insert(END, i)
-    a = lb31.curselection()
-
-    def cur_selection31(*x):
-        global value31
-        value31 = (lb31.get(lb31.curselection()))
-
-        act_lb32()
-    lb31.bind("<<ListboxSelect>>", cur_selection31)
-
-def act_lb32():
-    """ Changes selection for Listbox 2 of function 3.
-
-    """    
     lb32 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb32.grid(row=4, column=2, sticky="nsew")
     ## Adding scrollbar for lb32
     scroll_fun(lb32)
 
-    adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value31]
-    unique_cliente = pre_proc(adjusted_excel, "Cliente")
-    for y in unique_cliente:
+    adjusted_excel = excel1.loc[excel1["Cliente"] == value31]
+    unique_gruppo_prodotto = pre_proc(adjusted_excel, "Gruppo_prodotto")
+    for y in unique_gruppo_prodotto:
         lb32.insert(END, y)
 
     def cur_selection32(*y):
@@ -421,63 +341,114 @@ def act_lb32():
     lb32.bind("<<ListboxSelect>>", cur_selection32)
 
 def act_lb33():
-    """ Changes selection for Listbox 3 of function 3.
-
-    """        
+    """ Changes selection for Listbox 3 of function 1.
+    """    
     lb33 = Listbox(root, selectmode=SINGLE, exportselection=0)
     lb33.grid(row=4, column=3, sticky="nsew")
     # ## Adding scrollbar for lb33
     # scroll_fun(lb33)
-    
-    adjusted_excel = excel1.loc[(excel1["Gruppo_prodotto"] == value31) & (excel1["Cliente"] == value32)]
-    unique_prova = pre_proc(adjusted_excel, "Prova")
-    for z in unique_prova:
+    adjusted_excel = excel1.loc[(excel1["Cliente"] == value31) & (excel1["Gruppo_prodotto"] == value32)]
+    unique_anno = pre_proc(adjusted_excel, "ANNO")
+    for z in excel1_specific_column_uniq_ANNO:
         lb33.insert(END, z)
+    lb33.insert(END, "all")
 
     def cur_selection33(*z):
         global value33
         value33 = (lb33.get(lb33.curselection()))
-    lb33.bind("<<ListboxSelect>>", cur_selection33)    
 
-    
+    lb33.bind("<<ListboxSelect>>", cur_selection33)
 
 def act_button4():
-    # works but GUI can't close
-    # resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
-    # fig = product_type(resultfile,"Function_5" )
-    # fig = "cat.png"
-    # canvas = Canvas(root)
-    # canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
-    # img = PhotoImage( file=fig)
-    # canvas.create_image(100,100, image=img)
-    # list(img)
-    # listcounter(False)
-    # create_global_curr_fig(fig)
-    winsound.PlaySound("Feeling Happy Sound Effect", winsound.SND_FILENAME)
-    winsound.PlaySound(None, winsound.SND_PURGE)
+    global most_recent_function
+    most_recent_function = 4
 
+    if check_excel_1_exist == True:
+        lb41 = Listbox(root, selectmode=SINGLE, exportselection=0)
+        lb41.grid(row=5, column=1, sticky="nsew")
+        ## Adding scrollbar for lb51
+        scroll_fun(lb41)
 
+        for i in excel1_specific_column_uniq_ANNO:
+            lb41.insert(END, i)
+
+        def cur_selection41(*x):
+            global value41
+            value41 = (lb41.get(lb41.curselection()))
+
+        lb41.bind("<<ListboxSelect>>", cur_selection41)
+    else:
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
+    
 def act_button5():
+    """ Shows listboxes for product, compound and year 
+    to select from for function 2.  
+    """
     global most_recent_function
     most_recent_function = 5
 
     if check_excel_1_exist == True:
+    # create Listbox
         lb51 = Listbox(root, selectmode=SINGLE, exportselection=0)
         lb51.grid(row=6, column=1, sticky="nsew")
-        ## Adding scrollbar for lb51
+        ## Adding scrollbar for lb21
         scroll_fun(lb51)
 
-        for i in excel1_specific_column_uniq_ANNO:
+        for i in excel1_specific_column_uniq_Gruppo_prodotto:
             lb51.insert(END, i)
 
         def cur_selection51(*x):
+            # global selected_value51
             global value51
-            value51 = (lb51.get(lb51.curselection()))
+            value51 = lb51.get(lb51.curselection())
+            # selected_value51 = True
 
+            act_lb52()
         lb51.bind("<<ListboxSelect>>", cur_selection51)
     else:
         timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
 
+
+
+def act_lb52():
+    """ Changes selection for Listbox 2 of function 5.
+    """ 
+    # create Listbox 
+    lb52 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb52.grid(row=6, column=2, sticky="nsew")
+    ## Adding scrollbar for lb52
+    scroll_fun(lb52)
+
+    adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value51]
+    unique_prova = pre_proc(adjusted_excel, "Prova")
+    for y in unique_prova:
+        lb52.insert(END, y)
+
+    def cur_selection52(*y):
+        global value52
+        value52 = lb52.get(lb52.curselection())
+
+        act_lb53()
+    lb52.bind("<<ListboxSelect>>", cur_selection52)
+
+def act_lb53():
+    """ Changes selection for Listbox 3 of function 5.
+    """    
+    lb53 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb53.grid(row=6, column=3, sticky="nsew")
+    # ## Adding scrollbar for lb53
+    # scroll_fun(lb53)
+
+    adjusted_excel = excel1.loc[(excel1["Gruppo_prodotto"] == value51) & (excel1["Prova"] == value52)]
+    unique_anno = pre_proc(adjusted_excel, "ANNO")
+    for z in unique_anno:
+        lb53.insert(END, z)
+    lb53.insert(END, "all")
+
+    def cur_selection53(*z):
+        global value53
+        value53 = (lb53.get(lb53.curselection()))
+    lb53.bind("<<ListboxSelect>>", cur_selection53)
 
 def act_button6():
     global most_recent_function
@@ -501,38 +472,80 @@ def act_button6():
         timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
 
 
-
 def act_button7():
+    """ Shows listboxes for product, client and year 
+    to select from for function 3.  
+    """
     global most_recent_function
     most_recent_function = 7
 
     if check_excel_1_exist == True:
         lb71 = Listbox(root, selectmode=SINGLE, exportselection=0)
         lb71.grid(row=8, column=1, sticky="nsew")
-        ## Adding scrollbar for lb71
+        ## Adding scrollbar for lb31
         scroll_fun(lb71)
 
-        for i in excel1_specific_column_uniq_Cliente:
+        for i in excel1_specific_column_uniq_Gruppo_prodotto:
             lb71.insert(END, i)
+        a = lb71.curselection()
 
         def cur_selection71(*x):
             global value71
             value71 = (lb71.get(lb71.curselection()))
 
+            act_lb72()
         lb71.bind("<<ListboxSelect>>", cur_selection71)
     else:
         timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
 
 
+def act_lb72():
+    """ Changes selection for Listbox 2 of function 7.
+
+    """    
+    lb72 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb72.grid(row=8, column=2, sticky="nsew")
+    ## Adding scrollbar for lb72
+    scroll_fun(lb72)
+
+    adjusted_excel = excel1.loc[excel1["Gruppo_prodotto"] == value71]
+    unique_cliente = pre_proc(adjusted_excel, "Cliente")
+    for y in unique_cliente:
+        lb72.insert(END, y)
+
+    def cur_selection72(*y):
+        global value72
+        value72 = lb72.get(lb72.curselection())
+
+        act_lb73()
+    lb72.bind("<<ListboxSelect>>", cur_selection72)
+
+def act_lb73():
+    """ Changes selection for Listbox 3 of function 7.
+
+    """        
+    lb73 = Listbox(root, selectmode=SINGLE, exportselection=0)
+    lb73.grid(row=8, column=3, sticky="nsew")
+    # ## Adding scrollbar for lb73
+    # scroll_fun(lb73)
+    
+    adjusted_excel = excel1.loc[(excel1["Gruppo_prodotto"] == value71) & (excel1["Cliente"] == value72)]
+    unique_prova = pre_proc(adjusted_excel, "Prova")
+    for z in unique_prova:
+        lb73.insert(END, z)
+
+    def cur_selection73(*z):
+        global value73
+        value73 = (lb73.get(lb73.curselection()))
+    lb73.bind("<<ListboxSelect>>", cur_selection73)    
+
 def act_button8():
     global most_recent_function
     most_recent_function = 8
-    print (check_excel_2_exist)
-    print (check_excel_1_exist)
-    if check_excel_1_exist == True and check_excel_2_exist == True:
 
+    if check_excel_1_exist == True:
         lb81 = Listbox(root, selectmode=SINGLE, exportselection=0)
-        lb81.grid(row=9, column=1, sticky="nsew")
+        lb81.grid(row=9, column=3, sticky="nsew")
         ## Adding scrollbar for lb81
         scroll_fun(lb81)
 
@@ -544,36 +557,27 @@ def act_button8():
             value81 = (lb81.get(lb81.curselection()))
 
         lb81.bind("<<ListboxSelect>>", cur_selection81)
-    elif check_excel_2_exist == False and check_excel_1_exist == False:
-        timed_msgbox("Both excel files are missing", top_title="ERROR", duration=1500)
-    elif check_excel_1_exist == False and check_excel_2_exist == True:
-        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
     else:
-        timed_msgbox("Excel file 2 is missing", top_title="ERROR", duration=1500)
+        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
         winsound.Beep("")
-
 
 def act_button9():
-    global most_recent_function
-    most_recent_function = 9
+    # works but GUI can't close
+    # resultfile = pd.read_excel("test_analysis_18.xlsx", sheetname=0) #TEMP!
+    # fig = product_type(resultfile,"Function_5" )
+    # fig = "cat.png"
+    # canvas = Canvas(root)
+    # canvas.grid(row=1,column=4,rowspan=9,columnspan=10)
+    # img = PhotoImage( file=fig)
+    # canvas.create_image(100,100, image=img)
+    # list(img)
+    # listcounter(False)
+    # create_global_curr_fig(fig)
+    # winsound.PlaySound("Feeling Happy Sound Effect", winsound.SND_FILENAME)
+    # winsound.PlaySound(None, winsound.SND_PURGE)
+    pass
 
-    if check_excel_1_exist == True:
-        lb91 = Listbox(root, selectmode=SINGLE, exportselection=0)
-        lb91.grid(row=9, column=3, sticky="nsew")
-        ## Adding scrollbar for lb91
-        scroll_fun(lb91)
 
-        for i in excel1_specific_column_uniq_ANNO:
-            lb91.insert(END, i)
-
-        def cur_selection91(*x):
-            global value91
-            value91 = (lb91.get(lb91.curselection()))
-
-        lb91.bind("<<ListboxSelect>>", cur_selection91)
-    else:
-        timed_msgbox("Excel file 1 is missing", top_title="ERROR", duration=1500)
-        winsound.Beep("")
 
     
 
@@ -596,19 +600,19 @@ def act_go():
     # try:
     if most_recent_function == 0:
         tkinter.messagebox.showinfo("Error","Pick a graph first")
-    elif most_recent_function == 1:
-        img_list = residues_graph(excel1, value11, value12, value13)
-    elif most_recent_function == 2:
-        img_list = compound_per_client(excel1, compound=value22, crop=value21, date = value23, hide=hidecounter)
-    elif  most_recent_function == 3:
-        img_list = residues_graph_esp(excel1, client=value32, crop = value31, compound= value33)
+    elif most_recent_function == 3:
+        img_list = residues_graph(excel1, value31, value32, value33)
     elif most_recent_function == 5:
-        img_list = number_of_molecules(excel1, client= value51)
+        img_list = compound_per_client(excel1, compound=value52, crop=value51, date = value53, hide=hidecounter)
+    elif  most_recent_function == 7:
+        img_list = residues_graph_esp(excel1, client=value72, crop = value71, compound= value73)
+    elif most_recent_function == 4:
+        img_list = number_of_molecules(excel1, client= value41)
     elif most_recent_function == 6:
         img_list = samples_product_type(excel1, client="all", date=value61, detail=True)
-    elif most_recent_function == 7:
-        img_list = samples_product_type(excel1, client=value71, date="all", detail=True)
-    elif most_recent_function == 8:
+    elif most_recent_function == 1:
+        img_list = samples_product_type(excel1, client=value11, date="all", detail=True)
+    elif most_recent_function == 2:
         global reduced1
         global reduced2
         global reduced3
@@ -616,8 +620,8 @@ def act_go():
         img_list, reduced1, reduced2, reduced3, reduced4 = threshold_pie(excel1, excel2, date = value81, client="all", detail=True)
         buttonDetails = Button(root, text="Details", bg="blue", command= act_details)
         buttonDetails.grid(row=10, column=7, sticky="ew")
-    elif most_recent_function == 9:
-        img_list = clients_graph(excel1, date= value91)
+    elif most_recent_function == 8:
+        img_list = clients_graph(excel1, date= value81)
 
     for img in img_list:
         draw_image(img)
@@ -669,31 +673,31 @@ def openInstrucktion():
 
 ## CREATE BUTTONS CODE
 
-button1 = Button(root,text="1. Graph on average amount of residues \n per client for a single crop \n in a certain time span", command=act_button1, bg=bgcolor, fg=fgcolor)
+button1 = Button(root,text="1. Graph on total number of samples \n per product for one client", command=act_button1, bg=bgcolor, fg=fgcolor)
 button1.grid(row=2, column=0, sticky="nsew")
 
-button2 = Button(root,text="2. Graph on average amount of a certain compound \n per crop per year \n for all clients", command=act_button2, bg=bgcolor, fg=fgcolor)
+button2 = Button(root,text="2. Pie Chart of one crop samples by one client \n categorised into groups based on \n their concetration relative to their threshold", command=act_button2, bg=bgcolor, fg=fgcolor)
 button2.grid(row=3, column=0, sticky="nsew")
 
-button3 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command=act_button3, bg=bgcolor, fg=fgcolor)
+button3 = Button(root,text="3. Average concetrations of all compounds \n found in one crop from one client \n in a certain span", command=act_button3, bg=bgcolor, fg=fgcolor)
 button3.grid(row=4, column=0, sticky="nsew")
 
-button4 = Button(root,text="Button_4", command = act_button4, bg=bgcolor, fg=fgcolor)
+button4 = Button(root,text="4. Distribution of a certain compound \n throughout one year \n for one client for one crop ", command = act_button4, bg=bgcolor, fg=fgcolor)
 button4.grid(row=5, column=0, sticky="nsew")
 
-button5 = Button(root,text="5. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button5, bg=bgcolor, fg=fgcolor)
+button5 = Button(root,text="5. Average concetration of one compound \n found in one crop \n by clients in a certain time span", command=act_button5, bg=bgcolor, fg=fgcolor)
 button5.grid(row=6, column=0, sticky="nsew")
 
-button6 = Button(root,text="3. Chart on number of samples per product \n collected by SATA in a certain year", command=act_button6, bg=bgcolor, fg=fgcolor) #command= lambda: [f() for f in [selection61, selection62]])
+button6 = Button(root,text="6. Chart of average number of molecules \n per crop collected by SATA \n per year", command=act_button6, bg=bgcolor, fg=fgcolor) #command= lambda: [f() for f in [selection61, selection62]])
 button6.grid(row=7, column=0, sticky="nsew")
 
-button7 = Button(root,text="6. Graph on total number of samples \n per product for one client", command=act_button7, bg=bgcolor, fg=fgcolor)
+button7 = Button(root,text="7. Chart on number of samples per product \n collected by SATA in a certain year", command=act_button7, bg=bgcolor, fg=fgcolor)
 button7.grid(row=8, column=0, sticky="nsew")
 
-button8 = Button(root,text="7. Chart on percentage of samples \n that exceeds the limit in one year", command=act_button8, bg=bgcolor, fg=fgcolor)
+button8 = Button(root,text="8. Chart on occurence of clients \n exceeding the limit per year", command=act_button8, bg=bgcolor, fg=fgcolor)
 button8.grid(row=9, column=0, sticky="nsew")
 
-button9 = Button(root, text="8. Chart on clients \n always-sometimes-never \n exceeding the limit per year", command=act_button9, bg=bgcolor, fg=fgcolor)
+button9 = Button(root, text="Dummy Button to be removed", command=act_button4, bg=bgcolor, fg=fgcolor)
 button9.grid(row=9, column=2, sticky="nsew")
 
 backbutton = Button(root, text= "Previous Screen", command = backbutton, bg=bgcolor, fg=fgcolor)
@@ -702,7 +706,7 @@ backbutton.grid(row=10, column=4, sticky="ewsn")
 forwardbutton = Button(root, text= "Next Screen", command = forwardbutton, bg=bgcolor, fg=fgcolor)
 forwardbutton.grid(row=10, column=5, sticky="ewsn")
 
-addbutton = Button(root, text="Add Item", command=act_add, bg=bgcolor, fg=fgcolor)
+addbutton = Button(root, text="Add Item", bg="blue", command=act_add)
 addbutton.grid(row=10, column=10, sticky="ewsn")
 
 buttonDownload = Button(root, text="Download Summary", bg="green", command=act_download, fg=fgcolor)
