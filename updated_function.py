@@ -65,8 +65,6 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
         label = []
         limits = []
         count = 0
-        fig = plt.figure()
-        fig.set_size_inches(18.0, 18.0, forward=True)
         for element in sorted(prod.keys()):
             sizes.append(prod[element][0])
             label.append("Compound: " + str(element))
@@ -75,41 +73,40 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
                 limits.append(count)
             count = count + 1
         
-        #what happens if len(sizes) is SMALLER than 30?  
-        if len(sizes) > 30: # Produces several graphs depending on the number of compounds
-            start = 0
-            limits1 = limits            
-            while start < len(sizes):
-                fig = plt.figure()
-                fig.set_size_inches(18.0, 18.0)
-                sizes2 = list(map(float, sizes[start:start+30]))
-                label2 = label[start:start+30]
 
-                x2 = range(len(sizes2))
-                plt.xticks(rotation='vertical')
-                barlist = plt.bar(x2, sizes2, width=0.4, tick_label = label2, \
-                                  align='center')
-                
-                limits2 = []
-                for element in limits1:
-                    if element < 30:
-                        barlist[element].set_color('indianred')
-                    else:
-                        limits2.append(element-30)
-                        
-                limits1 = limits2 
-                
-                fig_title = "Compounds analyzed in " + crop + " from " + client\
-                            + " in " + str(year) + "_" + str(int(1+(start/30)))
-                
-                plt.title(fig_title, fontsize= 24)
-                plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-                
-                fig_name = "{}.png".format(fig_title)
-                fig.savefig(fig_name, dpi=100)
-                fig_list.append(fig_name)
-                
-                start = start + 30
+        start = 0
+        limits1 = limits            
+        while start < len(sizes):
+            fig = plt.figure()
+            fig.set_size_inches(18.0, 18.0)
+            sizes2 = list(map(float, sizes[start:start+30]))
+            label2 = label[start:start+30]
+
+            x2 = range(len(sizes2))
+            plt.xticks(rotation='vertical')
+            barlist = plt.bar(x2, sizes2, width=0.4, tick_label = label2, \
+                              align='center')
+            
+            limits2 = []
+            for element in limits1:
+                if element < 30:
+                    barlist[element].set_color('indianred')
+                else:
+                    limits2.append(element-30)
+                    
+            limits1 = limits2 
+            
+            fig_title = "Compounds analyzed in " + crop + " from " + client\
+                        + " in " + str(year) + "_" + str(int(1+(start/30)))
+            
+            plt.title(fig_title, fontsize= 24)
+            plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+            
+            fig_name = "{}.png".format(fig_title)
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)
+            
+            start = start + 30
 
         data_client = pd.DataFrame.from_dict(client_dic, orient="index")
         writer = pd.ExcelWriter('Compound_index.xlsx', engine='xlsxwriter')
