@@ -196,14 +196,14 @@ def ex1_button():
     # global excel1_columns
     global splitfilename11
 
-    used_cols = ["ANNO", "Cliente", "Data_Arrivo", "Gruppo_prodotto", 
-        "dettaglio_prodotto", "Prova", "Risultato", "Risultato", "Limite",
-        "N_Molecole", "Ris_Lim_perc", "Classi_Ris_Lim_perc"]
+    # used_cols = ["ANNO", "Cliente", "Data_Arrivo", "Gruppo_prodotto", 
+    #     "dettaglio_prodotto", "Prova", "Risultato", "Risultato", "Limite",
+    #     "N_Molecole", "Ris_Lim_perc", "Classi_Ris_Lim_perc", "N_campione"]
 
     filename = askopenfilename() # open selection of files
     splitfilename11 = filename.rsplit('/', 1)
-    excel1 = pd.read_excel(filename, sheet_name=0, use_cols = used_cols)
-    # excel1 = pd.read_excel(filename, sheet_name=0)
+    # excel1 = pd.read_excel(filename, sheet_name=0, use_cols = used_cols)
+    excel1 = pd.read_excel(filename, sheet_name=0)
     excel1 = drop_rows(excel1)
     if filename:        
         # excel1_columns = excel1.columns.values.tolist()
@@ -234,12 +234,14 @@ def ex2_button():
     # global excel2_columns
     global splitfilename2
 
-    used_cols = ["ANNO", "Cliente", "Gruppo_prodotto", 
-        "N_Molecole"]
+    # used_cols = ["ANNO", "Cliente", "Gruppo_prodotto", 
+        # "N_Molecole", "Analisi_richiesta_EX_NOTE_LAB",
+        # "N_campione"]
 
     filename2 = askopenfilename()
     splitfilename2 = filename2.rsplit('/',1)
-    excel2 = pd.read_excel(filename2, sheet_name=0, use_cols=used_cols)
+    excel2 = pd.read_excel(filename2, sheet_name=0)
+    # excel2 = pd.read_excel(filename2, sheet_name=0, use_cols=used_cols)
     excel2.drop(excel2.index[len(excel2) - 1], inplace=True) #drop total row
     # excel2 = drop_rows(excel2)
     if filename2:
@@ -613,7 +615,7 @@ def act_go():
     elif most_recent_function == 5:
         img_list = compound_per_client(excel1, compound=value52, crop=value51, date = value53, hide=hidecounter)
     elif  most_recent_function == 7:
-        img_list = residues_graph_esp(excel1, client=value72, crop = value71, compound= value73)
+        img_list = residues_graph_esp(excel1, excel2, client=value72, crop = value71, compound= value73)
     elif most_recent_function == 4:
         img_list = number_of_molecules(excel1, client= value41)
     elif most_recent_function == 6:
@@ -629,7 +631,7 @@ def act_go():
         buttonDetails = Button(root, text="Details", bg="blue", command= act_details)
         buttonDetails.grid(row=10, column=7, sticky="ew")
     elif most_recent_function == 8:
-        img_list = clients_graph(excel1, date= value81)
+        img_list = clients_graph(excel1, date=value81)
 
     for img in img_list:
         draw_image(img)
