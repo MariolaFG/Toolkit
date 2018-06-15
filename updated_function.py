@@ -101,11 +101,11 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
                 year1 = dates[0]
                 year2 = dates[-1]
                 if year1 == year2:
-                    fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in " + str(year1) + "(" + str(int(1+(start/30))) + ")"
+                    fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in " + str(year1) + ' ' + str(int(1+(start/30)))
                 else:
-                    fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in {}-{}".format(year1, year2) + "(" + str(int(1+(start/30))) + ")"
+                    fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in {}-{}".format(year1, year2) + " " + str(int(1+(start/30)))
             else:
-                fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in " + str(date) + "(" + str(int(1+(start/30))) + ")"
+                fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in " + str(date) + " " + str(int(1+(start/30)))
             plt.title(fig_title, fontsize= 24)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
@@ -333,8 +333,10 @@ def samples_product_type(resultfile, client = "all", detail = False,\
             year2 = years[-1]
             if year1 == year2:
                 fig_title = "Amount of samples for " + client + " in " + str(year1)
+            else:
+                fig_title = "Amount of samples for " + client + " in {}-{}".format(year1, year2)
         else:
-            fig_title = "Amount of samples for " + client + " in {}-{}".format(year1, year2)
+            fig_title = "Amount of samples for " + client + " in " + str(year)
         plt.title(fig_title)
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
@@ -397,7 +399,7 @@ def residues_graph_esp(resultfile, infofile, client, crop, compound):  ## 4
     
     reduced_info = pd.DataFrame(columns= infofile.columns.values)
     for trials in set(infofile["Analisi_richiesta_EX_NOTE_LAB"].tolist()):
-        trial = unicode(trials)
+        trial = str(trials)
         if compound in trial or "Multiresiduale Full" in trial:
             reduced_info = reduced_info.append(infofile[infofile\
                             ["Analisi_richiesta_EX_NOTE_LAB"] == trials])
@@ -425,7 +427,7 @@ def residues_graph_esp(resultfile, infofile, client, crop, compound):  ## 4
             limits.append(count)
         count = count + 1
 
-    print len(sizes)
+    # print(len(sizes))
     
     fig = plt.figure()
     if len(sizes) <= 20: # Only one graph is needed.
@@ -459,8 +461,8 @@ def residues_graph_esp(resultfile, infofile, client, crop, compound):  ## 4
                 else:
                     fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2)
             else:
-                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(date)
-            # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
+                # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(date)
+                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             fig_name = "{}.png".format(fig_title)   
@@ -503,7 +505,7 @@ def residues_graph_esp(resultfile, infofile, client, crop, compound):  ## 4
                     fig.savefig(fig_name, dpi=100)
                     fig_list.append(fig_name)
                     
-                    messages.append(message)
+                    fig_list.append(message)
                     list_no = []
                     check = 0
                     results_count = 0
@@ -556,7 +558,7 @@ def residues_graph_esp(resultfile, infofile, client, crop, compound):  ## 4
               
         
     print(fig_list)
-    return(fig_list, messages)
+    return(fig_list)
         # This update is just to make sure that the graph is not messy, dividing
         # the samples in groups of 20
 
