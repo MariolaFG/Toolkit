@@ -16,17 +16,16 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
     Variables:
         - Client: Compulsory (Column Cliente)
         - Crop: Compulsory (Column Gruppo_Prodotto)
-        - Date: Optional. """
-    
-    # fig_name = "Function 1 {}.png".format(version)
-
+        - Date: Optional. 
+    Returns list of figures as strings.
+    """
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
     dates = list(set(data["ANNO"].tolist()))
     
     if date != "all":
         data[data["ANNO"] == str(date)]
-        dates = [str(date)]
+        dates = [date]
     
     fig_list = []
     
@@ -43,7 +42,7 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
                 name = element + "_" + str(year)
             if hide == True:
                 name = client_count
-                client_dic["Compound: " + str(name)] = element+ "_" + year
+                client_dic["Compound: " + str(name)] = element+ "_" + str(year) # MT - changed
                 
             prev = data2[data2["Prova"] == element]
             # prev contains the data from a single year, client, crop and compound
@@ -54,8 +53,8 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
             if len(prev["Limite"].tolist()) == 0:
                 threshold = "nan"
             try:
-                if not element + "_" + year in list_check:
-                    list_check.append(element + "_" + year)
+                if not element + "_" + str(year) in list_check:
+                    list_check.append(element + "_" + str(year))
                     threshold = float(str(threshold).replace(",", "."))
                     client_count = client_count + 1
                     prod[name] = [np.mean(list(map(float, prev2.tolist()))), threshold]
@@ -76,7 +75,7 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
                 limits.append(count)
             count = count + 1
         
-        
+        #what happens if len(sizes) is SMALLER than 30?  
         if len(sizes) > 30: # Produces several graphs depending on the number of compounds
             start = 0
             limits1 = limits            
@@ -599,7 +598,7 @@ def clients_graph(resultfile, date = "all"): ## 8
     plt.pie(np.array([len(client_dic[1]), len(client_dic[2]), len(client_dic[3])]),\
             labels=labels, shadow=True, explode=explode, autopct='%1.1f%%',\
             pctdistance=0.6, colors=colors)
-    fig_title = "Clients grouped by threshold in " + str(date)
+    fig_title = "Clients grouped by threshold in " + str(date) + " 1"
     plt.title(fig_title, fontsize= 16)
     
     fig_name = "{}.png".format(fig_title)   
@@ -645,7 +644,7 @@ def products_of_client(resultfile, client, date = "all"):
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
-    fig_title = "Crops analyzed from " + client + " in " + str(date)
+    fig_title = "Crops analyzed from " + client + " in " + str(date) + " 2"
     plt.title(fig_title, fontsize= 16)
     fig_name = "{}.png".format(fig_title)   
     fig.savefig(fig_name, dpi=100)
@@ -774,7 +773,7 @@ if __name__ == "__main__":
     hide = False
     detail = False
 
-    # residues_graph(resultfile, client=client, crop=crop)
+    residues_graph(resultfile, client=client, crop=crop)
     
     # compound_per_client(resultfile, compound=compound, crop=crop, date = "all", hide=hide)   
 
