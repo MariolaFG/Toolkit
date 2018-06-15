@@ -101,11 +101,11 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
                 year1 = dates[0]
                 year2 = dates[-1]
                 if year1 == year2:
-                    fig_title = "Average concentration (" + str(int(1+(start/30))) + ") of all compounds found in " + crop + " from " + client + " in " + str(year1)
+                    fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in " + str(year1) + "(" + str(int(1+(start/30))) + ")"
                 else:
-                    fig_title = "Average concentration (" + str(int(1+(start/30))) + ") of all compounds found in " + crop + " from " + client + " in {}-{}".format(year1, year2)
+                    fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in {}-{}".format(year1, year2) + "(" + str(int(1+(start/30))) + ")"
             else:
-                fig_title = "Average concentration (" + str(int(1+(start/30))) + ") of all compounds found in " + crop + " from " + client + " in " + str(date)
+                fig_title = "Average concentration of all compounds found in " + crop + " from " + client + " in " + str(date) + "(" + str(int(1+(start/30))) + ")"
             plt.title(fig_title, fontsize= 24)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
@@ -186,7 +186,7 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
                 limits.append(count)
             count = count + 1
         
-        if len(sizes) < 30:
+        if len(sizes) <= 30:
             fig = plt.figure()
             fig.set_size_inches(18.0, 18.0)
             plt.xticks(rotation='vertical')
@@ -199,11 +199,11 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
                 year1 = dates[0]
                 year2 = dates[-1]
                 if year1 == year2:
-                    fig_title = "Average concentration (low) of " + compound + " in " + crop + " in " + str(year1)
+                    fig_title = "Average concentration of " + compound + " in " + crop + " in " + str(year1)
                 else:
-                    fig_title = "Average concentration (low) of " + compound + " in " + crop + " in {}-{}".format(year1, year2)
+                    fig_title = "Average concentration of " + compound + " in " + crop + " in {}-{}".format(year1, year2)
             else:
-                fig_title = "Average concentration (low) of " + compound + " in " + crop + " in " + str(date)
+                fig_title = "Average concentration of " + compound + " in " + crop + " in " + str(date)
 
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
@@ -241,11 +241,11 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
                     year1 = dates[0]
                     year2 = dates[-1]
                     if year1 == year2:
-                        fig_title = "Average concentration (high) of " + compound + " in " + crop + " in " + str(year1)
+                        fig_title = "Average concentration of " + compound + " in " + crop + " in " + str(year1) + "(" + str(int(1+(start/30))) + ")"
                     else:
-                        fig_title = "Average concentration of (high) " + compound + " in " + crop + " in {}-{}".format(year1, year2)
+                        fig_title = "Average concentration of " + compound + " in " + crop + " in {}-{}".format(year1, year2) + "(" + str(int(1+(start/30))) + ")"
                 else:
-                    fig_title = "Average concentration of (high) " + compound + " in " + crop + " in " + str(date)
+                    fig_title = "Average concentration of " + compound + " in " + crop + " in " + str(date) + "(" + str(int(1+(start/30))) + ")"
 
                 plt.title(fig_title, \
                           fontsize= 16)
@@ -413,11 +413,11 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             year1 = dates[0]
             year2 = dates[-1]
             if year1 == year2:
-                fig_title = "Average concentration (low) of " + compound + " in " + crop + " from " + client + " in " + str(year1)
+                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(year1)
             else:
-                fig_title = "Average concentration (low) of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2)
+                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2)
         else:
-            fig_title = "Average concentration (low) of " + compound + " in " + crop + " from " + client + " in " + str(date)
+            fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(date)
             # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
 
         plt.title(fig_title, fontsize= 16)
@@ -453,11 +453,11 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
                 year1 = dates[0]
                 year2 = dates[-1]
                 if year1 == year2:
-                    fig_title = "Average concentration (high) of " + compound + " in " + crop + " from " + client + " in " + str(year1)
+                    fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(year1) + "(" + str(int(1+(start/30))) + ")"
                 else:
-                    fig_title = "Average concentration (high) of " + compound + " in " + crop + "from " + client + " in {}-{}".format(year1, year2)
+                    fig_title = "Average concentration of " + compound + " in " + crop + "from " + client + " in {}-{}".format(year1, year2) + "(" + str(int(1+(start/30))) + ")"
             else:
-                fig_title = "Average concentration (high) of " + compound + " in " + crop + "from " + client + " in " + str(date)
+                fig_title = "Average concentration of " + compound + " in " + crop + "from " + client + " in " + str(date) + "(" + str(int(1+(start/30))) + ")"
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
