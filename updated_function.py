@@ -95,10 +95,17 @@ def residues_graph(resultfile, client, crop, date = "all", hide = False): ## n.1
                     limits2.append(element-30)
                     
             limits1 = limits2 
-            
-            fig_title = "Compounds analyzed in " + crop + " from " + client\
-                        + " in " + str(year) + "_" + str(int(1+(start/30)))
-            
+
+            # titles of graphs
+            if date == "all":
+                year1 = dates[0]
+                year2 = dates[-1]
+                if year1 == year2:
+                    fig_title = "Average concentration (" + str(int(1+(start/30))) + ") of all compounds found in " + crop + " from " + client + " in " + str(year1)
+                else:
+                    fig_title = "Average concentration (" + str(int(1+(start/30))) + ") of all compounds found in " + crop + " from " + client + " in {}-{}".format(year1, year2)
+            else:
+                fig_title = "Average concentration (" + str(int(1+(start/30))) + ") of all compounds found in " + crop + " from " + client + " in " + str(date)
             plt.title(fig_title, fontsize= 24)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
@@ -186,8 +193,18 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
             barlist = plt.bar(x, sizes, width=0.4, tick_label = label)
             for element in limits:
                 barlist[element].set_color('indianred')
-            
-            fig_title = compound + " in " + crop + " - " + str(year) + " 1"
+
+            # titles of graphs
+            if date == "all":
+                year1 = dates[0]
+                year2 = dates[-1]
+                if year1 == year2:
+                    fig_title = "Average concentration (low) of " + compound + " in " + crop + " in " + str(year1)
+                else:
+                    fig_title = "Average concentration (low) of " + compound + " in " + crop + " in {}-{}".format(year1, year2)
+            else:
+                fig_title = "Average concentration (low) of " + compound + " in " + crop + " in " + str(date)
+
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             fig_name = "{}.png".format(fig_title)
@@ -219,7 +236,17 @@ def compound_per_client(resultfile, compound, crop, date ="all", hide=False): ##
                         
                 limits1 = limits2 
                 
-                fig_title = compound + " in " + crop + " - " + str(year) + " 2" 
+                # titles of graphs
+                if date == "all":
+                    year1 = dates[0]
+                    year2 = dates[-1]
+                    if year1 == year2:
+                        fig_title = "Average concentration (high) of " + compound + " in " + crop + " in " + str(year1)
+                    else:
+                        fig_title = "Average concentration of (high) " + compound + " in " + crop + " in {}-{}".format(year1, year2)
+                else:
+                    fig_title = "Average concentration of (high) " + compound + " in " + crop + " in " + str(date)
+
                 plt.title(fig_title, \
                           fontsize= 16)
                 plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
@@ -299,7 +326,15 @@ def samples_product_type(resultfile, client = "all", detail = False,\
             explode.append(0.1)
         fig = plt.figure()
         fig.set_size_inches(18.0, 18.0)
-        fig_title = str(year) + " 1"
+        if client == "all":
+            fig_title = "Amount of samples for all clients in " + str(year)
+        elif date == "all":
+            year1 = years[0]
+            year2 = years[-1]
+            if year1 == year2:
+                fig_title = "Amount of samples for " + client + " in " + str(year1)
+        else:
+            fig_title = "Amount of samples for " + client + " in {}-{}".format(year1, year2)
         plt.title(fig_title)
         plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
                 explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
@@ -372,7 +407,19 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         barlist = plt.bar(x, sizes, width=0.4, tick_label = labels)
         for element in limits:
             barlist[element].set_color('indianred')
-        fig_title = compound + " analyzed in " + crop + " from " + client + " 1"
+
+        # titles of graphs
+        if date == "all":
+            year1 = dates[0]
+            year2 = dates[-1]
+            if year1 == year2:
+                fig_title = "Average concentration (low) of " + compound + " in " + crop + " from " + client + " in " + str(year1)
+            else:
+                fig_title = "Average concentration (low) of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2)
+        else:
+            fig_title = "Average concentration (low) of " + compound + " in " + crop + " from " + client + " in " + str(date)
+            # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
+
         plt.title(fig_title, fontsize= 16)
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
         fig_name = "{}.png".format(fig_title)   
@@ -401,7 +448,16 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
                     
             limits1 = limits2    
             
-            fig_title = compound + " analyzed in " + crop + " from " + client + " 2"
+            # titles of graphs
+            if date == "all":
+                year1 = dates[0]
+                year2 = dates[-1]
+                if year1 == year2:
+                    fig_title = "Average concentration (high) of " + compound + " in " + crop + " from " + client + " in " + str(year1)
+                else:
+                    fig_title = "Average concentration (high) of " + compound + " in " + crop + "from " + client + " in {}-{}".format(year1, year2)
+            else:
+                fig_title = "Average concentration (high) of " + compound + " in " + crop + "from " + client + " in " + str(date)
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
             
@@ -412,8 +468,7 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         
     print(fig_list)
     return(fig_list)
-        # This update is just to make sure that the graph is not messy, dividing
-        # the samples in groups of 20
+
 
 def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
     """ This function creates a graph on average number of molecules per crop
@@ -449,8 +504,7 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
         sizes = []
         labels = []
         explode = [0.1]
-        if "NON NORMATO" in prod.keys():
-            del prod['NON NORMATO']
+
         max_labels = heapq.nlargest(20, prod, key=prod.get)
         # It selects the 20 greatest averages
         
@@ -462,8 +516,20 @@ def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
         fig = plt.figure()
         fig.set_size_inches(18.0, 18.0)  
         plt.xticks(rotation='vertical')
-        fig_title = str(year) + " 2"
-        plt.title(str(year))
+
+        if client == "all":
+            fig_title = "Amount of analyses per product for all clients in " + str(year)
+        elif date == "all":
+            year1 = years[0]
+            year2 = years[-1]
+            if year1 == year2:
+                fig_title = "Amount of analyses for " + client + " in " + str(year1)
+            else:
+                fig_title = "Amount of analyses for " + client + " in {}-{}".format(year1, year2)
+        else:
+            fig_title = "Amount of analyses for " + client + " in " + str(year)
+
+        plt.title(fig_title)
         plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels, color="aquamarine")
         fig_name = "{}.png".format(fig_title)   
         fig.savefig(fig_name, dpi=100)
@@ -482,6 +548,10 @@ def threshold_pie(resultfile, infofile, date="all", client="all", detail = False
 
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == date]
+        years = []
+        for i in list(set(resultfile["ANNO"].tolist())):
+            if i != "Totale":
+                years.append(i)
     if client != "all":
         resultfile = resultfile[resultfile["Cliente"] == str(client)]
     
@@ -518,7 +588,18 @@ def threshold_pie(resultfile, infofile, date="all", client="all", detail = False
     plt.pie(list3, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, \
             pctdistance=0.7, explode=explode)
     
-    fig_title = "Samples grouped by threshold in " + str(date)
+    # title of graph
+    if client == "all":
+        fig_title = "Occurence of exceeding the limit for all clients in " + str(date)
+    elif date == "all":
+        year1 = years[0]
+        year2 = years[-1]
+        if year1 == year2:
+            fig_title = "Occurence of exceeding the limit for " + client + " in " + str(year1)
+        else:
+            fig_title = "Occurence of exceeding the limit for " + client + " in {}-{}".format(year1, year2)
+    else:
+        fig_title = "Occurence of exceeding the limit for " + client + " in " + str(date)
     plt.title(fig_title, fontsize=16)
     
     
@@ -595,7 +676,8 @@ def clients_graph(resultfile, date = "all"): ## 8
     plt.pie(np.array([len(client_dic[1]), len(client_dic[2]), len(client_dic[3])]),\
             labels=labels, shadow=True, explode=explode, autopct='%1.1f%%',\
             pctdistance=0.6, colors=colors)
-    fig_title = "Clients grouped by threshold in " + str(date) + " 1"
+
+    fig_title = "Occurence of samples exceeding the limit for clients in " + str(date)
     plt.title(fig_title, fontsize= 16)
     
     fig_name = "{}.png".format(fig_title)   
@@ -617,6 +699,7 @@ def products_of_client(resultfile, client, date = "all"):
 
     if date != "all":
         resultfile = resultfile[resultfile["ANNO"] == str(date)]
+        years = list(set(resultfile["ANNO"].tolist()))
     
     resultfile = resultfile[resultfile["Cliente"] == str(client)]
     
@@ -641,7 +724,18 @@ def products_of_client(resultfile, client, date = "all"):
     plt.xticks(rotation='vertical')
     plt.bar(range(len(sizes)), sizes, width=0.4, tick_label = labels,\
             color = "lightgreen")
-    fig_title = "Crops analyzed from " + client + " in " + str(date) + " 2"
+
+    # title of graph
+    if date == "all":
+        year1 = years[0]
+        year2 = years[-1]
+        if year1 == year2:
+            fig_title = "Crops analyzed from " + client + " in " + str(year1)
+        else: 
+            fig_title = "Crops analyzes from " + client + " in {}-{}".format(year1, year2)
+    else:
+        fig_title = "Crops analyzed from " + client + " in " + str(date)    
+
     plt.title(fig_title, fontsize= 16)
     fig_name = "{}.png".format(fig_title)   
     fig.savefig(fig_name, dpi=100)
@@ -692,7 +786,7 @@ def over_threshold(reducedfile, sample_count, client, date):
     fig.set_size_inches(18.0, 18.0)     
     plt.pie(np.array(sizes), labels=labels, shadow=True, colors=colors, \
             explode=explode, autopct='%1.1f%%', pctdistance=0.8, startangle=150)
-    fig_title = "Products over the threshold 1"    
+    fig_title = "Occurences exceeding the limit per compound for " + client + " in " + str(date) 
     plt.title(fig_title, fontsize= 16)
     fig_name = "{}.png".format(fig_title)   
     fig.savefig(fig_name, dpi=100)
@@ -727,7 +821,7 @@ def over_threshold(reducedfile, sample_count, client, date):
                  color='darkgreen', fontweight='bold', fontsize = 8)
     plt.ylim(0, max(sizes) + 1)
     plt.ylabel("Number of samples", fontsize = 14)
-    fig_title = "Products over the threshold 2"
+    fig_title = "Occurences exceeding the limit per product for " + client + " in " + str(date)
     plt.title(fig_title, fontsize= 16)
     fig_name = "{}.png".format(fig_title)   
     fig.savefig(fig_name, dpi=100)
