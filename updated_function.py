@@ -347,7 +347,7 @@ def samples_product_type(resultfile, client = "all", detail = False,\
     return(fig_list)
 
 
-def residues_graph_esp(resultfile, client, crop, compound):  ## 4 
+def residues_graph_esp(resultfile, infofile, client, crop, compound):  ## 4 
     """ This function creates a graph with the average concentration of a compound 
     through the year for a single client.
     Variables:
@@ -359,8 +359,9 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
         concentration.
         - Order dates chronologicaly
         """
+    messages  = None
     fig_list = []
-
+    
     data = resultfile[resultfile["Gruppo_prodotto"] == crop]
     data = data[data["Cliente"] == client]
     data = data[data["Prova"] == compound]
@@ -385,6 +386,31 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             except ValueError:
                 err_val[name] = prev.tolist()
     
+    infofile = infofile[infofile["Gruppo_prodotto"] == crop]
+    infofile = infofile[infofile["Cliente"] == client]
+    
+    date_infofile = pd.DataFrame(columns= infofile.columns.values)
+    for year in set(resultfile["ANNO"].tolist()):
+        date_infofile = date_infofile.append(infofile[infofile["ANNO"] == year])
+        
+    infofile = date_infofile
+    
+    reduced_info = pd.DataFrame(columns= infofile.columns.values)
+    for trials in set(infofile["Analisi_richiesta_EX_NOTE_LAB"].tolist()):
+        trial = unicode(trials)
+        if compound in trial or "Multiresiduale Full" in trial:
+            reduced_info = reduced_info.append(infofile[infofile\
+                            ["Analisi_richiesta_EX_NOTE_LAB"] == trials])
+
+    for sample in reduced_info["N_campione"].tolist():
+        if not sample in set(resultfile["N_campione"].tolist()):
+            name = "Sample_" + str(int(sample)) + "_" +\
+            str(reduced_info[reduced_info["N_campione"] == sample]\
+                ["Data_Arrivo"].tolist()[0])[:-9]
+            prod[name] = [0,0, reduced_info[reduced_info["N_campione"] == sample]\
+                 ["Data_Arrivo"].tolist()[0]]
+
+
     # Create bar chart:
     labels = []
     sizes = []
@@ -399,75 +425,140 @@ def residues_graph_esp(resultfile, client, crop, compound):  ## 4
             limits.append(count)
         count = count + 1
 
-    fig = plt.figure()
-    if len(sizes) <= 20:  
-        fig = plt.figure()
-        fig.set_size_inches(18.0, 18.0)  
-        plt.xticks(rotation='vertical')
-        barlist = plt.bar(x, sizes, width=0.4, tick_label = labels)
-        for element in limits:
-            barlist[element].set_color('indianred')
-
-        # titles of graphs
-        if date == "all":
-            year1 = dates[0]
-            year2 = dates[-1]
-            if year1 == year2:
-                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(year1)
-            else:
-                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2)
-        else:
-            fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(date)
-            # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
-
-        plt.title(fig_title, fontsize= 16)
-        plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
-        fig_name = "{}.png".format(fig_title)   
-        fig.savefig(fig_name, dpi=100)
-        fig_list.append(fig_name)  
+    print len(sizes)
     
-    if len(sizes) > 20:
-        ind = 20
-        limits1 = limits
-        while ind < len(sizes):
-            sizes1 = sizes[ind-20:ind]
-            labels1 = labels[ind-20:ind]
-
+    fig = plt.figure()
+    if len(sizes) <= 20: # Only one graph is needed.
+        if sum(sizes) == 0: # Checks if the graph is empty.
+            fig = plt.figure(figsize=(18.0, 18.0))
+            message = "No results detected between " + str(labels[0]) + \
+                " and " + str(labels[-1])
+            text = fig.text(0.5, 0.5, message, ha='center', va='center', size=20)
+            text.set_path_effects([path_effects.Normal()])
+            
+            messages = [message]
+            
+            fig_name = "{}.png".format(message)   
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)
+            # This saves an images with the message
+        
+        if sum(sizes) != 0: # Saves the normal graph
             fig = plt.figure()
-            fig.set_size_inches(18.0, 18.0)        
+            fig.set_size_inches(18.0, 18.0)  
             plt.xticks(rotation='vertical')
-            barlist = plt.bar(range(len(sizes1)), sizes1, width=0.4, \
-                              tick_label = labels1)
-            
-            limits2 = []
-            for element in limits1:
-                if element < 20:
-                    barlist[element].set_color('indianred')
-                else:
-                    limits2.append(element-20)
-                    
-            limits1 = limits2    
-            
+            barlist = plt.bar(x, sizes, width=0.4, tick_label = labels)
+            for element in limits:
+                barlist[element].set_color('indianred')
             # titles of graphs
             if date == "all":
                 year1 = dates[0]
                 year2 = dates[-1]
                 if year1 == year2:
-                    fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(year1) + "(" + str(int(1+(start/30))) + ")"
+                    fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(year1)
                 else:
-                    fig_title = "Average concentration of " + compound + " in " + crop + "from " + client + " in {}-{}".format(year1, year2) + "(" + str(int(1+(start/30))) + ")"
+                    fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2)
             else:
-                fig_title = "Average concentration of " + compound + " in " + crop + "from " + client + " in " + str(date) + "(" + str(int(1+(start/30))) + ")"
+                fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(date)
+            # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
             plt.title(fig_title, fontsize= 16)
             plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+            fig_name = "{}.png".format(fig_title)   
+            fig.savefig(fig_name, dpi=100)
+            fig_list.append(fig_name)
+    
+    if len(sizes) > 20: # Creates more than one graph
+        ind = 20
+        limits1 = limits
+        results_count = 0
+        list_no = []
+        while ind-20 < len(sizes):
+            sizes1 = sizes[ind-20:ind]
+            labels1 = labels[ind-20:ind]
+            check = results_count
+            
+            if sum(sizes1) == 0.0: # Checks if the graph is empty.
+                # Following if statements are to give all the no results found 
+                # in one images.
+                if check != results_count:
+                    if list_no != []:
+                        list_no.append(labels1[-1])
+                    if list_no == []:
+                        list_no.append(labels1[0], labels1[-1])
+                if check == 0 and results_count == 0:
+                    if list_no != []:
+                        list_no.append(labels1[-1])
+                    if list_no == []:
+                        list_no = [labels1[0], labels1[-1]]
+                        
+                if (check != 0 and check == results_count) or labels1[-1] == labels[-1]:
+                    # This if statement is the one that saves the messages
+                    messages = []
+                    fig = plt.figure(figsize=(18.0, 18.0))
+                    message = "No results detected between " + str(list_no[0]) + \
+                    " and " + str(list_no[-1])
+                    text = fig.text(0.5, 0.5, message, ha='center', va='center', size=20)
+                    text.set_path_effects([path_effects.Normal()])
+                    fig_name = "{}.png".format(message)   
+                    fig.savefig(fig_name, dpi=100)
+                    fig_list.append(fig_name)
+                    
+                    messages.append(message)
+                    list_no = []
+                    check = 0
+                    results_count = 0
+                
+                # Limits indexes need to be updated
+                limits2 = []
+                    
+                for number in limits1:
+                    limits2.append(number-20)
+                    
+                limits1 = limits2
+                
+            if sum(sizes1) != 0.0: # Saves the normal graph
+                results_count = results_count + 1
+                fig = plt.figure()
+                fig.set_size_inches(18.0, 18.0)        
+                plt.xticks(rotation='vertical')
+                barlist = plt.bar(range(len(sizes1)), sizes1, width=0.4, \
+                                  tick_label = labels1)
+                
+                limits2 = []
+                for element in limits1:
+                    if element < 20:
+                        barlist[element].set_color('indianred')
+                    else:
+                        limits2.append(element-20)
+                        
+                limits1 = limits2    
+                
+                 # titles of graphs
+                if date == "all":
+                    year1 = dates[0]
+                    year2 = dates[-1]
+                    if year1 == year2:
+                        fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(year1) + str(int(ind/20))
+                    else:
+                        fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in {}-{}".format(year1, year2) + str(int(ind/20))
+                else:
+                    fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + " in " + str(date) + str(int(ind/20))
+                    # fig_title = "Average concentration of " + compound + " in " + crop + " from " + client + "_low" ## Y-D-M H-M-S gives error
+
+                plt.title(fig_title, fontsize= 16)
+                plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%f mg/kg'))
+                
+                fig_name = "{}.png".format(fig_title)   
+                fig.savefig(fig_name, dpi=100)
+                fig_list.append(fig_name)
             
             ind = ind + 20
-        fig_name = "{}.png".format(fig_title)   
-        fig.savefig(fig_name, dpi=100)
-        fig_list.append(fig_name)  
+              
         
     print(fig_list)
-    return(fig_list)
+    return(fig_list, messages)
+        # This update is just to make sure that the graph is not messy, dividing
+        # the samples in groups of 20
 
 
 def number_of_molecules(infofile, client = "all", date = "all"): ## n.5
